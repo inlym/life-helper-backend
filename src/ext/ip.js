@@ -9,7 +9,7 @@ const { IP_LOCATION_API_APPCODE } = require('../config/appcode')
 
 
 /**
- * 通过IP地址获取所在地区
+ * 通过IP地址获取所在定位信息（地区、经纬度等）
  * 
  * 外部调用API来源于阿里云云市场
  * https://market.aliyun.com/products/57002002/cmapi00035184.html
@@ -62,7 +62,6 @@ function getLocationByIP(ipAddress) {
 		}
 
 		resolve(response.data.result)
-
 	})
 }
 
