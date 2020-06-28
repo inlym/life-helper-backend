@@ -1,0 +1,26 @@
+{
+  "name": "life-helper-backend",
+  "version": "1.0.0",
+  "description": "「我的个人助手」小程序服务端部分代码。",
+  "main": "index.js",
+  "directories": {
+    "doc": "doc"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/inlym/life-helper-backend.git"
+  },
+  "author": "inlym",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/inlym/life-helper-backend/issues"
+  },
+  "homepage": "https://github.com/inlym/life-helper-backend#readme",
+  "devDependencies": {},
+  "dependencies": {
+    "axios": "^0.19.2"
+  }
+}

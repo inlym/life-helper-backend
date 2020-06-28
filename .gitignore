@@ -102,3 +102,10 @@ dist
 
 # TernJS port file
 .tern-port
+
+
+# 配置文件（配置文件格式通过同名 .demo 文件对外展示）
+src/config/appcode.js
+src/config/config.development.js
+src/config/config.production.js
+
