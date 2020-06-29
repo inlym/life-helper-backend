@@ -24,3 +24,9 @@ const MINIPROGRAM_MAIN_DEVELOPER_ID = {
 	appid: 'xxxxxxxxxxxxxxxx',
 	secret: 'xxxxxxxxxxxxxxxx'
 }
+
+
+
+module.exports = {
+	MINIPROGRAM_MAIN_DEVELOPER_ID,
+}

@@ -38,3 +38,7 @@ function recognizeImageType(buf) {
 }
 
 
+
+module.exports = {
+	recognizeImageType
+}
