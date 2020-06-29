@@ -21,6 +21,7 @@
   "homepage": "https://github.com/inlym/life-helper-backend#readme",
   "devDependencies": {},
   "dependencies": {
-    "axios": "^0.19.2"
+    "axios": "^0.19.2",
+    "ioredis": "^4.17.3"
   }
 }
