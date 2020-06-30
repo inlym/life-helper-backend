@@ -33,8 +33,21 @@ const OSS_IMG_CONFIG = {
 
 
 
+/**
+ * OSS 内文件的访问域名
+ *  [ internalUseDomain ] => 内部使用访问域名，用于内部获取 object 使用，用于不需要向用户展示 url 地址的场景
+ *  [ customDomain ] => 自定义的访问域名，用于需要向用户展示地址的场景
+ */
+const OSS_IMG_DOMAINS = {
+	internalUseDomain:'xxxxxxxxxxxxxxxx.oss-cn-hangzhou.aliyuncs.com',
+	customDomain:'xxxxxxxxxxxxxxxx'
+}
+
+
+
 module.exports = {
 	MYSQL_MAIN_CONFIG,
 	REDIS_MAIN_CONFIG,
 	OSS_IMG_CONFIG,
+	OSS_IMG_DOMAINS,
 }
