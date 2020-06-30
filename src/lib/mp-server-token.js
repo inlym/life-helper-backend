@@ -16,7 +16,8 @@ const { MINIPROGRAM_MAIN_DEVELOPER_ID, REDIS_MAIN } = require('../config/config.
 /**
  * 从微信服务器获取 access_token， 用于我方服务端和微信服务端之间交互
  * 
- * 微信API地址：https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/access-token/auth.getAccessToken.html
+ * 微信开发文档地址：
+ * https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/access-token/auth.getAccessToken.html
  * 
  * @returns {Promise} resolve({access_token: 'xxxxxxxx', expires_in: 7200})
  */
@@ -33,7 +34,7 @@ function fetchAccessTokenFromWXServer() {
 		})
 
 		if (response.data.errcode) {
-			reject(new Error('微信服务端报错，错误信息：' + response.data.errmsg))
+			reject(new Error('微信服务端报错, 错误码: ' + response.data.errcode + ',错误信息: ' + response.data.errmsg))
 		} else {
 			resolve(response.data)
 		}
