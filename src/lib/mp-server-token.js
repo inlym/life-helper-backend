@@ -51,6 +51,12 @@ function fetchAccessTokenFromWXServer() {
  *   2. 微信服务端接口调用凭据 access_token 在 Redis 中键名为 [ WXServerAccessToken ]
  *   3. 方法中调用内部函数  [ fetchAccessTokenFromWXServer ]
  * 
+ * 数据库操作：
+ *   [ Redis ]
+ *   1.    key     => WXServerAccessToken
+ *         type    => string
+ *         command => set
+ * 
  * @returns {Promise} resolve(WXServerAccessToken: string)
  * 
  */
@@ -78,6 +84,13 @@ function updateWXAccessTokenInRedis() {
 
 /**
  * 用于内部调用获取微信服务端接口调用凭据 access_token (在 Redis 中键名为 [ WXServerAccessToken ])
+ * 
+ * 
+ * 数据库操作：
+ *   [ Redis ]
+ *   1.    key     => WXServerAccessToken
+ *         type    => string
+ *         command => get
  * 
  * @returns {Promise} resolve(WXServerAccessToken: string)
  */
