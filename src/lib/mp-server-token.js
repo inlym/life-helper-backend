@@ -9,7 +9,7 @@
 const axios = require('axios')
 const Redis = require('ioredis')
 
-const { MINIPROGRAM_MAIN_DEVELOPER_ID, REDIS_MAIN } = require('../config/config.global')
+const { MINIPROGRAM_MAIN_DEVELOPER_ID, REDIS_MAIN_CONFIG } = require('../config/config.global')
 
 
 
@@ -66,7 +66,7 @@ function updateWXAccessTokenInRedis() {
 		const expireTime = TokenWrapper.expires_in
 
 		// 创建 Redis 实例
-		const redis = new Redis(REDIS_MAIN)
+		const redis = new Redis(REDIS_MAIN_CONFIG)
 
 		await redis.set('WXServerAccessToken', WXServerAccessToken)
 		await redis.expire('WXServerAccessToken', expireTime)
@@ -94,7 +94,7 @@ function getWXAccessToken() {
 	return new Promise(async function (resolve, reject) {
 
 		// 创建 Redis 实例
-		const redis = new Redis(REDIS_MAIN)
+		const redis = new Redis(REDIS_MAIN_CONFIG)
 
 		let WXServerAccessToken = await redis.get('WXServerAccessToken')
 		if (!WXServerAccessToken) {

@@ -1,11 +1,11 @@
 'use strict'
 
-const MYSQL_MAIN = {
+const MYSQL_MAIN_CONFIG = {
 
 }
 
 
-const REDIS_MAIN = {
+const REDIS_MAIN_CONFIG = {
 	host:'xxxxxxxxxxxxxxxx',
 	port:6379,
 	family: 4,
@@ -15,6 +15,6 @@ const REDIS_MAIN = {
 
 
 module.exports = {
-	MYSQL_MAIN,
-	REDIS_MAIN
+	MYSQL_MAIN_CONFIG,
+	REDIS_MAIN_CONFIG
 }

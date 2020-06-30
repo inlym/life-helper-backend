@@ -34,5 +34,5 @@ function getUuid4WithoutHyphen(){
 
 module.exports = {
 	generateRandomString,
-	getUuid4WithoutHyphen
+	getUuid4WithoutHyphen,
 }
