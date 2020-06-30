@@ -22,6 +22,7 @@
   "devDependencies": {},
   "dependencies": {
     "axios": "^0.19.2",
-    "ioredis": "^4.17.3"
+    "ioredis": "^4.17.3",
+    "uuid": "^8.2.0"
   }
 }

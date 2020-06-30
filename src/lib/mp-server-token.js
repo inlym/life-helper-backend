@@ -53,9 +53,7 @@ function fetchAccessTokenFromWXServer() {
  * 
  * 数据库操作：
  *   [ Redis ]
- *   1.    key     => WXServerAccessToken
- *         type    => string
- *         command => set
+ *   1. WXServerAccessToken => set, expire
  * 
  * @returns {Promise} resolve(WXServerAccessToken: string)
  * 
@@ -88,9 +86,7 @@ function updateWXAccessTokenInRedis() {
  * 
  * 数据库操作：
  *   [ Redis ]
- *   1.    key     => WXServerAccessToken
- *         type    => string
- *         command => get
+ *   1. WXServerAccessToken => get
  * 
  * @returns {Promise} resolve(WXServerAccessToken: string)
  */
