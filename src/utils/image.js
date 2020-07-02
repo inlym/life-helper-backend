@@ -5,7 +5,7 @@
  * 通过读文件头识别图片类型，若非图片则返回 undefined
  * 
  * @param {Buffer} buf 一段Buffer
- * @returns {string|undefined}
+ * @returns {string|undefined} 返回图片类型
  */
 function recognizeImageType(buf) {
 	const PNG_BUFFER = Buffer.from('89504e470d0a1a0a','hex')
