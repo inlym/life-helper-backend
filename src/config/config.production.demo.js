@@ -1,16 +1,20 @@
 'use strict'
 
 const MYSQL_MAIN_CONFIG = {
-
+	host: 'xxxxxxxxxxxxxxxx',
+	port: 3306,
+	user: 'xxxxxxxxxxxxxxxx',
+	password: 'xxxxxxxxxxxxxxxx',
+	database: 'mp_helper_prod_db'
 }
 
 
 
 const REDIS_MAIN_CONFIG = {
-	host:'xxxxxxxxxxxxxxxx',
-	port:6379,
+	host: 'xxxxxxxxxxxxxxxx',
+	port: 6379,
 	family: 4,
-	password:'xxxxxxxxxxxxxxxx',
+	password: 'xxxxxxxxxxxxxxxx',
 	db: 8
 }
 
@@ -23,12 +27,12 @@ const REDIS_MAIN_CONFIG = {
  * [ OSS_IMG ] 专门用来存放图片文件
  */
 const OSS_IMG_CONFIG = {
-	region:'oss-cn-hangzhou',
-	accessKeyId:'xxxxxxxxxxxxxxxx',
-	accessKeySecret:'xxxxxxxxxxxxxxxx',
-	bucket:'xxxxxxxxxxxxxxxx',
-	endpoint:'oss-cn-hangzhou-internal.aliyuncs.com',
-	internal:true,    // 生产环境使用 VPC 内网访问 OSS
+	region: 'oss-cn-hangzhou',
+	accessKeyId: 'xxxxxxxxxxxxxxxx',
+	accessKeySecret: 'xxxxxxxxxxxxxxxx',
+	bucket: 'xxxxxxxxxxxxxxxx',
+	endpoint: 'oss-cn-hangzhou-internal.aliyuncs.com',
+	internal: true,    // 生产环境使用 VPC 内网访问 OSS
 }
 
 
@@ -39,8 +43,8 @@ const OSS_IMG_CONFIG = {
  *  [ customDomain ] => 自定义的访问域名，用于需要向用户展示地址的场景
  */
 const OSS_IMG_DOMAINS = {
-	internalUseDomain:'xxxxxxxxxxxxxxxx.oss-cn-hangzhou-internal.aliyuncs.com',
-	customDomain:'xxxxxxxxxxxxxxxx'
+	internalUseDomain: 'xxxxxxxxxxxxxxxx.oss-cn-hangzhou-internal.aliyuncs.com',
+	customDomain: 'xxxxxxxxxxxxxxxx'
 }
 
 
