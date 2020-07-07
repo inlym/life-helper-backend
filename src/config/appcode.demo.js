@@ -10,5 +10,6 @@
 'use strict'
 
 module.exports = {
-	IP_LOCATION_API_APPCODE:'xxxxxxxxxxxxxxxx'
+	IP_LOCATION_API_APPCODE:'xxxxxxxxxxxxxxxx',
+	WEATHER_API_APPCODE:'xxxxxxxxxxxxxxxx',
 }

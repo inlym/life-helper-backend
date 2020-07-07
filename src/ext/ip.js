@@ -32,14 +32,14 @@ const { IP_LOCATION_API_APPCODE } = require('../config/appcode')
  *			}
  * 
  */
-function getLocationByIP(ipAddress) {
+function fetchLocationByIP(ipAddress) {
 	return new Promise(async function (resolve, reject) {
 		if (!ipAddress) {
-			reject(new Error('错误：IP地址为空'))
+			return reject(new Error('参数错误：参数IP地址为空' + ' -- [fetchLocationByIP]'))
 		}
 
 		if (!net.isIPv4(ipAddress)) {
-			reject(new Error('错误：IP地址格式错误'))
+			return reject(new Error('参数错误：参数IP地址格式错误' + ' -- [fetchLocationByIP]'))
 		}
 
 		const response = await axios({
@@ -54,14 +54,18 @@ function getLocationByIP(ipAddress) {
 		})
 
 		if (response.status !== 200) {
-			reject(new Error('第三方错误：HTTP状态码非200'))
+			return reject(new Error('第三方错误：HTTP状态码非200' + ' -- [fetchLocationByIP]'))
 		}
 
 		if (response.data.code !== 100) {
-			reject(new Error('第三方错误，错误原因：' + response.data.message))
+			return reject(new Error('第三方错误，错误原因：' + response.data.message + ' -- [fetchLocationByIP]'))
 		}
 
 		resolve(response.data.result)
 	})
 }
 
+
+module.exports = {
+	fetchLocationByIP,
+}
