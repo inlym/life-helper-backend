@@ -12,7 +12,7 @@ const { generateRandomString } = require('../utils/string')
 
 
 /**
- * 为指定用户ID生成 token, 并存入 Redis (有效期 2 天)
+ * 为指定用户 ID 生成 token, 并存入 Redis (有效期 2 天)
  * 
  * 备注：
  * 1. 未检测重复性，可能同个 userId 存在多个 token, 目前允许这种情况存在
@@ -43,7 +43,7 @@ async function createTokenForSpecificUserId(userId) {
 
 
 /**
- * 通过 token 获取用户ID (如果 token 不存在，则返回 -1)
+ * 通过 token 获取用户 ID (如果 token 不存在，则返回 -1)
  * 
  * [ Redis ] 
  * key   => token:[token]
