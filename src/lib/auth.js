@@ -8,6 +8,8 @@
 const Redis = require('ioredis')
 const { REDIS_MAIN_CONFIG } = require('../config/config.global')
 const { generateRandomString } = require('../utils/string')
+const { code2Session } = require('./mp-openid.js')
+const { registerNewWxUser, getUserIdByOpenid } = require('./user.js')
 
 
 
@@ -74,7 +76,36 @@ async function getUserIdByToken(token) {
 
 
 
+/**
+ * 小程序端登录 => 小程序上传 code 给服务端，服务端回传 token 回去 (用户未注册则自动完成注册流程)
+ * @param {string} code 
+ * @returns {Promise} resolve(token)
+ */
+async function wxLogin(code) {
+	if (!code || typeof code !== 'string') throw new Error('参数错误: code为空或非字符串')
+
+	const { openid } = await code2Session(code)
+
+	if (!openid || typeof openid !== 'string') throw new Error('外部错误: 获取微信 openid 失败')
+
+	const _userId = await getUserIdByOpenid(openid)
+
+	let userId
+	if (!_userId) {
+		userId = await registerNewWxUser(openid)
+	} else {
+		userId = _userId
+	}
+
+	
+	const token = createTokenForSpecificUserId(userId)
+	return Promise.resolve(token)
+}
+
+
+
 module.exports = {
 	createTokenForSpecificUserId,
 	getUserIdByToken,
+	wxLogin,
 }
