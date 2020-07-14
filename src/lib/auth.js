@@ -20,9 +20,9 @@ const { registerNewWxUser, getUserIdByOpenid } = require('./user.js')
  * 1. 未检测重复性，可能同个 userId 存在多个 token, 目前允许这种情况存在
  * 
  * [ Redis ]
- * key   => token:[token]
- * value => [userId]
- * type  => string
+ *   key   => token:[token]
+ *   value => [userId]
+ *   type  => string
  * 
  * @param {number} userId 
  * @returns {Promise} resolve(token)
