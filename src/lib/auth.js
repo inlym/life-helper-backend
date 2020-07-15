@@ -5,6 +5,7 @@
 
 'use strict'
 
+
 const Redis = require('ioredis')
 const { REDIS_MAIN_CONFIG } = require('../config/config.global')
 const { generateRandomString } = require('../utils/string')
@@ -97,7 +98,6 @@ async function wxLogin(code) {
 		userId = _userId
 	}
 
-	
 	const token = createTokenForSpecificUserId(userId)
 	return Promise.resolve(token)
 }
