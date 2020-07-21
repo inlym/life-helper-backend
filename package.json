@@ -19,10 +19,13 @@
     "url": "https://github.com/inlym/life-helper-backend/issues"
   },
   "homepage": "https://github.com/inlym/life-helper-backend#readme",
-  "devDependencies": {},
+  "devDependencies": {
+    "koa": "^2.13.0"
+  },
   "dependencies": {
     "ali-oss": "^6.9.1",
     "axios": "^0.19.2",
+    "foi": "^2.0.0",
     "ioredis": "^4.17.3",
     "mysql": "^2.18.1",
     "uuid": "^8.2.0"
