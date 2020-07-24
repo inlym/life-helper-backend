@@ -34,7 +34,7 @@ function fetchAccessTokenFromWXServer() {
 		})
 
 		if (response.data.errcode) {
-			reject(new Error('微信服务端报错, 错误码: ' + response.data.errcode + ',错误信息: ' + response.data.errmsg))
+			reject(new Error('外部错误: 微信服务端报错, 错误码: ' + response.data.errcode + ',错误信息: ' + response.data.errmsg))
 		} else {
 			resolve(response.data)
 		}
@@ -113,5 +113,5 @@ function getWXAccessToken() {
 module.exports = {
 	fetchAccessTokenFromWXServer,
 	updateWXAccessTokenInRedis,
-	getWXAccessToken
+	getWXAccessToken,
 }

@@ -56,23 +56,24 @@ async function createTokenForSpecificUserId(userId) {
  * @param {string} token 
  * @returns {Promise} resolve(userId)
  */
-async function getUserIdByToken(token) {
+function getUserIdByToken(token) {
 	if (!token || typeof token !== 'string') throw new Error('参数错误: token为空或非字符串')
 
-	const redis = new Redis(REDIS_MAIN_CONFIG)
+	return new Promise(async function (resolve, reject) {
+		const redis = new Redis(REDIS_MAIN_CONFIG)
 
-	const result = await redis.get('token:' + token)
-	await redis.quit()
+		const result = await redis.get('token:' + token)
+		await redis.quit()
 
-	if (!result) {
-		// 如果查询的 token 不存在，则返回 -1
-		return Promise.resolve(-1)
-	} else {
-		// 获取到的 userId 为 string, 转为 number
-		userId = parseInt(result)
-
-		return Promise.resolve(userId)
-	}
+		if (!result) {
+			// 如果查询的 token 不存在，则返回 -1
+			return resolve(-1)
+		} else {
+			// 获取到的 userId 为 string, 转为 number
+			userId = parseInt(result)
+			return resolve(userId)
+		}
+	})
 }
 
 
@@ -82,24 +83,33 @@ async function getUserIdByToken(token) {
  * @param {string} code 
  * @returns {Promise} resolve(token)
  */
-async function wxLogin(code) {
+function wxLogin(code) {
 	if (!code || typeof code !== 'string') throw new Error('参数错误: code为空或非字符串')
 
-	const { openid } = await code2Session(code)
+	return new Promise(async function (resolve, reject) {
+		// 请求微信通过 code 换取 openid
+		const { openid } = await code2Session(code)
 
-	if (!openid || typeof openid !== 'string') throw new Error('外部错误: 获取微信 openid 失败')
+		if (!openid || typeof openid !== 'string') {
+			return reject(new Error('外部错误: 获取微信 openid 失败'))
+		}
 
-	const _userId = await getUserIdByOpenid(openid)
+		// 通过 openid 从数据库中查找 userId
+		// 用户可能不存在，返回 userId 为 0
+		const _userId = await getUserIdByOpenid(openid)
 
-	let userId
-	if (!_userId) {
-		userId = await registerNewWxUser(openid)
-	} else {
-		userId = _userId
-	}
+		let userId
+		if (!_userId) {
+			// 查找用户不存在则先注册，再拿到 userId
+			userId = await registerNewWxUser(openid)
+		} else {
+			userId = _userId
+		}
 
-	const token = createTokenForSpecificUserId(userId)
-	return Promise.resolve(token)
+		// 为该 userId 生成 token
+		const token = createTokenForSpecificUserId(userId)
+		return resolve(token)
+	})
 }
 
 

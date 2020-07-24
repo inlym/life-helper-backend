@@ -15,15 +15,9 @@ const { MINIPROGRAM_MAIN_DEVELOPER_ID } = require('../config/config.global')
  * @returns {Promise} resolve({openid,session_key,unionid})
  */
 function code2Session(code) {
+	if (!code || typeof code !== 'string') throw new Error('参数错误: code为空或非字符串')
+
 	return new Promise(async function (resolve, reject) {
-		if (!code) {
-			reject(new Error('错误：code为空'))
-		}
-
-		if (typeof code !== 'string') {
-			reject(new Error('错误：code错误，应为字符串'))
-		}
-
 		const response = await axios({
 			method: 'GET',
 			url: 'https://api.weixin.qq.com/sns/jscode2session',
@@ -36,7 +30,7 @@ function code2Session(code) {
 		})
 
 		if (response.data.errcode) {
-			reject(new Error('微信服务端报错, 错误码: ' + response.data.errcode + ',错误信息: ' + response.data.errmsg))
+			reject(new Error('外部错误: 微信服务端报错, 错误码: ' + response.data.errcode + ',错误信息: ' + response.data.errmsg))
 		} else {
 			resolve(response.data)
 		}
@@ -46,5 +40,5 @@ function code2Session(code) {
 
 
 module.exports = {
-	code2Session
+	code2Session,
 }

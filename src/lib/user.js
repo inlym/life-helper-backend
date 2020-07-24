@@ -1,5 +1,5 @@
 /**
- * 用户相关
+ * 用户账户相关
  */
 
 'use strict'
@@ -11,7 +11,7 @@ const { MYSQL_MAIN_CONFIG, REDIS_MAIN_CONFIG } = require('../config/config.globa
 
 
 /**
- * 注册新用户，向 user 表中插入一条新的用户记录
+ * 注册新用户，向 user 表中插入一条新的用户记录(在已经检测 openid 不存在的情况下)
  * 
  * [ Mysql ]
  * table => user
@@ -32,12 +32,12 @@ function registerNewWxUser(openid) {
 		mysql.query(sql, value, function (error, results, fields) {
 			if (error) {
 				reject(error)
-				mysql.end()
 			} else {
 				const insertId = results.insertId
 				resolve(insertId)
-				mysql.end()
 			}
+			mysql.end()
+
 		})
 	})
 }

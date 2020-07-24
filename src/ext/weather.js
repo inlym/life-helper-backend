@@ -15,7 +15,7 @@ const { WEATHER_API_APPCODE } = require('../config/appcode')
  */
 function fetchWeatherByCoordinate(longitude, latitude) {
 	return new Promise(async function (resolve, reject) {
-		if (!longitude || !latitude) return reject(new Error('参数错误：经纬度坐标为空' + ' -- [fetchWeatherByCoordinate]'))
+		if (!longitude || !latitude) throw new Error('参数错误：经纬度坐标为空')
 
 		const response = await axios({
 			url: 'http://aliv8.data.moji.com/whapi/json/aliweather/shortforecast',
@@ -27,11 +27,11 @@ function fetchWeatherByCoordinate(longitude, latitude) {
 		})
 
 		if (response.status !== 200) {
-			return reject(new Error('第三方错误：HTTP状态码非200' + ' -- [fetchWeatherByCoordinate]'))
+			return reject(new Error('第三方错误：HTTP状态码非200'))
 		}
 
 		if (response.data.code !== 0) {
-			return reject(new Error('第三方错误，错误原因：' + response.data.msg + ' -- [fetchWeatherByCoordinate]'))
+			return reject(new Error('第三方错误，错误原因：' + response.data.msg))
 		}
 
 		resolve(response.data.data)

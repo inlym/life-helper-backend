@@ -66,6 +66,7 @@ function fetchLocationByIP(ipAddress) {
 }
 
 
+
 module.exports = {
 	fetchLocationByIP,
 }
