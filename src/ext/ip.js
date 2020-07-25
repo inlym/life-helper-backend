@@ -33,14 +33,15 @@ const { IP_LOCATION_API_APPCODE } = require('../config/appcode')
  * 
  */
 function fetchLocationByIP(ipAddress) {
-	return new Promise(async function (resolve, reject) {
-		if (!ipAddress) {
-			return reject(new Error('参数错误：参数IP地址为空' + ' -- [fetchLocationByIP]'))
-		}
+	if (!ipAddress) {
+		throw new Error('参数错误: ipAddress为空')
+	}
 
-		if (!net.isIPv4(ipAddress)) {
-			return reject(new Error('参数错误：参数IP地址格式错误' + ' -- [fetchLocationByIP]'))
-		}
+	if (!net.isIPv4(ipAddress)) {
+		throw new Error('参数错误：参数IP地址格式错误')
+	}
+
+	return new Promise(async function (resolve, reject) {
 
 		const response = await axios({
 			url: 'https://ips.market.alicloudapi.com/iplocaltion',
@@ -54,11 +55,11 @@ function fetchLocationByIP(ipAddress) {
 		})
 
 		if (response.status !== 200) {
-			return reject(new Error('第三方错误：HTTP状态码非200' + ' -- [fetchLocationByIP]'))
+			return reject(new Error('第三方错误：HTTP状态码非200'))
 		}
 
 		if (response.data.code !== 100) {
-			return reject(new Error('第三方错误，错误原因：' + response.data.message + ' -- [fetchLocationByIP]'))
+			return reject(new Error('第三方错误：错误原因：' + response.data.message))
 		}
 
 		resolve(response.data.result)

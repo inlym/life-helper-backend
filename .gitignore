@@ -115,4 +115,6 @@ test/
 
 
 # 其他文件
+package.json
 package-lock.json
+index.js
