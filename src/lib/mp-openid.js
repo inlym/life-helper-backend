@@ -1,7 +1,7 @@
 'use strict'
 
 const axios = require('axios')
-const { MINIPROGRAM_MAIN_DEVELOPER_ID } = require('../config/config.global')
+const { MINIPROGRAM_MAIN_DEVELOPER_ID } = require('../config/config')
 
 
 

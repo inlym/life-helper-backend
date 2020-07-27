@@ -7,7 +7,7 @@
 const Redis = require('ioredis')
 const Mysql = require('mysql')
 
-const { MYSQL_MAIN_CONFIG, REDIS_MAIN_CONFIG } = require('../config/config.global')
+const { MYSQL_MAIN_CONFIG, REDIS_MAIN_CONFIG } = require('../config/config')
 
 
 /**

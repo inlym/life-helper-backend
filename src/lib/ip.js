@@ -4,7 +4,7 @@
 const net = require('net')
 const Redis = require('ioredis')
 const { fetchLocationByIP } = require('../ext/ip')
-const { REDIS_MAIN_CONFIG } = require('../config/config.global')
+const { REDIS_MAIN_CONFIG } = require('../config/config')
 
 /**
  * 通过IPv4地址获取定位信息

@@ -7,7 +7,7 @@
 
 
 const Redis = require('ioredis')
-const { REDIS_MAIN_CONFIG } = require('../config/config.global')
+const { REDIS_MAIN_CONFIG } = require('../config/config')
 const { generateRandomString } = require('../utils/string')
 const { code2Session } = require('./mp-openid.js')
 const { registerNewWxUser, getUserIdByOpenid } = require('./user.js')

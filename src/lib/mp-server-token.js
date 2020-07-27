@@ -9,7 +9,7 @@
 const axios = require('axios')
 const Redis = require('ioredis')
 
-const { MINIPROGRAM_MAIN_DEVELOPER_ID, REDIS_MAIN_CONFIG } = require('../config/config.global')
+const { MINIPROGRAM_MAIN_DEVELOPER_ID, REDIS_MAIN_CONFIG } = require('../config/config')
 
 
 
