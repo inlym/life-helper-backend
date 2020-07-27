@@ -1,14 +1,20 @@
 'use strict'
 
 /**
- * name    =>  get_ip
+ * API name    =>  get_ip
  * 
- * method  =>  GET
- * path    =>  /ip
+ * method      =>  GET
+ * path        =>  /ip
  */
 
-module.exports = async function getIp(ctx, next) {
+async function getIp(ctx, next) {
 	ctx.body = {
 		ip: ctx.ip
 	}
+}
+
+
+
+module.exports = {
+	getIp,
 }
