@@ -1,6 +1,6 @@
 'use strict'
 
-const { getLocationByIP } = require('../src/lib/ip')
+const { getLocationByIP } = require('../src/service/ip')
 
 
 /**
