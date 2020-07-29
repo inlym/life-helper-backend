@@ -3,10 +3,8 @@
 
 const net = require('net')
 const axios = require('axios')
-
 const { IP_LOCATION_API_APPCODE } = require('../config/appcode')
-const redis = require('../db/redis')
-const { logger } = require('./base')
+const { logger, redis } = require('./base')
 
 
 /**
@@ -33,6 +31,8 @@ const { logger } = require('./base')
  */
 function fetchLocationByIpFrom3rdAPI(ip) {
 	logger.debug('[fetchLocationByIpFrom3rdAPI] -- start --')
+	logger.debug('[fetchLocationByIpFrom3rdAPI] 参数 ip => ' + ip)
+
 	if (!ip) {
 		throw new Error('参数错误: IP为空')
 	}
@@ -73,6 +73,7 @@ function fetchLocationByIpFrom3rdAPI(ip) {
  */
 function getLocationByIP(ip) {
 	logger.debug('[getLocationByIP] -- start --')
+	logger.debug('[getLocationByIP] 参数 ip => ' + ip)
 
 	if (!ip) {
 		throw new Error('参数错误: IP地址为空')
@@ -103,6 +104,7 @@ function getLocationByIP(ip) {
 			logger.debug('[getLocationByIP] 函数对外返回的数据 => ' + JSON.stringify(location))
 			resolve(location)
 		}
+		logger.debug('[getLocationByIP] -- end --')
 	})
 }
 
