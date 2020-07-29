@@ -100,7 +100,7 @@ function getLocationByIP(ip) {
 			// 将数据缓存到 Redis, 有效期 2 天
 			// 由于数据都是整体使用，因此直接使用 string, 将数据 JSON.stringify 后再存入
 			await redis.set('ip:' + ip, JSON.stringify(location), 'EX', 3600 * 24 * 2)
-			logger.debug('[getLocationByIP] 将获取的数据存入 Redis 中，有效期 2 天')
+			logger.debug('[getLocationByIP] 将获取的数据存入 Redis 中，有效期 2 天，键名为 key => ip:' + ip)
 			logger.debug('[getLocationByIP] 函数对外返回的数据 => ' + JSON.stringify(location))
 			resolve(location)
 		}

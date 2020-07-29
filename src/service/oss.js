@@ -2,8 +2,8 @@
 
 const OSS = require('ali-oss')
 const { OSS_IMG_CONFIG } = require('../config/config')
-const { recognizeImageType } = require('../utils/image')
-const { getUuid4WithoutHyphen } = require('../utils/string')
+const { recognizeImageType } = require('../helper/image')
+const { getUuid4WithoutHyphen } = require('../helper/string')
 
 
 
@@ -31,9 +31,9 @@ function uploadImageToOss(buf) {
 		const filename = identifier + '.' + extname
 
 		// 上传图片
-		const result = await client.put(filename,buf)
+		const result = await client.put(filename, buf)
 		console.log(result)
-		return resolve('https://img.inlym.com/'+filename)
+		return resolve('https://img.inlym.com/' + filename)
 	})
 }
 
