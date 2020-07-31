@@ -5,31 +5,31 @@
 
 ## 目录结构
 
-> ```
-> life-helper-backend
-> ├── package.json
-> ├── app.js
-> ├── src
-> |   ├── router.js
-> |   ├── common.js
-> │   ├── config
-> │   |   └── config.default.js
-> │   |   └── config.development.js
-> │   |   └── config.production.js
-> │   |   └── config.js
-> │   ├── controller
-> │   |   └── location.js
-> │   |   └── ...
-> │   ├── service
-> │   |   └── location.js
-> │   |   └── ...
-> │   ├── middleware
-> │   |   └── xxx.js
-> │   |   └── ...
-> │   ├── schedule
-> │   |   └── xxx.js
-> │   |   └── ...
-> ```
+```
+life-helper-backend
+├── package.json
+├── app.js
+├── src
+|   ├── router.js
+|   ├── common.js
+│   ├── config
+│   |   └── config.default.js
+│   |   └── config.development.js
+│   |   └── config.production.js
+│   |   └── config.js
+│   ├── controller
+│   |   └── location.js
+│   |   └── ...
+│   ├── service
+│   |   └── location.js
+│   |   └── ...
+│   ├── middleware
+│   |   └── xxx.js
+│   |   └── ...
+│   ├── schedule
+│   |   └── xxx.js
+│   |   └── ...
+```
 
 - `src/router.js` 路由文件，用于配置路由规则
 - `src/common.js` 常用内部模块聚合，原则上应该将 MySQL，Redis等资源挂载到框架上，服务层再从框架获取使用，但这里为了避免服务层依赖框架，增加该文件用于聚合内部常用模块。
