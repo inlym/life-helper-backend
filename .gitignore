@@ -109,7 +109,8 @@ src/config/appcode.js
 src/config/config.development.js
 src/config/config.production.js
 src/config/config.global.js
-src/config/config.js
+src/config/config.default.js
+
 
 # 内部测试用例
 test/

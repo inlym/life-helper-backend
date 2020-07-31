@@ -1,7 +1,7 @@
 'use strict'
 
 const axios = require('axios')
-const { WEATHER_API_APPCODE } = require('../config/appcode')
+const { MOJI_WEATHER_API_APPCODE } = require('../config/appcode')
 
 
 /**
@@ -21,7 +21,7 @@ function fetchWeatherByCoordinate(longitude, latitude) {
 			url: 'http://aliv8.data.moji.com/whapi/json/aliweather/shortforecast',
 			method: 'POST',
 			headers: {
-				Authorization: 'APPCODE ' + WEATHER_API_APPCODE
+				Authorization: 'APPCODE ' + MOJI_WEATHER_API_APPCODE
 			},
 			data: `lat=${latitude}&lon=${longitude}&token=bbc0fdc738a3877f3f72f69b1a4d30fe`,
 		})

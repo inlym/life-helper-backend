@@ -9,7 +9,7 @@
 const axios = require('axios')
 const Redis = require('ioredis')
 
-const { MINIPROGRAM_MAIN_DEVELOPER_ID, REDIS_MAIN_CONFIG } = require('../config/config')
+const { MINIPROGRAM_DEVELOPER_ID, REDIS_CONFIG } = require('../config/config')
 
 
 
@@ -28,8 +28,8 @@ function fetchAccessTokenFromWXServer() {
 			url: 'https://api.weixin.qq.com/cgi-bin/token',
 			params: {
 				grant_type: 'client_credential',
-				appid: MINIPROGRAM_MAIN_DEVELOPER_ID.appid,
-				secret: MINIPROGRAM_MAIN_DEVELOPER_ID.secret
+				appid: MINIPROGRAM_DEVELOPER_ID.appid,
+				secret: MINIPROGRAM_DEVELOPER_ID.secret
 			}
 		})
 
@@ -66,7 +66,7 @@ function updateWXAccessTokenInRedis() {
 		const expireTime = TokenWrapper.expires_in
 
 		// 创建 Redis 实例
-		const redis = new Redis(REDIS_MAIN_CONFIG)
+		const redis = new Redis(REDIS_CONFIG)
 
 		await redis.set('WXServerAccessToken', WXServerAccessToken)
 		await redis.expire('WXServerAccessToken', expireTime)
@@ -94,7 +94,7 @@ function getWXAccessToken() {
 	return new Promise(async function (resolve, reject) {
 
 		// 创建 Redis 实例
-		const redis = new Redis(REDIS_MAIN_CONFIG)
+		const redis = new Redis(REDIS_CONFIG)
 
 		let WXServerAccessToken = await redis.get('WXServerAccessToken')
 		if (!WXServerAccessToken) {

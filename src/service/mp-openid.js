@@ -1,7 +1,7 @@
 'use strict'
 
 const axios = require('axios')
-const { MINIPROGRAM_MAIN_DEVELOPER_ID } = require('../config/config')
+const { MINIPROGRAM_DEVELOPER_ID } = require('../config/config')
 
 
 
@@ -22,8 +22,8 @@ function code2Session(code) {
 			method: 'GET',
 			url: 'https://api.weixin.qq.com/sns/jscode2session',
 			params: {
-				appid: MINIPROGRAM_MAIN_DEVELOPER_ID.appid,
-				secret: MINIPROGRAM_MAIN_DEVELOPER_ID.secret,
+				appid: MINIPROGRAM_DEVELOPER_ID.appid,
+				secret: MINIPROGRAM_DEVELOPER_ID.secret,
 				js_code: code,
 				grant_type: 'authorization_code'
 			}

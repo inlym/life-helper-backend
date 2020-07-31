@@ -3,8 +3,9 @@
 
 const net = require('net')
 const axios = require('axios')
-const { IP_LOCATION_API_APPCODE } = require('../config/appcode')
-const { logger, redis } = require('./base')
+const { IP_LOCATION_API_APPCODE } = require('../config/config.js').ALIYUN_MARKET_API_APPCODE
+const { logger, redis } = require('../common.js')
+
 
 
 /**
@@ -30,7 +31,7 @@ const { logger, redis } = require('./base')
  * @returns {Promise}
  */
 function fetchLocationByIpFrom3rdAPI(ip) {
-	logger.debug('[fetchLocationByIpFrom3rdAPI] -- start --')
+	logger.debug('[fetchLocationByIpFrom3rdAPI] >>>>>>>>  start  >>>>>>>>')
 	logger.debug('[fetchLocationByIpFrom3rdAPI] 参数 ip => ' + ip)
 
 	if (!ip) {
@@ -62,7 +63,7 @@ function fetchLocationByIpFrom3rdAPI(ip) {
 			resolve(response.data.result)
 			logger.debug('[fetchLocationByIpFrom3rdAPI] 函数对外返回数据 => ' + JSON.stringify(response.data.result))
 		}
-		logger.debug('[fetchLocationByIpFrom3rdAPI] -- end --')
+		logger.debug('[fetchLocationByIpFrom3rdAPI] <<<<<<<<   end   <<<<<<<<')
 	})
 }
 
@@ -72,7 +73,7 @@ function fetchLocationByIpFrom3rdAPI(ip) {
  * @param {string} ip IP地址
  */
 function getLocationByIP(ip) {
-	logger.debug('[getLocationByIP] -- start --')
+	logger.debug('[getLocationByIP] >>>>>>>>  start  >>>>>>>>')
 	logger.debug('[getLocationByIP] 参数 ip => ' + ip)
 
 	if (!ip) {
@@ -104,7 +105,7 @@ function getLocationByIP(ip) {
 			logger.debug('[getLocationByIP] 函数对外返回的数据 => ' + JSON.stringify(location))
 			resolve(location)
 		}
-		logger.debug('[getLocationByIP] -- end --')
+		logger.debug('[getLocationByIP] <<<<<<<<   end   <<<<<<<<')
 	})
 }
 

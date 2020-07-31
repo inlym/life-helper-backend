@@ -1,18 +1,16 @@
 'use strict'
 
+/**
+ * Serverless 中运行的入口文件
+ */
+
 const Foi = require('foi')
+const router = require('./router')
 
 
-module.exports.ip = function (event, context, callback) {
-	const { getIp } = require('./api2/ip')
-	const app = new Foi({ event, context, callback })
-	app.use(getIp)
-	app.init()
+module.exports.handler = function (event, context, callback) {
+
+	app.use(router.routes())
+	app.listen()
 }
 
-module.exports.location = function (event, context, callback) {
-	const { getLocation } = require('./api2/location')
-	const app = new Foi({ event, context, callback })
-	app.use(getLocation)
-	app.init()
-}
