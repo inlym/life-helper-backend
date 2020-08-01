@@ -1,8 +1,8 @@
 'use strict'
 
-const { code2Session } = require('../src/service/mp-openid')
-const { createTokenForSpecificUserId, getUserIdByToken, wxLogin } = require('../src/service/auth')
-const { registerNewWxUser, getUserIdByOpenid } = require('../src/service/user')
+const { code2Session } = require('../app/service/mp-openid')
+const { createTokenForSpecificUserId, getUserIdByToken, wxLogin } = require('../app/service/auth')
+const { registerNewWxUser, getUserIdByOpenid } = require('../app/service/user')
 
 
 async function login(ctx, next) {

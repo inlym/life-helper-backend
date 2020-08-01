@@ -111,11 +111,16 @@ src/config/config.production.js
 src/config/config.global.js
 src/config/config.default.js
 
+app/config/appcode.js
+app/config/config.development.js
+app/config/config.production.js
+app/config/config.global.js
+app/config/config.default.js
+
 
 # 内部测试用例
 test/
 
 
 # 其他文件
-package.json
 package-lock.json
