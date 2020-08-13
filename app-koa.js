@@ -7,7 +7,7 @@
 
 const Koa = require('koa')
 const app = new Koa()
-const router = require('./router')
+const router = require('./app/router')
 
 app.use(router.routes())
 
