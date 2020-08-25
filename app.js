@@ -12,4 +12,6 @@ const router = require('./app/router')
 app.use(router.routes())
 
 
-app.listen(8090)
+app.listen(8090, () => {
+	console.log('服务器已启动')
+})

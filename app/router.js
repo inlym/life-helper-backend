@@ -4,9 +4,14 @@
 const Router = require('koa-router')
 const router = new Router()
 
-const login = require('./controller/login')
+const controller = require('require-all')(__dirname + '/controller')
 
-router.get('/login', login.login)
+// ping
+router.get('/ping', controller.ping.ping)
+
+
+router.get('/login', controller.login.login)
+
 
 
 
