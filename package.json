@@ -20,15 +20,16 @@
 	},
 	"homepage": "https://github.com/inlym/life-helper-backend#readme",
 	"devDependencies": {
-		"ali-oss": "^6.9.1",
-		"koa": "^2.13.0"
+		"ali-oss": "^6.9.1"
 	},
 	"dependencies": {
 		"ali-rds": "^3.4.0",
 		"axios": "^0.19.2",
 		"foi": "^2.2.0",
 		"ioredis": "^4.17.3",
+		"koa": "^2.13.0",
 		"koa-router": "^9.1.0",
+		"koa-to-serverless": "^1.0.3",
 		"log4js": "^6.3.0",
 		"mysql": "^2.18.1",
 		"require-all": "^3.0.0",
