@@ -12,6 +12,7 @@ async function getIp(ctx, next) {
 	ctx.body = {
 		ip: ctx.ip
 	}
+
 	await next()
 }
 

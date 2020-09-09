@@ -111,7 +111,6 @@ function getLocationByIP(ip) {
 
 
 
-
 module.exports = {
 	fetchLocationByIpFrom3rdAPI,
 	getLocationByIP,

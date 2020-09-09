@@ -26,4 +26,6 @@ module.exports = async function debug(ctx, next) {
 		request,
 		client,
 	}
+
+	await next()
 }

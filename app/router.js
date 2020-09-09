@@ -14,6 +14,4 @@ router.get('/login', controller.login.login)
 
 
 
-
-
 module.exports = router

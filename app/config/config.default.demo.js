@@ -15,14 +15,12 @@ module.exports = {
 	// 环境：开发环境 => development, 预发布环境 => release, 生产环境 => production
 	STAGE: 'development',
 
-
 	// 小程序开发者ID
 	MINIPROGRAM_DEVELOPER_ID: {
 		appid: 'xxxxxxxxxxxxxxxx',
 		secret: 'xxxxxxxxxxxxxxxx'
 	},
 
-	
 	// 阿里云市场购买的第三方API的APPCODE
 	ALIYUN_MARKET_API_APPCODE: {
 		IP_LOCATION_API_APPCODE: 'xxxxxxxxxxxxxxxx',

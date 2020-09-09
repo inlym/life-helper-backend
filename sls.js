@@ -1,17 +1,23 @@
 'use strict'
 
 /**
- * Serverless 中运行的入口文件
+ * Koa 框架中运行的入口文件
  */
 
-const Foi = require('foi')
+const Koa = require('koa')
+const bodyParser = require('koa-bodyparser')
+const debug = require('koa-debug')
+const launch = require('koa-to-serverless')
+
 const router = require('./app/router')
 
+const app = new Koa()
 
-module.exports.handler = function (event, context, callback) {
-	const app = new Foi({ event, context, callback })
+app.use(debug({
+    disable: true,
+    mode: 'console',
+}))
+app.use(bodyParser())
+app.use(router.routes())
 
-	app.use(router.routes())
-	app.listen()
-}
-
+module.exports.handler = launch(app)

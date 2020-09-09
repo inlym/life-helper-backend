@@ -15,7 +15,6 @@ async function login(ctx, next) {
 	const code = ctx.query.code
 	ctx.body = await wxLogin(code)
 
-
 	await next()
 }
 

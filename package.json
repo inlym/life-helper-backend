@@ -7,7 +7,7 @@
 		"doc": "doc"
 	},
 	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1"
+		"test": "echo\"Error:notestspecified\"&&exit1"
 	},
 	"repository": {
 		"type": "git",
@@ -28,6 +28,8 @@
 		"foi": "^2.2.0",
 		"ioredis": "^4.17.3",
 		"koa": "^2.13.0",
+		"koa-bodyparser": "^4.3.0",
+		"koa-debug": "^1.2.0",
 		"koa-router": "^9.1.0",
 		"koa-to-serverless": "^1.0.3",
 		"log4js": "^6.3.0",

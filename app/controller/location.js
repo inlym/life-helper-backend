@@ -35,6 +35,8 @@ async function getLocation(ctx, next) {
 		longitude: lng,
 		latitude: lat
 	}
+
+	await next()
 }
 
 
