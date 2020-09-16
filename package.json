@@ -25,7 +25,6 @@
 	"dependencies": {
 		"ali-rds": "^3.4.0",
 		"axios": "^0.19.2",
-		"foi": "^2.2.0",
 		"ioredis": "^4.17.3",
 		"koa": "^2.13.0",
 		"koa-bodyparser": "^4.3.0",
