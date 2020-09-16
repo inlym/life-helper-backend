@@ -123,6 +123,7 @@ test/
 
 # macOS 附加的文件
 .DS_Store
+app/.DS_Store
 
 # 其他文件
 package-lock.json
