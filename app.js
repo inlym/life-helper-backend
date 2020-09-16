@@ -1,9 +1,5 @@
 'use strict'
 
-/**
- * Koa 框架中运行的入口文件
- */
-
 const Koa = require('koa')
 const bodyParser = require('koa-bodyparser')
 const launch = require('koa-to-serverless')
@@ -22,10 +18,12 @@ app.use(
 app.use(bodyParser())
 app.use(router.routes())
 
+/** 原生环境入口 */
 if (require.main === module) {
 	app.listen(8090, () => {
 		console.log('服务器已启动')
 	})
 }
 
+/** Serverless 环境入口 */
 module.exports.handler = launch(app)
