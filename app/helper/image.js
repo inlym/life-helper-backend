@@ -1,9 +1,8 @@
 'use strict'
 
-
 /**
  * 通过读文件头识别图片类型，若非图片则返回 undefined
- * 
+ *
  * @param {Buffer} buf 一段Buffer
  * @returns {string|undefined} 返回图片类型
  */
@@ -36,8 +35,6 @@ function recognizeImageType(buf) {
 		return undefined
 	}
 }
-
-
 
 module.exports = {
 	recognizeImageType,

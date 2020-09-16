@@ -1,19 +1,16 @@
 'use strict'
 
-
 const net = require('net')
 const axios = require('axios')
 const { IP_LOCATION_API_APPCODE } = require('../config/config.js').ALIYUN_MARKET_API_APPCODE
 const { logger, redis } = require('../common.js')
 
-
-
 /**
  * 从第三方接口通过 IP 地址换取定位信息（地区、经纬度等）
- * 
+ *
  * 第三方API来源于阿里云云市场
  * https://market.aliyun.com/products/57002002/cmapi00035184.html
- * 
+ *
  * 数据格式（直接返回了从第三方API获取的数据）：
  *  {
  *		en_short: 'CN',
@@ -47,13 +44,15 @@ function fetchLocationByIpFrom3rdAPI(ip) {
 			url: 'https://ips.market.alicloudapi.com/iplocaltion',
 			method: 'GET',
 			params: {
-				ip: ip
+				ip: ip,
 			},
 			headers: {
-				Authorization: 'APPCODE ' + IP_LOCATION_API_APPCODE
-			}
+				Authorization: 'APPCODE ' + IP_LOCATION_API_APPCODE,
+			},
 		})
-		logger.debug('[fetchLocationByIpFrom3rdAPI] 请求第三方API，返回响应的数据为 => ' + JSON.stringify(response.data))
+		logger.debug(
+			'[fetchLocationByIpFrom3rdAPI] 请求第三方API，返回响应的数据为 => ' + JSON.stringify(response.data)
+		)
 
 		if (response.status !== 200) {
 			reject(new Error('第三方错误：HTTP状态码非200'))
@@ -66,7 +65,6 @@ function fetchLocationByIpFrom3rdAPI(ip) {
 		logger.debug('[fetchLocationByIpFrom3rdAPI] <<<<<<<<   end   <<<<<<<<')
 	})
 }
-
 
 /**
  * 通过 IP 地址获取定位信息（用于内部函数调用）
@@ -108,8 +106,6 @@ function getLocationByIP(ip) {
 		logger.debug('[getLocationByIP] <<<<<<<<   end   <<<<<<<<')
 	})
 }
-
-
 
 module.exports = {
 	fetchLocationByIpFrom3rdAPI,

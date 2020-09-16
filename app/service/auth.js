@@ -4,26 +4,23 @@
  * 用户登录、获取用户身份相关
  */
 
-
 const { redis, logger } = require('../common.js')
 const { generateRandomString } = require('../helper/string.js')
 const { code2Session } = require('./mp-openid.js')
 const { registerNewWxUser, getUserIdByOpenid } = require('./user.js')
 
-
-
 /**
  * 为指定用户 ID 生成 token, 并存入 Redis (有效期 2 天)
- * 
+ *
  * 备注：
  * 1. 未检测重复性，可能同个 userId 存在多个 token, 目前允许这种情况存在
- * 
+ *
  * [ Redis ]
  *   key   => token:[token]
  *   value => [userId]
  *   type  => string
- * 
- * @param {number} userId 
+ *
+ * @param {number} userId
  * @returns {Promise} resolve(token)
  */
 function createTokenForSpecificUserId(userId) {
@@ -44,17 +41,15 @@ function createTokenForSpecificUserId(userId) {
 	})
 }
 
-
-
 /**
  * 通过 token 获取用户 ID (如果 token 不存在，则返回 0)
- * 
- * [ Redis ] 
+ *
+ * [ Redis ]
  * key   => token:[token]
  * value => [userId]
  * type  => string
- * 
- * @param {string} token 
+ *
+ * @param {string} token
  * @returns {Promise} resolve(userId)
  */
 function getUserIdByToken(token) {
@@ -82,11 +77,9 @@ function getUserIdByToken(token) {
 	})
 }
 
-
-
 /**
  * 小程序端登录 => 小程序上传 code 给服务端，服务端回传 token 回去 (用户未注册则自动完成注册流程)
- * @param {string} code 
+ * @param {string} code
  * @returns {Promise} resolve(token)
  */
 function wxLogin(code) {
@@ -110,13 +103,11 @@ function wxLogin(code) {
 		let userId = await getUserIdByOpenid(openid)
 		logger.debug('[wxLogin] 通过 openid, 获取 userId (为0表示不存在该用户) => ' + userId)
 
-
 		if (!userId) {
 			// 查找用户不存在则先注册，再拿到 userId
 			userId = await registerNewWxUser(openid)
 			logger.debug('[wxLogin] 用户不存在, 进入注册用户环节, 注册后获取 userId => ' + userId)
 		}
-
 
 		// 为该 userId 生成 token
 		const token = await createTokenForSpecificUserId(userId)
@@ -125,8 +116,6 @@ function wxLogin(code) {
 		logger.debug('[wxLogin] <<<<<<<<   end   <<<<<<<<')
 	})
 }
-
-
 
 module.exports = {
 	createTokenForSpecificUserId,

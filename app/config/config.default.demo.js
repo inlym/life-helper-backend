@@ -18,7 +18,7 @@ module.exports = {
 	// 小程序开发者ID
 	MINIPROGRAM_DEVELOPER_ID: {
 		appid: 'xxxxxxxxxxxxxxxx',
-		secret: 'xxxxxxxxxxxxxxxx'
+		secret: 'xxxxxxxxxxxxxxxx',
 	},
 
 	// 阿里云市场购买的第三方API的APPCODE
@@ -26,5 +26,4 @@ module.exports = {
 		IP_LOCATION_API_APPCODE: 'xxxxxxxxxxxxxxxx',
 		MOJI_WEATHER_API_APPCODE: 'xxxxxxxxxxxxxxxx',
 	},
-
 }

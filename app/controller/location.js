@@ -5,12 +5,12 @@ const { getLocationByIP } = require('../service/location')
 
 /**
  * 客户端获取自己的定位信息（经纬度）
- * 
+ *
  * method => GET
  * query
  *     - ip => 选填，为空时使用客户端自己的IP地址
  * body   => null
- * 
+ *
  */
 async function getLocation(ctx, next) {
 	let ip = ''
@@ -19,7 +19,7 @@ async function getLocation(ctx, next) {
 			ctx.status = 422
 			ctx.body = {
 				errcode: 40001,
-				errmsg: '参数ip不是一个正确的IP地址'
+				errmsg: '参数ip不是一个正确的IP地址',
 			}
 			return
 		} else {
@@ -33,13 +33,11 @@ async function getLocation(ctx, next) {
 	ctx.body = {
 		ip,
 		longitude: lng,
-		latitude: lat
+		latitude: lat,
 	}
 
 	await next()
 }
-
-
 
 module.exports = {
 	getLocation,

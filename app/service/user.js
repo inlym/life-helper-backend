@@ -4,17 +4,15 @@
  * 用户账户相关
  */
 
-
 const { redis, mysql, logger } = require('../common.js')
-
 
 /**
  * 注册新用户，向 user 表中插入一条新的用户记录(在已经检测 openid 不存在的情况下)
- * 
+ *
  * [ Mysql ]
  * table => user
- * 
- * @param {string} openid 
+ *
+ * @param {string} openid
  * @returns {Promise} resolve(userId: number)
  */
 function registerNewWxUser(openid) {
@@ -33,15 +31,13 @@ function registerNewWxUser(openid) {
 	})
 }
 
-
-
 /**
  * 通过 openid, 从 user 表中获取用户 ID (如果 openid 不存在，则返回 0)
- * 
+ *
  * [ Mysql ]
  * table => user
- * 
- * @param {string} openid 
+ *
+ * @param {string} openid
  * @returns {Promise} resolve(userId: number)
  */
 function getUserIdByOpenid(openid) {
@@ -65,8 +61,6 @@ function getUserIdByOpenid(openid) {
 		logger.debug('[getUserIdByOpenid] <<<<<<<<   end   <<<<<<<<')
 	})
 }
-
-
 
 module.exports = {
 	registerNewWxUser,

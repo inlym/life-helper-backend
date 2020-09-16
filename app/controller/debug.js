@@ -2,7 +2,6 @@
 
 const { getLocationByIP } = require('../service/location.js')
 
-
 module.exports = async function debug(ctx, next) {
 	const request = {}
 	const client = {}
@@ -19,7 +18,7 @@ module.exports = async function debug(ctx, next) {
 	const location = await getLocationByIP(ctx.ip)
 	client.location = {
 		longitude: location.lng,
-		latitude: location.lat
+		latitude: location.lat,
 	}
 
 	ctx.body = {

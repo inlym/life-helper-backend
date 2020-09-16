@@ -2,12 +2,11 @@
 
 const { wxLogin } = require('../service/auth')
 
-
 /**
  * 小程序登录接口
- * 
+ *
  * method => GET
- * query  
+ * query
  * 		- code
  * body   => null
  */
@@ -17,8 +16,6 @@ async function login(ctx, next) {
 
 	await next()
 }
-
-
 
 module.exports = {
 	login,

@@ -5,8 +5,6 @@ const { OSS_IMG_CONFIG } = require('../config/config.js')
 const { recognizeImageType } = require('../helper/image.js')
 const { getUuid4WithoutHyphen } = require('../helper/string.js')
 
-
-
 function uploadImageToOss(buf) {
 	const client = new OSS(OSS_IMG_CONFIG)
 
@@ -36,8 +34,6 @@ function uploadImageToOss(buf) {
 		return resolve('https://img.inlym.com/' + filename)
 	})
 }
-
-
 
 module.exports = {
 	uploadImageToOss,

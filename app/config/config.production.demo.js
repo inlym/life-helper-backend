@@ -18,9 +18,8 @@ module.exports = {
 		port: 3306,
 		user: 'xxxxxxxxxxxxxxxx',
 		password: 'xxxxxxxxxxxxxxxx',
-		database: 'mp_helper_prod_db'
+		database: 'mp_helper_prod_db',
 	},
-
 
 	// Redis数据库配置信息
 	REDIS_CONFIG: {
@@ -28,9 +27,8 @@ module.exports = {
 		port: 6379,
 		family: 4,
 		password: 'xxxxxxxxxxxxxxxx',
-		db: 8
+		db: 8,
 	},
-
 
 	// 存放图片专用的阿里云OSS配置信息
 	OSS_IMG_CONFIG: {
@@ -39,16 +37,14 @@ module.exports = {
 		accessKeySecret: 'xxxxxxxxxxxxxxxx',
 		bucket: 'xxxxxxxxxxxxxxxx',
 		endpoint: 'oss-cn-hangzhou-internal.aliyuncs.com',
-		internal: true
+		internal: true,
 	},
-
 
 	OSS_IMG_DOMAINS: {
 		// 内部使用访问域名，用于内部获取 object 使用，用于不需要向用户展示 url 地址的场景
 		internalUseDomain: 'xxxxxxxxxxxxxxxx',
 
 		// 自定义的访问域名，用于需要向用户展示地址的场景
-		customDomain: 'xxxxxxxxxxxxxxxx'
+		customDomain: 'xxxxxxxxxxxxxxxx',
 	},
-
 }
