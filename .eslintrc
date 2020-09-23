@@ -108,7 +108,6 @@
             "always"
         ],
         "no-var":"error",
-        "prefer-rest-params":"error",
-        "no-async-promise-executor":"warn"
+        "prefer-rest-params":"error"
     }
 }
