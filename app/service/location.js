@@ -2,7 +2,7 @@
 
 const net = require('net')
 const axios = require('axios')
-const { IP_LOCATION_API_APPCODE } = require('../config/config.js').ALIYUN_MARKET_API_APPCODE
+const { IP_LOCATION_API_APPCODE } = require('../common.js').CONFIG.ALIYUN_MARKET_API_APPCODE
 const { logger, redis } = require('../common.js')
 
 /**

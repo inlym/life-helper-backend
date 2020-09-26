@@ -11,7 +11,7 @@ const app = new Koa()
 
 app.use(
 	debug({
-		disable: true,
+		disable: false,
 		mode: 'console',
 	})
 )

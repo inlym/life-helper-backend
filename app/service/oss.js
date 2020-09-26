@@ -1,7 +1,7 @@
 'use strict'
 
 const OSS = require('ali-oss')
-const { OSS_IMG_CONFIG } = require('../config/config.js')
+const { OSS_IMG_CONFIG } = require('../common.js')
 const { recognizeImageType } = require('../helper/image.js')
 const { getUuid4WithoutHyphen } = require('../helper/string.js')
 
