@@ -12,7 +12,7 @@ const app = new Koa()
 app.use(
 	debug({
 		disable: false,
-		mode: 'console',
+		mode: 'response',
 	})
 )
 app.use(bodyParser())
@@ -20,8 +20,8 @@ app.use(router.routes())
 
 /** 原生环境入口 */
 if (require.main === module) {
-	app.listen(8090, () => {
-		console.log('服务器已启动')
+	app.listen(8090, '0.0.0.0', () => {
+		console.log('服务器已启动, pid: ' + process.pid)
 	})
 }
 
