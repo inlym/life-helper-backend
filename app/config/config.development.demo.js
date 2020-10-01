@@ -12,7 +12,7 @@
  */
 
 module.exports = {
-	// MySQL数据库配置信息
+	/** MySQL数据库配置信息 */
 	MYSQL_CONFIG: {
 		host: 'xxxxxxxxxxxxxxxx',
 		port: 3306,
@@ -21,7 +21,7 @@ module.exports = {
 		database: 'mp_helper_test_db',
 	},
 
-	// Redis数据库配置信息
+	/** Redis数据库配置信息 */
 	REDIS_CONFIG: {
 		host: 'xxxxxxxxxxxxxxxx',
 		port: 6379,
@@ -30,7 +30,7 @@ module.exports = {
 		db: 6,
 	},
 
-	// 存放图片专用的阿里云OSS配置信息
+	/** 存放图片专用的阿里云OSS配置信息 */
 	OSS_IMG_CONFIG: {
 		region: 'oss-cn-hangzhou',
 		accessKeyId: 'xxxxxxxxxxxxxxxx',

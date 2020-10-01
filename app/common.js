@@ -4,6 +4,7 @@
 
 const Mysql = require('ali-rds')
 const Redis = require('ioredis')
+const loghere = require('loghere')
 
 /** 环境：生产环境 => production, 开发环境 => development */
 const NODE_ENV = process.env.NODE_ENV && process.env.NODE_ENV.toLowerCase()
@@ -28,9 +29,7 @@ const mysql = new Mysql(CONFIG.MYSQL_CONFIG)
 const redis = new Redis(CONFIG.REDIS_CONFIG)
 
 // logger
-const log4js = require('log4js')
-const logger = log4js.getLogger()
-logger.level = 'debug'
+const logger = loghere.getLogger()
 
 module.exports = {
 	mysql,

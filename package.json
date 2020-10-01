@@ -8,7 +8,8 @@
 	},
 	"scripts": {
 		"test": "echo\"Error:notestspecified\"&&exit1",
-		"lint": "eslint ."
+		"lint": "eslint .",
+		"reload": "pm2 reload all"
 	},
 	"repository": {
 		"type": "git",

@@ -1,0 +1,14 @@
+{
+	"name": "lhb-prod",
+	"script": "app.js",
+	"cwd": "/data/project/life-helper-backend-prod",
+	"exec_mode": "cluster",
+	"instances": 0,
+	"out_file": "/data/logs/lhb-prod-out.log",
+	"error_file": "/data/logs/lhb-prod-err.log",
+	"combine_logs": true,
+	"env": {
+		"PORT": 3030,
+		"NODE_ENV": "production"
+	}
+}

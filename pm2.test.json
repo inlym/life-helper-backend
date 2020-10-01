@@ -1,0 +1,14 @@
+{
+	"name": "lhb-test",
+	"script": "app.js",
+	"cwd": "/data/project/life-helper-backend-test",
+	"exec_mode": "cluster",
+	"instances": 0,
+	"out_file": "/data/logs/lhb-test-out.log",
+	"error_file": "/data/logs/lhb-test-err.log",
+	"combine_logs": true,
+	"env": {
+		"PORT": 3020,
+		"NODE_ENV": "development"
+	}
+}

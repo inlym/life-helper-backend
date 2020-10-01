@@ -7,12 +7,12 @@
  * query  => null
  * body   => null
  */
-async function getIp(ctx, next) {
+async function getIp(ctx, nextMiddleware) {
 	ctx.body = {
 		ip: ctx.ip,
 	}
 
-	await next()
+	await nextMiddleware()
 }
 
 module.exports = {

@@ -10,11 +10,11 @@ const { wxLogin } = require('../service/auth')
  * 		- code
  * body   => null
  */
-async function login(ctx, next) {
+async function login(ctx, nextMiddleware) {
 	const code = ctx.query.code
 	ctx.body = await wxLogin(code)
 
-	await next()
+	await nextMiddleware()
 }
 
 module.exports = {
