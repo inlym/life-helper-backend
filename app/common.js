@@ -2,7 +2,7 @@
 
 // 当前文件整合常用引用的内部模块，统一输出
 
-const Mysql = require('ali-rds')
+const rds = require('ali-rds')
 const Redis = require('ioredis')
 const loghere = require('loghere')
 
@@ -13,6 +13,7 @@ const PUBLIC_CONFIG = require('./config/config.public.js')
 const PRODUCTION_CONFIG = require('./config/config.production.js')
 const DEVELOPMENT_CONFIG = require('./config/config.development.js')
 
+/** 合并的配置项 */
 const CONFIG = {}
 if (NODE_ENV === 'production') {
 	Object.assign(CONFIG, PUBLIC_CONFIG, PRODUCTION_CONFIG)
@@ -23,12 +24,12 @@ if (NODE_ENV === 'production') {
 }
 
 /** MySQL 实例 */
-const mysql = new Mysql(CONFIG.MYSQL_CONFIG)
+const mysql = rds(CONFIG.MYSQL_CONFIG)
 
 /** Redis 实例 */
 const redis = new Redis(CONFIG.REDIS_CONFIG)
 
-// logger
+/** 日志 logger 实例 */
 const logger = loghere.getLogger()
 
 module.exports = {
