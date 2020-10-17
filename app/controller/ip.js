@@ -1,11 +1,9 @@
 'use strict'
 
 /**
- * 客户端获取自己的IP地址
+ *  客户端获取自己的IP地址
  *
- * method => GET
- * query  => null
- * body   => null
+ *  GET /ip
  */
 async function getIp(ctx, nextMiddleware) {
 	ctx.body = {

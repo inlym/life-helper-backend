@@ -21,9 +21,11 @@ module.exports = {
 		secret: 'xxxxxxxxxxxxxxxx',
 	},
 
-	// 阿里云市场购买的第三方API的APPCODE
+	/** 阿里云市场购买的第三方 API 的 APPCODE */
 	ALIYUN_MARKET_API_APPCODE: {
 		IP_LOCATION_API_APPCODE: 'xxxxxxxxxxxxxxxx',
 		MOJI_WEATHER_API_APPCODE: 'xxxxxxxxxxxxxxxx',
+		MOBILE_LOCATION_API_APPCODE: 'xxxxxxxxxxxxxxxx',
+		EXPRESS_API_APPCODE: 'xxxxxxxxxxxxxxxx',
 	},
 }

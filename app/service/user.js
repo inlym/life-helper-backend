@@ -1,6 +1,6 @@
 'use strict'
 
-const { mysql } = require('../common.js')
+const { mysql, logger } = require('../common.js')
 
 /**
  *  通过 opeid 从用户表中查询用户 id。
@@ -21,8 +21,10 @@ async function getUserIdByOpenid(openid) {
 	})
 
 	if (!result) {
+		logger.debug('openid 未检索到，应为新用户')
 		return NOT_EXIST_USER_ID
 	} else {
+		logger.debug(`userId => ${result.id}`)
 		return result.id
 	}
 }
@@ -43,6 +45,7 @@ async function createNewUser(openid) {
 	}
 
 	const result = await mysql.insert('user', row)
+	logger.debug(`userId => ${result.insertId}`)
 	return result.insertId
 }
 

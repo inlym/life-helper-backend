@@ -1,17 +1,19 @@
 'use strict'
 
 const Router = require('koa-router')
-const debug = require('koa-debug')
 
 const router = new Router()
 
-// const controller = require('require-all')(__dirname + '/controller')
-
-// ping
-const Ping = require('./controller/ping')
+/** ping */
+const Ping = require('./controller/ping.js')
 router.all('/ping', Ping.ping)
 
 /** debug */
-router.all('/debug', debug())
+const Debug = require('./controller/debug.js')
+router.all('/debug', Debug.debug)
+
+/** ip */
+const Ip = require('./controller/ip.js')
+router.all('/ip', Ip.getIp)
 
 module.exports = router
