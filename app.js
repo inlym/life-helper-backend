@@ -3,7 +3,6 @@
 const Koa = require('koa')
 const bodyParser = require('koa-bodyparser')
 const launch = require('koa-to-serverless')
-const debug = require('koa-debug')
 const clientip = require('koa-clientip')
 const router = require('./app/router.js')
 const { logger } = require('./app/common.js')

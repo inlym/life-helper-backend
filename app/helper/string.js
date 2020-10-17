@@ -11,12 +11,17 @@ const uuid = require('uuid')
  */
 function generateRandomString(length) {
 	const buf = crypto.randomBytes(length)
-	const randomString = buf.toString('base64').replace(/\+/g, '').replace(/\//g, '').replace(/=/g, '')
+	const randomString = buf
+		.toString('base64')
+		.replace(/\+/gu, '')
+		.replace(/\//gu, '')
+		.replace(/[=]/gu, '')
 
 	if (randomString.length < length) {
 		return generateRandomString(length)
 	} else {
-		return randomString.slice(0, length)
+		const ZERO_INDEX = 0
+		return randomString.slice(ZERO_INDEX, length)
 	}
 }
 
@@ -24,7 +29,7 @@ function generateRandomString(length) {
  * 生成 Version 4 (Random) 版本的 UUID，去掉其中的短横线( - )后返回
  */
 function getUuid4WithoutHyphen() {
-	return uuid.v4().replace('-', '')
+	return uuid.v4().replace(/-/gu, '')
 }
 
 module.exports = {

@@ -1,68 +1,52 @@
 'use strict'
 
-/**
- * 用户账户相关
- */
-
-const { redis, mysql, logger } = require('../common.js')
+const { mysql } = require('../common.js')
 
 /**
- * 注册新用户，向 user 表中插入一条新的用户记录(在已经检测 openid 不存在的情况下)
- *
- * [ Mysql ]
- * table => user
+ *  通过 opeid 从用户表中查询用户 id。
+ *  如果用户存在则直接返回正整数用户 id，如果用户不存在则返回 0
  *
  * @param {string} openid
- * @returns {Promise} resolve(userId: number)
+ * @returns {number} userId
  */
-function registerNewWxUser(openid) {
-	logger.debug('[registerNewWxUser] >>>>>>>>  start  >>>>>>>>')
-	logger.debug('[registerNewWxUser] 参数 openid => ' + openid)
+async function getUserIdByOpenid(openid) {
+	if (!openid || typeof openid !== 'string') {
+		throw new Error('参数错误: openid为空或非字符串')
+	}
 
-	if (!openid || typeof openid !== 'string') throw new Error('参数错误: openid 为空或非字符串')
+	const NOT_EXIST_USER_ID = 0
 
-	return new Promise(async function (resolve, reject) {
-		const sql = 'INSERT INTO user (openid) VALUES (?);'
-		const value = [openid]
-
-		const { insertId } = await mysql.query(sql, value)
-		resolve(insertId)
-		logger.debug('[registerNewWxUser] <<<<<<<<   end   <<<<<<<<')
+	const result = await mysql.get('user', {
+		openid,
 	})
+
+	if (!result) {
+		return NOT_EXIST_USER_ID
+	} else {
+		return result.id
+	}
 }
 
 /**
- * 通过 openid, 从 user 表中获取用户 ID (如果 openid 不存在，则返回 0)
- *
- * [ Mysql ]
- * table => user
+ *  在判断 openid 不存在的情况下，创建新用户，并返回用户 id
+ *  - 调用该函数前，请先进行 openid 是否存在检测
  *
  * @param {string} openid
- * @returns {Promise} resolve(userId: number)
  */
-function getUserIdByOpenid(openid) {
-	logger.debug('[getUserIdByOpenid] >>>>>>>>  start  >>>>>>>>')
-	logger.debug('[getUserIdByOpenid] 参数 openid => ' + openid)
+async function createNewUser(openid) {
+	if (!openid || typeof openid !== 'string') {
+		throw new Error('参数错误: openid为空或非字符串')
+	}
 
-	if (!openid || typeof openid !== 'string') throw new Error('参数错误: openid 为空或非字符串')
+	const row = {
+		openid,
+	}
 
-	return new Promise(async function (resolve, reject) {
-		const sql = 'SELECT id FROM user where openid = ? LIMIT 1;'
-		const value = [openid]
-
-		const results = await mysql.query(sql, value)
-		logger.debug('[getUserIdByOpenid] 查询数据库 results => ' + JSON.stringify(results))
-
-		if (results.length === 0) {
-			resolve(0)
-		} else {
-			resolve(results[0]['id'])
-		}
-		logger.debug('[getUserIdByOpenid] <<<<<<<<   end   <<<<<<<<')
-	})
+	const result = await mysql.insert('user', row)
+	return result.insertId
 }
 
 module.exports = {
-	registerNewWxUser,
 	getUserIdByOpenid,
+	createNewUser,
 }

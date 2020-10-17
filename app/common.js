@@ -20,7 +20,9 @@ if (NODE_ENV === 'production') {
 } else if (NODE_ENV === 'development') {
 	Object.assign(CONFIG, PUBLIC_CONFIG, DEVELOPMENT_CONFIG)
 } else {
-	throw new Error('环境配置错误：未识别的 NODE_ENV')
+	throw new Error(
+		`环境配置错误：未识别的 NODE_ENV => ${process.env.NODE_ENV}`
+	)
 }
 
 /** MySQL 实例 */
