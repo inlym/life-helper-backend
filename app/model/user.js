@@ -60,7 +60,6 @@ const User = sequelize.define(
 		 *   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间'
 		 *   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE
 		 *    CURRENT_TIMESTAMP COMMENT '更新时间',
-		 *
 		 */
 	}
 )
