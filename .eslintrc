@@ -104,7 +104,7 @@
 		"array-element-newline": ["error", "consistent"],
 		"block-spacing": ["error", "always"],
 		"brace-style": ["error", "1tbs"],
-		"camelcase": "error",
+		"camelcase": "off",
 		"comma-spacing": [
 			"error",
 			{

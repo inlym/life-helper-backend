@@ -43,6 +43,9 @@ const sequelize = new Sequelize(database, user, password, {
 	host,
 	port,
 	dialect: 'mysql',
+	logging: (msg) => {
+		logger.debug(msg)
+	},
 })
 
 module.exports = {
