@@ -5,6 +5,7 @@
 const rds = require('ali-rds')
 const Redis = require('ioredis')
 const loghere = require('loghere')
+const Sequelize = require('sequelize')
 
 /** 环境：生产环境 => production, 开发环境 => development */
 const NODE_ENV = process.env.NODE_ENV && process.env.NODE_ENV.toLowerCase()
@@ -34,9 +35,20 @@ const redis = new Redis(CONFIG.REDIS_CONFIG)
 /** 日志 logger 实例 */
 const logger = loghere.getLogger()
 
+// 获取 MySQL 数据库配置信息
+const { host, port, user, password, database } = CONFIG.MYSQL_CONFIG
+
+/** ORM sequelize 实例 */
+const sequelize = new Sequelize(database, user, password, {
+	host,
+	port,
+	dialect: 'mysql',
+})
+
 module.exports = {
 	mysql,
 	redis,
 	logger,
+	sequelize,
 	CONFIG,
 }
