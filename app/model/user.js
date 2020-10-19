@@ -3,6 +3,13 @@
 const { DataTypes } = require('sequelize')
 const { sequelize } = require('../common.js')
 
+/**
+ *  创建时间(create_time)和更新时间(update_time)字段由数据库自动维护，不在应用层处理。
+ *  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间'
+ *  `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE
+ *  CURRENT_TIMESTAMP COMMENT '更新时间',
+ */
+
 const User = sequelize.define(
 	'User',
 
@@ -55,13 +62,6 @@ const User = sequelize.define(
 		createdAt: false,
 		updatedAt: false,
 	}
-
-	/**
-	 *  创建时间(create_time)和更新时间(update_time)字段由数据库自动维护，不在应用层处理。
-	 *  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间'
-	 *  `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE
-	 *  CURRENT_TIMESTAMP COMMENT '更新时间',
-	 */
 )
 
 module.exports = User
