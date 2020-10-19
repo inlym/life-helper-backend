@@ -1,5 +1,5 @@
 {
-	"name": "life-helper-backend-prod",
+	"name": "lhb-local",
 	"script": "app.js",
 	"cwd": "/Users/inlym/project/life-helper-backend",
 	"exec_mode": "cluster",

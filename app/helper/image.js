@@ -19,20 +19,23 @@ function recognizeImageType(buf) {
 		throw new Error('错误：输入的参数不是一个Buffer对象')
 	}
 
-	if (buf.indexOf(PNG_BUFFER) === 0) {
+	const BUFFER_START_INDEX = 0
+	if (buf.indexOf(PNG_BUFFER) === BUFFER_START_INDEX) {
 		return 'png'
-	} else if (buf.indexOf(JPG_BUFFER) === 0) {
+	} else if (buf.indexOf(JPG_BUFFER) === BUFFER_START_INDEX) {
 		return 'jpg'
-	} else if (buf.indexOf(GIF_BUFFER) === 0) {
+	} else if (buf.indexOf(GIF_BUFFER) === BUFFER_START_INDEX) {
 		return 'gif'
-	} else if (buf.indexOf(BMP_BUFFER) === 0) {
+	} else if (buf.indexOf(BMP_BUFFER) === BUFFER_START_INDEX) {
 		return 'bmp'
-	} else if (buf.indexOf(ICO_BUFFER) === 0) {
+	} else if (buf.indexOf(ICO_BUFFER) === BUFFER_START_INDEX) {
 		return 'ico'
-	} else if (buf.indexOf(TIFF_BUFFER_1) === 0 || buf.indexOf(TIFF_BUFFER_2) === 0) {
+	} else if (buf.indexOf(TIFF_BUFFER_1) === BUFFER_START_INDEX) {
+		return 'tiff'
+	} else if (buf.indexOf(TIFF_BUFFER_2) === BUFFER_START_INDEX) {
 		return 'tiff'
 	} else {
-		return undefined
+		return 'unknown'
 	}
 }
 
