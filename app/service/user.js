@@ -3,8 +3,8 @@
 const { mysql, logger } = require('../common.js')
 
 /**
- *  通过 opeid 从用户表中查询用户 id。
- *  如果用户存在则直接返回正整数用户 id，如果用户不存在则返回 0
+ *  通过 openid 从用户表中查询用户 id。
+ *  - 如果用户存在则直接返回正整数用户 id，如果用户不存在则返回 0
  *
  * @param {string} openid
  * @returns {number} userId

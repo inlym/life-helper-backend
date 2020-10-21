@@ -1,8 +1,5 @@
 'use strict'
 
-// 当前文件整合常用引用的内部模块，统一输出
-
-const rds = require('ali-rds')
 const Redis = require('ioredis')
 const loghere = require('loghere')
 const Sequelize = require('sequelize')
@@ -26,9 +23,6 @@ if (NODE_ENV === 'production') {
 	)
 }
 
-/** MySQL 实例 */
-const mysql = rds(CONFIG.MYSQL_CONFIG)
-
 /** Redis 实例 */
 const redis = new Redis(CONFIG.REDIS_CONFIG)
 
@@ -49,7 +43,6 @@ const sequelize = new Sequelize(database, user, password, {
 })
 
 module.exports = {
-	mysql,
 	redis,
 	logger,
 	sequelize,

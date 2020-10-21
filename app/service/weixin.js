@@ -6,10 +6,10 @@ const { CONFIG } = require('../common.js')
 const { MINIPROGRAM_DEVELOPER_ID } = CONFIG
 
 /**
- * 从微信服务器获取服务端用的 access_token, 用于我方服务端和微信服务端之间交互
+ *  从微信服务器获取服务端用的 access_token, 用于我方服务端和微信服务端之间交互
  *
- * 微信开发文档地址：
- * https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/access-token/auth.getAccessToken.html
+ *  微信开发文档地址：
+ *  https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/access-token/auth.getAccessToken.html
  *
  * @returns {Promise} {"access_token":"xxxxxx","expires_in":7200}
  *
@@ -40,10 +40,10 @@ async function fetchServerAccessToken() {
 }
 
 /**
- * 通过从小程序端获取的 code 去微信服务器换取 openid 等信息
+ *  通过从小程序端获取的 code 去微信服务器换取 openid 等信息
  *
- * 微信开发文档地址：
- * https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/login/auth.code2Session.html
+ *  微信开发文档地址：
+ *  https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/login/auth.code2Session.html
  *
  * @param {string} code 从小程序端获取的 code
  * @returns {Promise} {openid,session_key,unionid}

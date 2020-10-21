@@ -6,12 +6,12 @@ const { fetchSessionByCode } = require('./weixin.js')
 const { getUserIdByOpenid, createNewUser } = require('./user.js')
 
 /**
- * 为指定用户 id 生成 token 并存入 Redis。
- * 有效期 2 天
+ *  为指定用户 id 生成 token 并存入 Redis。
+ *  - 有效期 2 天
  *
- * 格式：
- * key   =>   token:${token}
- * value =>   ${userId}
+ *  格式：
+ *  - key    =>   token:${token}
+ *  - value  =>   ${userId}
  * @param {number} userId
  */
 async function createTokenForUserId(userId) {
