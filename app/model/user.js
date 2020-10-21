@@ -10,6 +10,7 @@ const { sequelize } = require('../common.js')
  *  CURRENT_TIMESTAMP COMMENT '更新时间',
  */
 
+/** 用户账户模型 */
 const User = sequelize.define(
 	'User',
 
