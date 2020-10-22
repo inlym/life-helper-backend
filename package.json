@@ -7,7 +7,7 @@
 		"doc": "doc"
 	},
 	"scripts": {
-		"test": "echo\"Error:notestspecified\"&&exit1",
+		"test": "cross-env NODE_ENV=DEVELOPMENT node ./local-test/ip.js",
 		"lint": "eslint .",
 		"reload": "pm2 reload all"
 	},
