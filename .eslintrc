@@ -155,7 +155,8 @@
 		"new-cap": [
 			"error",
 			{
-				"newIsCap": true
+				"newIsCap": true,
+				"properties": false
 			}
 		],
 		"new-parens": ["error", "always"],
