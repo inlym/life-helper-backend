@@ -43,6 +43,48 @@ const Login = sequelize.define(
 			allowNull: false,
 			comment: '用户的 IP 地址',
 		},
+
+		nation: {
+			type: DataTypes.STRING,
+			allowNull: false,
+			defaultValue: '',
+			comment: '国家',
+		},
+
+		province: {
+			type: DataTypes.STRING,
+			allowNull: false,
+			defaultValue: '',
+			comment: '省份',
+		},
+
+		city: {
+			type: DataTypes.STRING,
+			allowNull: false,
+			defaultValue: '',
+			comment: '城市',
+		},
+
+		district: {
+			type: DataTypes.STRING,
+			allowNull: false,
+			defaultValue: '',
+			comment: '区县',
+		},
+
+		longitude: {
+			type: DataTypes.DECIMAL(8, 5),
+			allowNull: false,
+			defaultValue: '',
+			comment: '经度',
+		},
+
+		latitude: {
+			type: DataTypes.DECIMAL(8, 5),
+			allowNull: false,
+			defaultValue: '',
+			comment: '经度',
+		},
 	},
 
 	{
