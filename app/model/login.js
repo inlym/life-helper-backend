@@ -8,6 +8,12 @@ const { sequelize } = require('../common.js')
  *  小程序端通过 code 换取服务端下发的 token 的行为
  */
 
+/** 经纬度数值的总长度 */
+const COORDINATE_LENGTH = 8
+
+/** 经纬度数值的小数部分长度 */
+const DECIMAL_LENGTH = 5
+
 /** 用户登录记录模型 */
 const Login = sequelize.define(
 	'Login',
@@ -73,14 +79,14 @@ const Login = sequelize.define(
 		},
 
 		longitude: {
-			type: DataTypes.DECIMAL(8, 5),
+			type: DataTypes.DECIMAL(COORDINATE_LENGTH, DECIMAL_LENGTH),
 			allowNull: false,
 			defaultValue: '',
 			comment: '经度',
 		},
 
 		latitude: {
-			type: DataTypes.DECIMAL(8, 5),
+			type: DataTypes.DECIMAL(COORDINATE_LENGTH, DECIMAL_LENGTH),
 			allowNull: false,
 			defaultValue: '',
 			comment: '经度',
