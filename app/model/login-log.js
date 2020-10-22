@@ -10,9 +10,9 @@ const { sequelize } = require('../common.js')
  *  当前数据表仅用于后续统计用途，无业务关联
  */
 
-/** 用户登录记录模型 */
-const Login = sequelize.define(
-	'Login',
+/** 用户登录日志模型 */
+const LoginLog = sequelize.define(
+	'LoginLog',
 
 	{
 		user_id: {
@@ -91,10 +91,10 @@ const Login = sequelize.define(
 	},
 
 	{
-		tableName: 'login',
+		tableName: 'login_log',
 		createdAt: false,
 		updatedAt: false,
 	}
 )
 
-module.exports = Login
+module.exports = LoginLog
