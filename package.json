@@ -22,10 +22,11 @@
 	},
 	"homepage": "https://github.com/inlym/life-helper-backend#readme",
 	"devDependencies": {
-		"ali-oss": "^6.9.1"
+		"cross-env": "^7.0.2"
 	},
 	"dependencies": {
 		"ali-rds": "^3.4.0",
+		"ali-oss": "^6.9.1",
 		"axios": "^0.19.2",
 		"ioredis": "^4.17.3",
 		"koa": "^2.13.0",
