@@ -11,7 +11,7 @@ const PageView = sequelize.define(
 		user_id: {
 			type: DataTypes.INTEGER,
 			allowNull: false,
-			comment: '访问用户的 id',
+			comment: '访问用户的 user_id',
 		},
 
 		page: {
@@ -24,6 +24,19 @@ const PageView = sequelize.define(
 			type: DataTypes.STRING,
 			allowNull: true,
 			comment: '小程序页面的查询参数，例如 id=1',
+		},
+
+		visit_time: {
+			type: DataTypes.DATE,
+			allowNull: false,
+			defaultValue: DataTypes.NOW,
+			comment: '访问时间',
+		},
+
+		ip: {
+			type: DataTypes.STRING,
+			allowNull: false,
+			comment: '访问者的 IP 地址',
 		},
 	},
 
