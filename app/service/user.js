@@ -1,9 +1,10 @@
 'use strict'
 
-const { mysql, logger } = require('../common.js')
+const { logger } = require('../common.js')
+const User = require('../model/user.js')
 
 /**
- *  通过 openid 从用户表中查询用户 id。
+ *  通过 openid 从用户表(user)中查询用户 id。
  *  - 如果用户存在则直接返回正整数用户 id，如果用户不存在则返回 0
  *
  * @param {string} openid
@@ -16,8 +17,10 @@ async function getUserIdByOpenid(openid) {
 
 	const NOT_EXIST_USER_ID = 0
 
-	const result = await mysql.get('user', {
-		openid,
+	const result = await User.findOne({
+		where: {
+			openid,
+		},
 	})
 
 	if (!result) {
@@ -44,9 +47,9 @@ async function createNewUser(openid) {
 		openid,
 	}
 
-	const result = await mysql.insert('user', row)
-	logger.debug(`userId => ${result.insertId}`)
-	return result.insertId
+	const result = await User.create(row)
+	logger.debug(`userId => ${result.id}`)
+	return result.id
 }
 
 module.exports = {
