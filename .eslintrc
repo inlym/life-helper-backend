@@ -2,11 +2,12 @@
 	"env": {
 		"node": true,
 		"commonjs": true,
-		"es6": true
+		"es6": true,
+		"mocha": true
 	},
 	"extends": "eslint:recommended",
 	"parserOptions": {
-		"ecmaVersion": 12
+		"ecmaVersion": 2019
 	},
 	"rules": {
 		"no-await-in-loop": "warn",
@@ -22,6 +23,7 @@
 		"no-alert": "error",
 		"no-caller": "error",
 		"no-case-declarations": "error",
+		"no-console": "off",
 		"no-div-regex": "error",
 		"no-else-return": "off",
 		"no-empty-function": "error",
@@ -70,7 +72,7 @@
 		"prefer-named-capture-group": "error",
 		"prefer-promise-reject-errors": "error",
 		"radix": "error",
-		"require-await": "error",
+		"require-await": "off",
 		"require-unicode-regexp": "error",
 		"yoda": ["error", "never"],
 
@@ -159,7 +161,6 @@
 				"properties": false
 			}
 		],
-		"new-parens": ["error", "always"],
 		"newline-per-chained-call": "error",
 		"no-array-constructor": "error",
 		"no-bitwise": "error",

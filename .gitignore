@@ -106,23 +106,12 @@ dist
 
 
 # 配置文件（配置文件格式通过同名 .demo 文件对外展示）
-src/config/appcode.js
-src/config/config.development.js
-src/config/config.production.js
-src/config/config.global.js
-src/config/config.default.js
-
-app/config/appcode.js
-app/config/config.development.js
-app/config/config.production.js
-app/config/config.global.js
-app/config/config.default.js
-app/config/config.public.js
+config/
 
 
 # 内部测试用例
 local-test/
-test/
+
 
 # macOS 附加的文件
 .DS_Store
@@ -130,3 +119,9 @@ app/.DS_Store
 
 # 其他文件
 package-lock.json
+
+# 运行时文件夹
+run/
+
+# sequelize 的数据库配置信息
+database/config.json

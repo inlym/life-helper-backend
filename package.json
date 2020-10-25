@@ -6,10 +6,20 @@
 	"directories": {
 		"doc": "doc"
 	},
+	"egg": {
+		"declarations": true
+	},
 	"scripts": {
-		"test": "cross-env NODE_ENV=DEVELOPMENT node ./local-test/ip.js",
+		"start": "egg-scripts start --daemon --title=life-helper-backend",
+		"stop": "egg-scripts stop --title=life-helper-backend",
+		"dev": "egg-bin dev",
+		"debug": "egg-bin debug",
+		"test": "npm run lint -- --fix && npm run test-local",
+		"test-local": "egg-bin test",
+		"cov": "egg-bin cov",
 		"lint": "eslint .",
-		"reload": "pm2 reload all"
+		"ci": "npm run lint && npm run cov",
+		"autod": "autod"
 	},
 	"repository": {
 		"type": "git",
@@ -22,25 +32,24 @@
 	},
 	"homepage": "https://github.com/inlym/life-helper-backend#readme",
 	"devDependencies": {
-		"cross-env": "^7.0.2"
+		"autod": "^3.0.1",
+		"autod-egg": "^1.1.0",
+		"cross-env": "^7.0.2",
+		"egg-bin": "^4.11.0",
+		"egg-ci": "^1.11.0",
+		"egg-mock": "^3.21.0",
+		"eslint": "^5.13.0",
+		"eslint-config-egg": "^7.1.0",
+		"sequelize-cli": "^6.2.0"
 	},
 	"dependencies": {
-		"ali-rds": "^3.4.0",
-		"ali-oss": "^6.9.1",
 		"axios": "^0.19.2",
-		"ioredis": "^4.17.3",
-		"koa": "^2.13.0",
-		"koa-bodyparser": "^4.3.0",
-		"koa-clientip": "^1.1.1",
-		"koa-debug": "^1.2.0",
-		"koa-router": "^9.1.0",
-		"koa-to-serverless": "^1.0.3",
-		"log4js": "^6.3.0",
-		"loghere": "^1.0.1",
-		"mysql": "^2.18.1",
+		"egg": "^2.15.1",
+		"egg-mysql": "^3.0.0",
+		"egg-redis": "^2.4.0",
+		"egg-scripts": "^2.11.0",
+		"egg-sequelize": "^6.0.0",
 		"mysql2": "^2.2.5",
-		"require-all": "^3.0.0",
-		"sequelize": "^6.3.5",
-		"uuid": "^8.2.0"
+		"only": "0.0.2"
 	}
 }
