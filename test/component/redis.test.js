@@ -1,6 +1,6 @@
 'use strict'
 
-const { app, mock, assert } = require('egg-mock/bootstrap')
+const { app, assert } = require('egg-mock/bootstrap')
 
 describe('redis 连接测试', () => {
 	it('redis ping, return pong', async () => {
