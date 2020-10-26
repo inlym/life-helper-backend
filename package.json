@@ -10,10 +10,11 @@
 		"declarations": true
 	},
 	"scripts": {
-		"start": "egg-scripts start --daemon --env=prod --title=life-helper-backend-prod",
-		"stop": "egg-scripts stop --title=life-helper-backend-prod",
+		"start": "egg-scripts start --daemon --env=prod --title=lh-prod",
+		"stop": "egg-scripts stop --title=lh-prod",
 		"reload": "npm run stop && npm run start",
 		"dev": "egg-bin dev",
+		"prodev": "EGG_SERVER_ENV=prod egg-bin dev",
 		"debug": "egg-bin debug",
 		"test": "npm run lint -- --fix && npm run test-local",
 		"test-local": "egg-bin test",
@@ -51,6 +52,7 @@
 		"egg-redis": "^2.4.0",
 		"egg-scripts": "^2.11.0",
 		"egg-sequelize": "^6.0.0",
+		"egg-validate": "^2.0.2",
 		"mysql2": "^2.2.5",
 		"only": "0.0.2"
 	}

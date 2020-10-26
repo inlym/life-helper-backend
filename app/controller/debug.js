@@ -31,12 +31,22 @@ class DebugController extends Controller {
 		ctx.body = only(ctx.request, fields)
 	}
 
+	async redirect() {
+		const { ctx } = this
+		ctx.redirect('http://inlym.com')
+	}
+
 	async seq() {
 		const { ctx, app } = this
 		const res = await app.model.User.findAll({
 			attributes: ['id', 'tip'],
 		})
 		ctx.body = res
+	}
+
+	async temp() {
+		const { ctx } = this
+		ctx.body = 'hello'
 	}
 }
 
