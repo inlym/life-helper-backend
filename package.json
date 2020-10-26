@@ -10,8 +10,9 @@
 		"declarations": true
 	},
 	"scripts": {
-		"start": "egg-scripts start --daemon --title=life-helper-backend",
-		"stop": "egg-scripts stop --title=life-helper-backend",
+		"start": "egg-scripts start --daemon --env=prod --title=life-helper-backend-prod",
+		"stop": "egg-scripts stop --title=life-helper-backend-prod",
+		"reload": "npm run stop && npm run start",
 		"dev": "egg-bin dev",
 		"debug": "egg-bin debug",
 		"test": "npm run lint -- --fix && npm run test-local",
@@ -45,6 +46,7 @@
 	"dependencies": {
 		"axios": "^0.19.2",
 		"egg": "^2.15.1",
+		"egg-alinode": "^2.0.1",
 		"egg-mysql": "^3.0.0",
 		"egg-redis": "^2.4.0",
 		"egg-scripts": "^2.11.0",
