@@ -3,8 +3,13 @@
 const { Controller } = require('egg')
 
 class PingController extends Controller {
+	constructor(ctx) {
+		super(ctx)
+		this.cusName = ctx.get('User-Agent')
+	}
+
 	async index() {
-		this.ctx.body = 'pong'
+		this.ctx.body = this.cusName
 	}
 
 	async redis() {
