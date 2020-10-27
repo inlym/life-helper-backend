@@ -14,15 +14,7 @@ module.exports = (app) => {
 		ctx.logger.error(`[app on error] error => ${err}`)
 	})
 
-	app.on('request', (ctx) => {
-		if (ctx.path !== '/ping') {
-			ctx.logger.info(`新的请求 => ${ctx.querystring}`)
-		}
-	})
+	app.on('request', (ctx) => {})
 
-	app.on('response', (ctx) => {
-		if (ctx.path !== '/ping') {
-			ctx.logger.info(`响应返回 => ${JSON.stringify(ctx.querystring)}`)
-		}
-	})
+	app.on('response', (ctx) => {})
 }

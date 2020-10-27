@@ -5,11 +5,13 @@
 		"es6": true,
 		"mocha": true
 	},
-	"extends": "eslint:recommended",
+	"extends": ["eslint:recommended", "plugin:prettier/recommended"],
 	"parserOptions": {
 		"ecmaVersion": 2019
 	},
+	"plugins": ["prettier"],
 	"rules": {
+		"prettier/prettier": "error",
 		"no-await-in-loop": "warn",
 		"accessor-pairs": "error",
 		"array-callback-return": "error",
