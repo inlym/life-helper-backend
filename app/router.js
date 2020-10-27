@@ -7,4 +7,6 @@ module.exports = (app) => {
 	router.get('/ping/redis', controller.ping.redis)
 
 	router.all('/debug', controller.debug.index)
+
+	router.get('/ip', controller.ip.index)
 }

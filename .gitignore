@@ -111,6 +111,7 @@ config/
 
 # 内部测试用例
 local-test/
+test/temp
 
 
 # macOS 附加的文件
