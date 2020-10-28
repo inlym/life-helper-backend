@@ -8,6 +8,7 @@ module.exports = (app) => {
 	router.get('/ping/mysql', controller.ping.mysql)
 
 	router.all('/debug', controller.debug.index)
+	router.get('/debug/logger', controller.debug.logger)
 
 	router.get('/ip', controller.ip.index)
 }
