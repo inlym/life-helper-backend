@@ -3,17 +3,21 @@
 const { Controller } = require('egg')
 
 class PingController extends Controller {
-	constructor(ctx) {
-		super(ctx)
-		this.cusName = ctx.get('User-Agent')
-	}
-
 	async index() {
-		this.ctx.body = this.cusName
+		this.ctx.body = 'pong'
 	}
 
 	async redis() {
 		this.ctx.body = await this.app.redis.incr('system:ping_count')
+	}
+
+	async mysql() {
+		const [results, metadata] = await this.app.model.query(
+			'SELECT 1+1 as sum;'
+		)
+
+		// 返回结果应为 2
+		this.ctx.body = results[0]['sum']
 	}
 }
 

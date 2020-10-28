@@ -5,6 +5,7 @@ module.exports = (app) => {
 
 	router.get('/ping', controller.ping.index)
 	router.get('/ping/redis', controller.ping.redis)
+	router.get('/ping/mysql', controller.ping.mysql)
 
 	router.all('/debug', controller.debug.index)
 
