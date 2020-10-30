@@ -131,3 +131,4 @@ database/config.json
 .travis.yml
 appveyor.yml
 .github/workflows/nodejs.yml
+jsconfig.json

@@ -9,6 +9,8 @@ module.exports = (app) => {
 
 	router.all('/debug', controller.debug.index)
 	router.get('/debug/logger', controller.debug.logger)
+	router.get('/debug/env', controller.debug.env)
+	router.get('/debug/os', controller.debug.os)
 
 	router.get('/ip', controller.ip.index)
 }
