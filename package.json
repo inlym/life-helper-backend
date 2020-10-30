@@ -43,6 +43,9 @@
 		"egg-mock": "^3.21.0",
 		"eslint": "^5.13.0",
 		"eslint-config-egg": "^7.1.0",
+		"eslint-plugin-prettier": "^3.1.4",
+		"prettier": "^2.1.2",
+		"eslint-config-prettier": "^6.15.0",
 		"sequelize-cli": "^6.2.0"
 	},
 	"dependencies": {
