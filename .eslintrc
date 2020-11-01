@@ -193,7 +193,7 @@
 		"no-underscore-dangle": "off",
 		"no-whitespace-before-property": "error",
 		"object-curly-spacing": ["error", "always"],
-		"operator-linebreak": ["error", "before"],
+		"operator-linebreak": "off",
 		"quote-props": ["error", "as-needed"],
 		"quotes": ["error", "single"],
 		"semi": ["error", "never"],
