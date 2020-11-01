@@ -13,4 +13,6 @@ module.exports = (app) => {
 	router.get('/debug/os', controller.debug.os)
 
 	router.get('/ip', controller.ip.index)
+
+	router.redirect('/favicon.ico', '/public/favicon.ico', 302)
 }

@@ -1,10 +1,10 @@
 'use strict'
 
-const { app, mock, assert } = require('egg-mock/bootstrap')
+const { app, assert } = require('egg-mock/bootstrap')
 
 describe('controller/ping.js', () => {
 	describe('[index]  GET /ping', () => {
-		it("状态码 => 200 - 响应body => 'pong'", () => {
+		it('状态码 => 200 - 响应body => pong', () => {
 			return app.httpRequest().get('/ping').expect(200).expect('pong')
 		})
 	})

@@ -2,7 +2,7 @@
 
 const { app, assert } = require('egg-mock/bootstrap')
 
-describe('sequelize 连接测试', () => {
+describe('egg-sequelize', () => {
 	it('aaaaaaaaaa', async () => {
 		console.info(app.sequelize)
 		const res = await app.model.query('select database() as db;')
