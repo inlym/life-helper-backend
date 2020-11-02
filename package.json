@@ -52,6 +52,7 @@
 		"axios": "^0.19.2",
 		"egg": "^2.15.1",
 		"egg-alinode": "^2.0.1",
+		"egg-aliyun-tablestore": "^1.0.0",
 		"egg-mysql": "^3.0.0",
 		"egg-redis": "^2.4.0",
 		"egg-scripts": "^2.11.0",
