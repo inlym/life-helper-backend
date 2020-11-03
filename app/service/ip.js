@@ -15,21 +15,21 @@ class IpService extends Service {
 	 */
 	async getLocation(ip) {
 		const { app } = this
-		const { ALIYUN_MARKET_API_APPCODE_IPLOCATION } = app.config
+		const { APPCODE_IPLOCATION } = app.config
+		const { axios } = app
 
-		const url = 'https://ips.market.alicloudapi.com/iplocaltion'
-		const options = {
-			dataType: 'json',
+		const request = {
+			url: 'https://ips.market.alicloudapi.com/iplocaltion',
 			method: 'GET',
-			data: {
-				ip,
+			params: {
+				ip: ip,
 			},
 			headers: {
-				Authorization: `APPCODE ${ALIYUN_MARKET_API_APPCODE_IPLOCATION}`,
+				Authorization: `APPCODE ${APPCODE_IPLOCATION}`,
 			},
 		}
 
-		const response = await app.curl(url, options)
+		const response = await axios(request)
 
 		const SUCCESS_STATUS = 200
 		const SUCCESS_CODE = 100
