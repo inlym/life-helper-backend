@@ -86,8 +86,7 @@
 		"no-undef-init": "error",
 		"no-undefined": "error",
 		"no-use-before-define": "error",
-
-		"callback-return": "error",
+		"callback-return": "off",
 		"global-require": "error",
 		"handle-callback-err": "error",
 		"no-buffer-constructor": "error",
