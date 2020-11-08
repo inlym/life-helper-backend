@@ -12,9 +12,7 @@ class PingController extends Controller {
 	}
 
 	async mysql() {
-		const [results, metadata] = await this.app.model.query(
-			'SELECT 1+1 as sum;'
-		)
+		const [results] = await this.app.model.query('SELECT 1+1 as sum;')
 
 		// 返回结果应为 2
 		this.ctx.body = results[0]['sum']
