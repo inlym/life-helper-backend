@@ -39,7 +39,7 @@
 
 下图是本项目的服务端架构：
 
-![](https://img.inlym.com/80c022ee5b87404aaedb352e3416eb50.png)
+![服务端架构图](https://img.inlym.com/f4e09df7d8534331a978c6b08b66ab42.png)
 
 
 ### 单元测试
