@@ -5,8 +5,6 @@ const only = require('only')
 
 class DebugController extends Controller {
   async index() {
-    const { ctx } = this
-
     const requestFields = [
       'headers',
       'url',
@@ -31,41 +29,44 @@ class DebugController extends Controller {
       'params',
     ]
 
-    ctx.body = only(ctx.request, requestFields)
+    this.ctx.body = only(this.ctx.request, requestFields)
   }
 
   async logger() {
-    const { ctx, app } = this
-    ctx.logger.debug('这是 ctx.logger.debug 日志')
-    ctx.logger.info('这是 ctx.logger.info 日志')
-    ctx.logger.warn('这是 ctx.logger.warn 日志')
-    ctx.logger.error('这是 ctx.logger.error 日志')
+    this.ctx.logger.debug('这是 ctx.logger.debug 日志')
+    this.ctx.logger.info('这是 ctx.logger.info 日志')
+    this.ctx.logger.warn('这是 ctx.logger.warn 日志')
+    this.ctx.logger.error('这是 ctx.logger.error 日志')
 
-    app.logger.debug('这是 app.logger.debug 日志')
-    app.logger.info('这是 app.logger.info 日志')
-    app.logger.warn('这是 app.logger.warn 日志')
-    app.logger.error('这是 app.logger.error 日志')
+    this.app.logger.debug('这是 app.logger.debug 日志')
+    this.app.logger.info('这是 app.logger.info 日志')
+    this.app.logger.warn('这是 app.logger.warn 日志')
+    this.app.logger.error('这是 app.logger.error 日志')
 
-    ctx.body = 'ok'
+    this.ctx.body = 'ok'
   }
 
   env() {
-    const { ctx, app } = this
     const envFields = ['NODE_ENV', 'EGG_SERVER_ENV']
-    ctx.body = {
+    this.ctx.body = {
       'process.env': only(process.env, envFields),
-      'app.config.env': app.config.env,
+      'app.config.env': this.app.config.env,
     }
   }
 
   os() {
-    const { ctx, app } = this
-    ctx.body = {
+    this.ctx.body = {
       node_version: process.version,
       pid: process.pid,
       ppid: process.ppid,
       platform: process.platform,
-      listen_port: app.config.cluster.listen.port,
+      listen_port: this.app.config.cluster.listen.port,
+    }
+  }
+
+  ip() {
+    this.ctx.body = {
+      ip: this.ctx.ip,
     }
   }
 }
