@@ -1,7 +1,7 @@
 'use strict'
 
 module.exports = {
-	sayHi() {
-		return 'hello'
-	},
+  sayHi() {
+    return 'hello'
+  },
 }
