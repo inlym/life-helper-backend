@@ -3,6 +3,7 @@
 module.exports = (app) => {
   const { STRING, TINYINT } = app.Sequelize
 
+  /** 用户账户模型 */
   const User = app.model.define(
     'User',
 

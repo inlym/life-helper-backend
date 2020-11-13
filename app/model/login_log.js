@@ -1,7 +1,7 @@
 'use strict'
 
 module.exports = (app) => {
-  const { DataTypes } = app.Sequelize
+  const { STRING, INTEGER, DATE, NOW } = app.Sequelize
 
   /**
    *  本模型的登录指：
@@ -16,59 +16,59 @@ module.exports = (app) => {
 
     {
       user_id: {
-        type: DataTypes.INTEGER,
+        type: INTEGER,
         allowNull: false,
         comment: '登录用户的 user_id',
       },
 
       login_time: {
-        type: DataTypes.DATE,
+        type: DATE,
         allowNull: false,
-        defaultValue: DataTypes.NOW,
+        defaultValue: NOW,
         comment: '登录时间',
       },
 
       code: {
-        type: DataTypes.STRING,
+        type: STRING,
         allowNull: false,
         comment: '小程序端拿到的 code',
       },
 
       token: {
-        type: DataTypes.STRING,
+        type: STRING,
         allowNull: false,
         comment: '服务端返回的 token',
       },
 
       ip: {
-        type: DataTypes.STRING,
+        type: STRING,
         allowNull: false,
         comment: '用户的 IP 地址',
       },
 
       nation: {
-        type: DataTypes.STRING,
+        type: STRING,
         allowNull: false,
         defaultValue: '',
         comment: '国家',
       },
 
       province: {
-        type: DataTypes.STRING,
+        type: STRING,
         allowNull: false,
         defaultValue: '',
         comment: '省份',
       },
 
       city: {
-        type: DataTypes.STRING,
+        type: STRING,
         allowNull: false,
         defaultValue: '',
         comment: '城市',
       },
 
       district: {
-        type: DataTypes.STRING,
+        type: STRING,
         allowNull: false,
         defaultValue: '',
         comment: '区县',
@@ -76,14 +76,14 @@ module.exports = (app) => {
 
       // 考虑到后期兼容性，使用字符串存储经纬度，使用时转换成浮点数
       longitude: {
-        type: DataTypes.STRING,
+        type: STRING,
         allowNull: false,
         defaultValue: '',
         comment: '经度',
       },
 
       latitude: {
-        type: DataTypes.STRING,
+        type: STRING,
         allowNull: false,
         defaultValue: '',
         comment: '纬度',
