@@ -20,6 +20,7 @@ class MpService extends Service {
     const res = await this.ctx.curl(url, {
       dataType: 'json',
     })
+    this.ctx.logger.debug(`code => ${code} , session => ${JSON.stringify(res.data)}`)
     return res.data
   }
 
@@ -43,6 +44,7 @@ class MpService extends Service {
     const res = await this.ctx.curl(url, {
       dataType: 'json',
     })
+    this.ctx.logger.debug(`access_token => ${res.data.access_token}`)
     return res.data
   }
 }
