@@ -37,4 +37,7 @@ module.exports = (app) => {
 
   /** 查看客户端的 IPv4 地址 */
   router.get('/debug/ip', controller.debug.ip)
+
+  /** 微信登录 */
+  router.get('/login', controller.login.wxLogin)
 }

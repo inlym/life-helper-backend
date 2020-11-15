@@ -2,6 +2,9 @@
 
 const { Service } = require('egg')
 
+/** 当返回用户ID为 0 时，表示该用户不存在 */
+const NOT_EXIST_USER_ID = 0
+
 class UserService extends Service {
   /**
    * 通过 openid 从用户（user）表中查找用户 ID，如果未找到则返回 0
@@ -12,8 +15,6 @@ class UserService extends Service {
     if (!openid || typeof openid !== 'string') {
       throw new Error('参数错误: openid为空或非字符串')
     }
-
-    const NOT_EXIST_USER_ID = 0
 
     const result = await this.app.model.User.findOne({
       where: {
