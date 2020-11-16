@@ -27,7 +27,7 @@ module.exports = (app) => {
   router.all('/debug', controller.debug.index)
 
   /** 调试框架的日志功能，调用接口打印日志 */
-  router.get('/debug/logger', controller.debug.logger)
+  router.get('/debug/logger', controller.debug.debugLogger)
 
   /** 查看应用的环境变量：NODE_ENV, EGG_SERVER_ENV, app.config.env */
   router.get('/debug/env', controller.debug.env)
@@ -37,6 +37,9 @@ module.exports = (app) => {
 
   /** 查看客户端的 IPv4 地址 */
   router.get('/debug/ip', controller.debug.ip)
+
+  /** 临时测试使用 */
+  router.post('/test', controller.debug.test)
 
   /** 微信登录 */
   router.get('/login', controller.login.wxLogin)

@@ -32,7 +32,7 @@ class DebugController extends Controller {
     this.ctx.body = only(this.ctx.request, requestFields)
   }
 
-  async logger() {
+  async debugLogger() {
     this.ctx.logger.debug('这是 ctx.logger.debug 日志')
     this.ctx.logger.info('这是 ctx.logger.info 日志')
     this.ctx.logger.warn('这是 ctx.logger.warn 日志')
@@ -42,6 +42,11 @@ class DebugController extends Controller {
     this.app.logger.info('这是 app.logger.info 日志')
     this.app.logger.warn('这是 app.logger.warn 日志')
     this.app.logger.error('这是 app.logger.error 日志')
+
+    this.logger.debug('这是 logger.debug 日志')
+    this.logger.info('这是 logger.info 日志')
+    this.logger.warn('这是 logger.warn 日志')
+    this.logger.error('这是 logger.error 日志')
 
     this.ctx.body = 'ok'
   }
@@ -68,6 +73,10 @@ class DebugController extends Controller {
     this.ctx.body = {
       ip: this.ctx.ip,
     }
+  }
+
+  test() {
+    console.log('----  temp test  ----')
   }
 }
 
