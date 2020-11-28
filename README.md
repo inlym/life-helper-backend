@@ -12,7 +12,7 @@
 
 ![](https://img.inlym.com/f2f2cd585f4b4185bdd6d4715c361aed.jpg)
 
-小程序部分项目源码地址：https://github.com/inlym/life-helper-miniprogram
+小程序部分源码地址：https://github.com/inlym/life-helper-miniprogram
 
 
 
