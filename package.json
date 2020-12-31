@@ -62,6 +62,7 @@
     "egg-scripts": "^2.11.0",
     "egg-sequelize": "^6.0.0",
     "egg-validate": "^2.0.2",
+    "egg-view-nunjucks": "^2.2.0",
     "mysql2": "^2.2.5",
     "only": "0.0.2",
     "spawn-object": "^1.1.0"
