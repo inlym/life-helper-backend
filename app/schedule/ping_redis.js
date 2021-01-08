@@ -2,7 +2,7 @@
 
 module.exports = {
   schedule: {
-    interval: '1ms',
+    interval: '1s',
     type: 'worker',
   },
 
