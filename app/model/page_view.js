@@ -42,8 +42,11 @@ module.exports = (app) => {
 
     {
       tableName: 'page_view',
-      createdAt: false,
-      updatedAt: false,
+      createdAt: 'create_time',
+      updatedAt: 'update_time',
+      paranoid: true,
+      timestamps: true,
+      deletedAt: 'delete_time',
     }
   )
 

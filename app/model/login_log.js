@@ -92,8 +92,11 @@ module.exports = (app) => {
 
     {
       tableName: 'login_log',
-      createdAt: false,
-      updatedAt: false,
+      createdAt: 'create_time',
+      updatedAt: 'update_time',
+      paranoid: true,
+      timestamps: true,
+      deletedAt: 'delete_time',
     }
   )
 
