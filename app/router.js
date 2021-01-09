@@ -46,4 +46,7 @@ module.exports = (app) => {
 
   /** 微信登录 */
   router.get('/login', controller.login.wxLogin)
+
+  /** 查看系统运行状态 */
+  router.get('/status', controller.system.status)
 }
