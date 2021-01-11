@@ -37,6 +37,8 @@ class SystemService extends Service {
       baseDir,
     } = this.app.config
 
+    const { EGG_SERVER_ENV, NODE_ENV } = process.env
+
     /** 监听端口 */
     const listenPort = this.app.config.cluster.listen.port
 
@@ -51,6 +53,8 @@ class SystemService extends Service {
       env,
       baseDir,
       listenPort,
+      EGG_SERVER_ENV,
+      NODE_ENV,
     }
   }
 }
