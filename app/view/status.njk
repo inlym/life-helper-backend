@@ -2,35 +2,65 @@
 <html lang="zh-CN">
 
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>系统运行状态</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>系统运行状态</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
 <body>
-    <div class="container">
-        <h1>系统运行状态</h1>
-        <table class="table table-hover">
-            <thead>
-                <tr>
-                    <th>项目</th>
-                    <th>内容</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>应用名称</td>
-                    <td>life-helper</td>
-                </tr>
-                <tr>
-                    <td>运行环境</td>
-                    <td>production</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+  <div class="container">
+    <h1>系统运行状态</h1>
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>项目</th>
+          <th>内容</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>应用名称</td>
+          <td>{{name}}</td>
+        </tr>
+        <tr>
+          <td>运行环境</td>
+          <td>{{env}}</td>
+        </tr>
+        <tr>
+          <td>Node.js 版本</td>
+          <td>{{version}}</td>
+        </tr>
+        <tr>
+          <td>操作系统的 CPU 架构</td>
+          <td>{{arch}}</td>
+        </tr>
+        <tr>
+          <td>操作系统平台</td>
+          <td>{{platform}}</td>
+        </tr>
+        <tr>
+          <td>进程 PID</td>
+          <td>{{pid}}</td>
+        </tr>
+        <tr>
+          <td>父进程 PID</td>
+          <td>{{ppid}}</td>
+        </tr>
+        <tr>
+          <td>调试器端口</td>
+          <td>{{debugPort}}</td>
+        </tr>
+        <tr>
+          <td>应用代码目录</td>
+          <td>{{baseDir}}</td>
+        </tr>
+
+
+      </tbody>
+    </table>
+  </div>
 
 
 </body>
