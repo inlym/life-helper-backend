@@ -42,6 +42,9 @@ class SystemService extends Service {
     /** 监听端口 */
     const listenPort = this.app.config.cluster.listen.port
 
+    const launchTime = await this.app.redis.get('system:launch_time')
+    const launchCounter = await this.app.redis.get('system:launch_counter')
+
     return {
       arch,
       debugPort,
@@ -55,6 +58,8 @@ class SystemService extends Service {
       listenPort,
       EGG_SERVER_ENV,
       NODE_ENV,
+      launchTime,
+      launchCounter,
     }
   }
 }
