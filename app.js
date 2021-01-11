@@ -1,7 +1,7 @@
 'use strict'
 
 module.exports = (app) => {
-  app.redis.set('system:launch_time', app.dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'))
+  app.redis.set('system:launch_time', app.now())
   app.redis.incr('system:launch_counter')
 
   app.once('server', () => {

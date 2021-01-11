@@ -45,6 +45,9 @@ class SystemService extends Service {
     const launchTime = await this.app.redis.get('system:launch_time')
     const launchCounter = await this.app.redis.get('system:launch_counter')
 
+    /** 当前时间 */
+    const currentTime = this.app.now()
+
     return {
       arch,
       debugPort,
@@ -60,6 +63,7 @@ class SystemService extends Service {
       NODE_ENV,
       launchTime,
       launchCounter,
+      currentTime,
     }
   }
 }

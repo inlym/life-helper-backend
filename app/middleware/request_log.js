@@ -3,7 +3,7 @@
 const sp = require('spawn-object')
 
 /**
- *  记录请求和响应日志
+ * 记录请求和响应日志
  * @param {object} options 中间件配置
  */
 
@@ -22,7 +22,7 @@ module.exports = () => {
     const { status } = ctx.response
     const response_headers = ctx.response.headers
     const response_body = ctx.response.body
-    const create_time = app.dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss')
+    const create_time = app.now()
     console.log('create_time: ', create_time)
 
     const obj = {
