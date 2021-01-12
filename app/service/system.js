@@ -1,6 +1,7 @@
 'use strict'
 
 const { Service } = require('egg')
+const os = require('os')
 
 /** 系统相关服务 */
 class SystemService extends Service {
@@ -48,6 +49,9 @@ class SystemService extends Service {
     /** 当前时间 */
     const currentTime = this.app.now()
 
+    /** 主机名 */
+    const hostname = os.hostname()
+
     return {
       arch,
       debugPort,
@@ -64,6 +68,7 @@ class SystemService extends Service {
       launchTime,
       launchCounter,
       currentTime,
+      hostname,
     }
   }
 }
