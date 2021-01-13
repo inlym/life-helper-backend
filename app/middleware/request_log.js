@@ -23,7 +23,6 @@ module.exports = () => {
     const response_headers = ctx.response.headers
     const response_body = ctx.response.body
     const create_time = app.now()
-    console.log('create_time: ', create_time)
 
     const obj = {
       url,
