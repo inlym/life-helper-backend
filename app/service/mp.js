@@ -47,6 +47,15 @@ class MpService extends Service {
     this.ctx.logger.debug(`access_token => ${res.data.access_token}`)
     return res.data
   }
+
+  /**
+   * 更新 Redis 中的微信调用凭证（access_token）
+   * [Redis] `system:mp_token` => `${access_token}`
+   */
+  async updateAccessToken() {
+    const { access_token } = await this.getAccessToken()
+    this.app.redis.set('system:mp_token', access_token)
+  }
 }
 
 module.exports = MpService
