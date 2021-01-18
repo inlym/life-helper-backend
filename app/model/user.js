@@ -53,11 +53,6 @@ module.exports = (app) => {
 
     {
       tableName: 'user',
-      createdAt: 'create_time',
-      updatedAt: 'update_time',
-      paranoid: true,
-      timestamps: true,
-      deletedAt: 'delete_time',
     }
   )
 
