@@ -78,14 +78,6 @@ class DebugController extends Controller {
   test() {
     console.log('----  temp test  ----')
   }
-
-  async tpl() {
-    const dataList = {
-      v: 'Hi inlym',
-    }
-
-    await this.ctx.render('./main.tpl', dataList)
-  }
 }
 
 module.exports = DebugController
