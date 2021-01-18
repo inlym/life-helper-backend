@@ -33,13 +33,6 @@ class UserService extends Service {
 
   /**
    * 在判断 openid 不存在的情况下，创建新用户，并返回用户 id
-   *  - 调用该函数前，请先进行 openid 是否存在检测
-   *
-   * @param {string} openid
-   */
-
-  /**
-   * 创建新用户
    * @param {!string} openid
    * @returns {Promise<number>} 新用户的 userId
    */
