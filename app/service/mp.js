@@ -50,11 +50,12 @@ class MpService extends Service {
 
   /**
    * 更新 Redis 中的微信调用凭证（access_token）
+   *
    * [Redis] `system:mp_token` => `${access_token}`
    */
   async updateAccessToken() {
-    const { access_token } = await this.getAccessToken()
-    this.app.redis.set('system:mp_token', access_token)
+    const { access_token, expires_in } = await this.getAccessToken()
+    this.app.redis.set('system:mp_token', access_token, 'EX', expires_in)
   }
 }
 
