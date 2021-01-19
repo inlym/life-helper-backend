@@ -1,16 +1,9 @@
 'use strict'
 
 module.exports = (app) => {
+  // 记录本次启动时间
   app.redis.set('system:last_launch_time', app.now())
+
+  // 记录启动次数 +1
   app.redis.incr('system:launch_counter')
-
-  app.once('server', () => {
-    app.logger.info(`[APP ON SERVER] EGG_SERVER_ENV => ${process.env.EGG_SERVER_ENV}`)
-    app.logger.info(`[APP ON SERVER] NODE_ENV => ${process.env.NODE_ENV}`)
-    app.logger.info(`[APP ON SERVER] app.config.env => ${app.config.env}`)
-  })
-
-  app.on('error', (err, ctx) => {
-    ctx.logger.error(`[app on error] error => ${err}`)
-  })
 }
