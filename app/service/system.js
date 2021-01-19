@@ -43,7 +43,7 @@ class SystemService extends Service {
     /** 监听端口 */
     const listenPort = this.app.config.cluster.listen.port
 
-    const launchTime = await this.app.redis.get('system:launch_time')
+    const launchTime = await this.app.redis.get('system:last_launch_time')
     const launchCounter = await this.app.redis.get('system:launch_counter')
 
     /** 当前时间 */
