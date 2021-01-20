@@ -12,7 +12,7 @@ class Api3rdService extends Service {
    * @example 返回内容样例:
    * {"en_short":"CN","en_name":"China","nation":"中国","province":"浙江省","city":"杭州市","district":"西湖区","adcode":330106,"lat":30.25961,"lng":120.13026}
    */
-  async getLocation(ip) {
+  async fetchLocation(ip) {
     const { app } = this
     const { APPCODE_IPLOCATION } = app.config
     const { axios } = app
@@ -39,6 +39,37 @@ class Api3rdService extends Service {
       return Promise.reject(new Error(`第三方错误：错误原因：${response.data.message}`))
     } else {
       return response.data.result
+    }
+  }
+
+  async fetchExpressInfo(expressNumber) {
+    if (!expressNumber || typeof expressNumber !== 'string') {
+      throw new Error('参数错误: 快递单号(expressNumber)为空或非字符串')
+    }
+
+    const { app } = this
+    const { APPCODE_EXPRESS } = app.config
+    const { axios } = app
+
+    const request = {
+      url: 'http://wuliu.market.alicloudapi.com/kdi',
+      method: 'GET',
+      params: {
+        no: expressNumber,
+      },
+      headers: {
+        Authorization: `APPCODE ${APPCODE_EXPRESS}`,
+      },
+    }
+
+    const response = await axios(request)
+
+    const SUCCESS_STATUS = '0'
+    if (response.data.status === SUCCESS_STATUS) {
+      return response.data.result
+    } else {
+      app.logger.error(JSON.stringify(response.data))
+      return Promise.reject(new Error(response.data.msg))
     }
   }
 }
