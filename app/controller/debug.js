@@ -33,16 +33,28 @@ class DebugController extends Controller {
   }
 
   async debugLogger() {
+    /**
+     * 格式演示：
+     * 2020-01-01 01:02:03,840 INFO 9999 [123/1.1.1.1/AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA/2ms GET /debug/logger] 这是 ctx.logger.debug 日志
+     */
     this.ctx.logger.debug('这是 ctx.logger.debug 日志')
     this.ctx.logger.info('这是 ctx.logger.info 日志')
     this.ctx.logger.warn('这是 ctx.logger.warn 日志')
     this.ctx.logger.error('这是 ctx.logger.error 日志')
 
+    /**
+     * 格式演示：
+     * 2020-01-01 01:02:03,840 INFO 9999 这是 app.logger.debug 日志
+     */
     this.app.logger.debug('这是 app.logger.debug 日志')
     this.app.logger.info('这是 app.logger.info 日志')
     this.app.logger.warn('这是 app.logger.warn 日志')
     this.app.logger.error('这是 app.logger.error 日志')
 
+    /**
+     * 格式演示：
+     * 2020-01-01 01:02:03,840 INFO 9999 [123/1.1.1.1/AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA/2ms GET /debug/logger] [controller.debug] 这是 logger.debug 日志
+     */
     this.logger.debug('这是 logger.debug 日志')
     this.logger.info('这是 logger.info 日志')
     this.logger.warn('这是 logger.warn 日志')
