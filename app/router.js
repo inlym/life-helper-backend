@@ -38,6 +38,9 @@ module.exports = (app) => {
   /** 查看客户端的 IPv4 地址 */
   router.get('/debug/ip', controller.debug.ip)
 
+  /** 控制器内抛出错误 */
+  router.get('/debug/error', controller.debug.err)
+
   /** 临时测试使用 */
   router.post('/test', controller.debug.test)
 

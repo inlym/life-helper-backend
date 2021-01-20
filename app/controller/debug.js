@@ -90,6 +90,10 @@ class DebugController extends Controller {
   test() {
     console.log('----  temp test  ----')
   }
+
+  err() {
+    throw new Error('自定义错误')
+  }
 }
 
 module.exports = DebugController
