@@ -11,6 +11,7 @@ module.exports = (app) => {
       openid: {
         type: STRING,
         allowNull: false,
+        unique: true,
         comment: '微信小程序openid，用于唯一区分小程序用户',
       },
 
