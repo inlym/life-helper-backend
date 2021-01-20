@@ -26,7 +26,7 @@ class AuthService extends Service {
     const token = this.app.kit.randomString(TOKEN_LENGTH)
 
     /** debug 日志 */
-    this.ctx.logger.debug(`userId => ${userId}, token => ${token}`)
+    this.ctx.logger.debug(`为指定 userId 生成 token: userId => ${userId} , token => ${token}`)
 
     /** 将 token 存入 Redis 中 */
     await this.app.redis.set(`token:${token}`, userId, 'EX', EXPIRATION)
