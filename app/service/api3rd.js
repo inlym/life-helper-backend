@@ -2,16 +2,15 @@
 
 const { Service } = require('egg')
 
-class IpService extends Service {
+class Api3rdService extends Service {
   /**
-   *  从第三方接口通过 IP 地址换取定位信息（地区、经纬度等）
+   * 通过 IP 换取定位信息
    *
-   *  第三方API来源于阿里云云市场
-   *  https://market.aliyun.com/products/57002002/cmapi00035184.html
-   *
-   *  返回数据格式演示：
-   *  {"en_short":"CN","en_name":"China","nation":"中国","province":"浙江省","city":"杭州市","district":"西湖区","adcode":330106,"lat":30.25961,"lng":120.13026}
+   * @see https://market.aliyun.com/products/57002002/cmapi00035184.html
    * @param {string} ip
+   * @returns {Promise<object>}
+   * @example 返回内容样例:
+   * {"en_short":"CN","en_name":"China","nation":"中国","province":"浙江省","city":"杭州市","district":"西湖区","adcode":330106,"lat":30.25961,"lng":120.13026}
    */
   async getLocation(ip) {
     const { app } = this
@@ -44,4 +43,4 @@ class IpService extends Service {
   }
 }
 
-module.exports = IpService
+module.exports = Api3rdService
