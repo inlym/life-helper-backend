@@ -23,12 +23,12 @@ class UserService extends Service {
     })
 
     if (!result) {
-      this.logger.info(
+      this.logger.debug(
         `通过openid从用户表中查询获取userId > openid => ${openid} 在用户表中未找到，为新用户`
       )
       return NOT_EXIST_USER_ID
     } else {
-      this.logger.info(
+      this.logger.debug(
         `通过openid从用户表中查询获取userId openid => ${openid} / userId => ${result.id}`
       )
       return result.id
@@ -50,7 +50,7 @@ class UserService extends Service {
     }
 
     const result = await this.app.model.User.create(row)
-    this.logger.info(`已创建新用户 - userId => ${result.id}`)
+    this.logger.info(`创建新用户 - userId => ${result.id}`)
     return result.id
   }
 }
