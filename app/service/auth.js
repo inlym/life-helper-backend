@@ -25,8 +25,7 @@ class AuthService extends Service {
     /** 生成随机字符串的 token */
     const token = this.app.kit.randomString(TOKEN_LENGTH)
 
-    /** debug 日志 */
-    this.ctx.logger.debug(`为指定 userId 生成 token: userId => ${userId} , token => ${token}`)
+    this.logger.info(`为指定userId生成token - userId => ${userId} / token => ${token}`)
 
     /** 将 token 存入 Redis 中 */
     await this.app.redis.set(`token:${token}`, userId, 'EX', EXPIRATION)
@@ -65,8 +64,12 @@ class AuthService extends Service {
     // 通过 code 换取 openid
     const openid = await this.service.mp.code2Openid(code)
 
+    this.logger.info(`通过 code 换取 openid， code => ${code} , openid => ${openid}`)
+
     // 获取 userId
     let userId = await this.service.user.getUserIdByOpenid(openid)
+
+    this.logger.info(`通过 openid 换取 userId, openid => ${openid} , userId => ${userId}`)
 
     if (userId === NOT_EXIST_USER_ID) {
       userId = await this.service.user.createNewUser(openid)

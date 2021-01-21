@@ -32,7 +32,7 @@ class Api3rdService extends Service {
     const { APPCODE_IPLOCATION } = app.config
     const { axios } = app
 
-    const request = {
+    const requestOptions = {
       url: 'https://ips.market.alicloudapi.com/iplocaltion',
       method: 'GET',
       params: {
@@ -43,16 +43,17 @@ class Api3rdService extends Service {
       },
     }
 
-    const response = await axios(request)
+    const response = await axios(requestOptions)
 
     const SUCCESS_STATUS = 200
     const SUCCESS_CODE = 100
 
     if (response.status !== SUCCESS_STATUS) {
-      return Promise.reject(new Error('第三方错误：HTTP状态码非200'))
+      throw new Error('第三方错误：HTTP状态码非200')
     } else if (response.data.code !== SUCCESS_CODE) {
-      return Promise.reject(new Error(`第三方错误：错误原因：${response.data.message}`))
+      throw new Error(`第三方错误：错误原因：${response.data.message}`)
     } else {
+      this.logger.info(`IP归属地查询 - 返回数据为 ${JSON.stringify(response.data)}`)
       return response.data.result
     }
   }
@@ -66,7 +67,7 @@ class Api3rdService extends Service {
     const { APPCODE_EXPRESS } = app.config
     const { axios } = app
 
-    const request = {
+    const requestOptions = {
       url: 'http://wuliu.market.alicloudapi.com/kdi',
       method: 'GET',
       params: {
@@ -77,14 +78,14 @@ class Api3rdService extends Service {
       },
     }
 
-    const response = await axios(request)
+    const response = await axios(requestOptions)
 
     const SUCCESS_STATUS = '0'
     if (response.data.status === SUCCESS_STATUS) {
+      this.logger.info(`快递信息查询 - 返回数据为 ${JSON.stringify(response.data)}`)
       return response.data.result
     } else {
-      app.logger.error(JSON.stringify(response.data))
-      return Promise.reject(new Error(response.data.msg))
+      throw new Error(response.data.msg)
     }
   }
 }
