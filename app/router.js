@@ -41,6 +41,9 @@ module.exports = (app) => {
   /** 控制器内抛出错误 */
   router.get('/debug/error', controller.debug.err)
 
+  /** 获取当前服务器时间 */
+  router.get('/debug/now', controller.debug.now)
+
   /** 临时测试使用 */
   router.post('/test', controller.debug.test)
 

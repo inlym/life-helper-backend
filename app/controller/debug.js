@@ -87,6 +87,12 @@ class DebugController extends Controller {
     }
   }
 
+  now() {
+    this.ctx.body = {
+      now: this.app.now(),
+    }
+  }
+
   test() {
     console.log('----  temp test  ----')
   }
