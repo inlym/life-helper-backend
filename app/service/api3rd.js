@@ -15,6 +15,19 @@ class Api3rdService extends Service {
    * @property {string} adcode 邮政编码
    * @property {number} lat 纬度
    * @property {number} lng 经度
+   *
+   * @example
+   * {
+   *   en_short: 'CN',
+   *   en_name: 'China',
+   *   nation: '中国',
+   *   province: '浙江省',
+   *   city: '杭州市',
+   *   district: '西湖区',
+   *   adcode: 330106,
+   *   lat: 30.12345,
+   *   lng: 120.12345,
+   * }
    */
 
   /**
@@ -22,10 +35,6 @@ class Api3rdService extends Service {
    * @see https://market.aliyun.com/products/57002002/cmapi00035184.html
    * @param {!string} ip
    * @returns {Promise<LocationInfo>}
-   * @example
-   * ```js
-   * {"en_short":"CN","en_name":"China","nation":"中国","province":"浙江省","city":"杭州市","district":"西湖区","adcode":330106,"lat":30.25961,"lng":120.13026}
-   * ```
    */
   async fetchLocation(ip) {
     const { app } = this
@@ -58,6 +67,12 @@ class Api3rdService extends Service {
     }
   }
 
+  /**
+   * 查询快递物流信息
+   * @see https://market.aliyun.com/products/57126001/cmapi021863.html
+   * @param {!string} expressNumber 快递单号
+   * @returns {Promise<ExpressInfo>}
+   */
   async fetchExpressInfo(expressNumber) {
     if (!expressNumber || typeof expressNumber !== 'string') {
       throw new Error('参数错误: 快递单号(expressNumber)为空或非字符串')
@@ -80,13 +95,9 @@ class Api3rdService extends Service {
 
     const response = await axios(requestOptions)
 
-    const SUCCESS_STATUS = '0'
-    if (response.data.status === SUCCESS_STATUS) {
-      this.logger.info(`快递信息查询 - 返回数据为 ${JSON.stringify(response.data)}`)
-      return response.data.result
-    } else {
-      throw new Error(response.data.msg)
-    }
+    this.logger.info(`快递信息查询 - 返回数据为 ${JSON.stringify(response.data)}`)
+
+    return response.data
   }
 }
 
