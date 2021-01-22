@@ -41,12 +41,23 @@ module.exports = (app) => {
     },
 
     {
+      /** 数据表的表名 */
       tableName: 'page_view',
-      createdAt: 'create_time',
-      updatedAt: 'update_time',
-      paranoid: true,
+
+      /** 启用时间戳 */
       timestamps: true,
+
+      /** 使用软删字段标记删除 */
+      paranoid: true,
+
+      /** 软删时间字段名 */
       deletedAt: 'delete_time',
+
+      /** 创建时间字段名 */
+      createdAt: 'create_time',
+
+      /** 更新时间字段名 */
+      updatedAt: 'update_time',
     }
   )
 
