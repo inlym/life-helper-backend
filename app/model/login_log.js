@@ -34,6 +34,12 @@ module.exports = (app) => {
         comment: '小程序端拿到的 code',
       },
 
+      openid: {
+        type: STRING,
+        allowNull: false,
+        comment: '通过 code 从微信服务器换取的 openid',
+      },
+
       token: {
         type: STRING,
         allowNull: false,
