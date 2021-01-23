@@ -1,5 +1,6 @@
 {
   "env": {
+    "browser": true,
     "node": true,
     "commonjs": true,
     "es6": true,
@@ -87,7 +88,7 @@
     "no-undefined": "error",
     "no-use-before-define": "error",
     "callback-return": "off",
-    "global-require": "error",
+    "global-require": "warn",
     "handle-callback-err": "error",
     "no-buffer-constructor": "error",
     "no-mixed-requires": [
