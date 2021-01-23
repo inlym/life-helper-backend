@@ -8,6 +8,13 @@ module.exports = (app) => {
     'PageView',
 
     {
+      id: {
+        type: INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+        comment: '主键 id',
+      },
+
       user_id: {
         type: INTEGER,
         allowNull: false,

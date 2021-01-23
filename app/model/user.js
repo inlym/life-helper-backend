@@ -1,13 +1,20 @@
 'use strict'
 
 module.exports = (app) => {
-  const { STRING, TINYINT } = app.Sequelize
+  const { STRING, TINYINT, INTEGER } = app.Sequelize
 
   /** 用户账户模型 */
   const User = app.model.define(
     'User',
 
     {
+      id: {
+        type: INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+        comment: '主键 id，其他地方出现的 user_id 和 userId 均表示该值',
+      },
+
       openid: {
         type: STRING,
         allowNull: false,
