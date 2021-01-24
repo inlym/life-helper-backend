@@ -68,6 +68,27 @@ class Api3rdService extends Service {
   }
 
   /**
+   * fetchLocation(ip) 函数的带缓存升级版
+   * [Redis] `ip2location:${ip}` => `JSON.stringify(location)`
+   */
+  async getLocation(ip) {
+    const { logger, app } = this
+
+    /** 缓存时长：10天 */
+    const EXP_TIME = 3600 * 24 * 10
+
+    const res = await app.redis.get(`ip2location:${ip}`)
+    if (res) {
+      logger.debug(`从 Redis 中获取 ip：${ip} 的位置信息 => ${res}`)
+      return JSON.parse(res)
+    } else {
+      const location = await this.fetchLocation(ip)
+      app.redis.set(`ip2location:${ip}`, JSON.stringify(location), 'EX', EXP_TIME)
+      return location
+    }
+  }
+
+  /**
    * 查询快递物流信息
    * @see https://market.aliyun.com/products/57126001/cmapi021863.html
    * @param {!string} expressNumber 快递单号
