@@ -132,3 +132,4 @@ database/config.json
 appveyor.yml
 .github/workflows/nodejs.yml
 jsconfig.json
+.github/
