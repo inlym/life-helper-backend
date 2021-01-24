@@ -53,6 +53,25 @@ class UserService extends Service {
     this.logger.info(`创建新用户 - userId => ${result.id}`)
     return result.id
   }
+
+  /**
+   * 通过小程序传递的 code 获取 userId
+   * 1. 包含了创建新用户操作
+   * @param {!string} code
+   * @returns {Promise<number>}
+   */
+  async getUserIdByCode(code) {
+    const { service } = this
+
+    const openid = await service.mp.code2Openid(code)
+    let userId = await this.getUserIdByOpenid(openid)
+
+    if (userId === NOT_EXIST_USER_ID) {
+      userId = await this.createNewUser(openid)
+    }
+
+    return userId
+  }
 }
 
 module.exports = UserService

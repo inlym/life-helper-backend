@@ -57,20 +57,8 @@ class AuthService extends Service {
    * @returns {Promise<string>}
    */
   async wxLogin(code) {
-    if (!code || typeof code !== 'string') {
-      throw new Error('参数错误: code为空或非字符串')
-    }
-
-    // 通过 code 换取 openid
-    const openid = await this.service.mp.code2Openid(code)
-
-    // 通过 openid 换取 userId
-    let userId = await this.service.user.getUserIdByOpenid(openid)
-
-    if (userId === NOT_EXIST_USER_ID) {
-      userId = await this.service.user.createNewUser(openid)
-    }
-
+    const { service } = this
+    const userId = await service.user.getUserIdByCode(code)
     const token = await this.createToken(userId)
     return token
   }

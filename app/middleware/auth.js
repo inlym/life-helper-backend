@@ -1,5 +1,11 @@
 'use strict'
 
+/** 用于传递 token 的请求头字段 */
+const HEADER_TOKEN_FIELD = 'X-Token'
+
+/** 用于传递微信小程序获取的 code 的请求头字段 */
+const HEADER_CODE_FIELD = 'X-CODE'
+
 /**
  * 鉴权中间件
  *
@@ -10,19 +16,34 @@
  */
 module.exports = () => {
   return async function getUserId(ctx, next) {
-    const token = ctx.get('X-Token') || ctx.query.token
+    const token = ctx.get(HEADER_TOKEN_FIELD) || ctx.query.token
+    const code = ctx.get(HEADER_CODE_FIELD)
 
-    if (!token) {
-      ctx.userId = 0
-      ctx.logger.info('从请求头获取 token 为空')
-    } else {
+    if (token) {
       ctx.userId = await ctx.service.auth.getUserIdByToken(token)
-      ctx.logger.info(`从请求头获取 token 为 ${token} ，转换的 userId 为 ${ctx.userId}`)
+
+      if (ctx.userId) {
+        // 存在有效 token（即可以获取 userId），鉴权通过
+        ctx.logger.debug(`从 token 获取 userId - token => ${token} / userId => ${ctx.userId}`)
+        await next()
+        return
+      }
+    }
+
+    if (code) {
+      ctx.userId = await ctx.service.user.getUserIdByCode(code)
+
+      if (ctx.userId) {
+        // 从 code 中能够转换出有效 userId，鉴权通过
+        ctx.logger.debug(`从 code 获取 userId - code => ${code} / userId => ${ctx.userId}`)
+        await next()
+        return
+      }
     }
 
     const { noAuthPath } = ctx.app.config
-    if (ctx.userId === 0 && !noAuthPath.includes(ctx.path)) {
-      // 无有效 token 且非免鉴权接口
+
+    if (!noAuthPath.includes(ctx.path)) {
       ctx.status = 401
       ctx.body = 'Need Auth'
     } else {
