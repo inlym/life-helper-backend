@@ -8,7 +8,7 @@ const HEADER_CODE_FIELD = 'X-Lh-Code'
 
 /**
  * 鉴权中间件
- * 1. 存在 token 则直接从 token 中获取 userId（快），否则从 code（必传） 中换取 userId（慢）。
+ * 1. 存在 token 则直接从 token 中获取 userId（快），否则从 code 中换取 userId（慢）。
  */
 module.exports = () => {
   return async function getUserId(ctx, next) {
@@ -31,7 +31,7 @@ module.exports = () => {
       }
     }
 
-    // 如果 token 异常（无或错误），则从 code 中获取 userId
+    // 如果 token 为空，则从 code 中获取 userId
     if (code) {
       ctx.userId = await ctx.service.user.getUserIdByCode(code)
 
@@ -46,7 +46,7 @@ module.exports = () => {
     /** 无需鉴权即可访问的接口列表 */
     const { noAuthPath } = ctx.app.config
 
-    // 一般到不了这一步，因为 code 为必传项。为后续兼容考虑，提供这一步。无法获取 userId 时，有下述处理
+    // 一般到不了这一步，除非提供了 token 但是是无效的，因此无法获取 userId 时，有下述处理
     if (!noAuthPath.includes(ctx.path)) {
       // 当前接口需要鉴权，则返回 401 错误码，客户端再次执行登录
       ctx.status = 401
