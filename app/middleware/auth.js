@@ -1,52 +1,58 @@
 'use strict'
 
 /** 用于传递 token 的请求头字段 */
-const HEADER_TOKEN_FIELD = 'X-Token'
+const HEADER_TOKEN_FIELD = 'X-Lh-Token'
 
-/** 用于传递微信小程序获取的 code 的请求头字段 */
-const HEADER_CODE_FIELD = 'X-CODE'
+/** 用于传递微信小程序 wx.login 获取的 code 的请求头字段 */
+const HEADER_CODE_FIELD = 'X-Lh-Code'
 
 /**
  * 鉴权中间件
- *
- * - 从请求头的 X-Token 字段获取 token，转换成 userId，并赋值到 ctx.userId （token 为空或异常均返回 0）
- * - 预留可从 query 中获取 token，仅用于临时调试使用
- * - 对需要鉴权而未传递正确 token 的请求返回 401 状态码（http status code）
- * - 免鉴权的路径配置在 config.default.js 的 noAuthPath 列表中
+ * 1. 存在 token 则直接从 token 中获取 userId（快），否则从 code（必传） 中换取 userId（慢）。
  */
 module.exports = () => {
   return async function getUserId(ctx, next) {
+    /** 从请求头中获取 token，为方便调试，兼容从 query 中获取 */
     const token = ctx.get(HEADER_TOKEN_FIELD) || ctx.query.token
+
+    /** 从请求头中获取 wx.login 获取的 code */
     const code = ctx.get(HEADER_CODE_FIELD)
 
+    // token 存在，则直接从 token 中获取 userId
     if (token) {
       ctx.userId = await ctx.service.auth.getUserIdByToken(token)
 
+      // userId 为 0 表示 token 异常，非 0 则表示 token 正常（下同）
       if (ctx.userId) {
         // 存在有效 token（即可以获取 userId），鉴权通过
-        ctx.logger.debug(`从 token 获取 userId - token => ${token} / userId => ${ctx.userId}`)
+        ctx.logger.debug(`从 token 获取 userId -> token => ${token} / userId => ${ctx.userId}`)
         await next()
         return
       }
     }
 
+    // 如果 token 异常（无或错误），则从 code 中获取 userId
     if (code) {
       ctx.userId = await ctx.service.user.getUserIdByCode(code)
 
       if (ctx.userId) {
         // 从 code 中能够转换出有效 userId，鉴权通过
-        ctx.logger.debug(`从 code 获取 userId - code => ${code} / userId => ${ctx.userId}`)
+        ctx.logger.debug(`从 code 获取 userId -> code => ${code} / userId => ${ctx.userId}`)
         await next()
         return
       }
     }
 
+    /** 无需鉴权即可访问的接口列表 */
     const { noAuthPath } = ctx.app.config
 
+    // 一般到不了这一步，因为 code 为必传项。为后续兼容考虑，提供这一步。无法获取 userId 时，有下述处理
     if (!noAuthPath.includes(ctx.path)) {
+      // 当前接口需要鉴权，则返回 401 错误码，客户端再次执行登录
       ctx.status = 401
       ctx.body = 'Need Auth'
     } else {
+      // 当前接口无需鉴权，则直接到下一步
       await next()
     }
   }
