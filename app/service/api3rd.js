@@ -68,8 +68,8 @@ class Api3rdService extends Service {
   }
 
   /**
-   * fetchLocation(ip) 函数的带缓存升级版
-   * [Redis] `ip2location:${ip}` => `JSON.stringify(location)`
+   * fetchLocation(ip) 函数的带 Redis 缓存升级版
+   * [Redis] `ip#location:${ip}` => `JSON.stringify(location)`
    */
   async getLocation(ip) {
     const { logger, app } = this
@@ -77,15 +77,14 @@ class Api3rdService extends Service {
     /** 缓存时长：10天 */
     const EXPIRATION = 3600 * 24 * 10
 
-    const res = await app.redis.get(`ip2location:${ip}`)
+    const res = await app.redis.get(`ip#location:${ip}`)
     if (res) {
       logger.debug(`从 Redis 中获取 ip：${ip} 的位置信息 => ${res}`)
       return JSON.parse(res)
     } else {
       const location = await this.fetchLocation(ip)
 
-      /** [Redis][SET] */
-      app.redis.set(`ip2location:${ip}`, JSON.stringify(location), 'EX', EXPIRATION)
+      app.redis.set(`ip#location:${ip}`, JSON.stringify(location), 'EX', EXPIRATION)
       return location
     }
   }
