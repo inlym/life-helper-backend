@@ -25,7 +25,6 @@ module.exports = () => {
       // userId 为 0 表示 token 异常，非 0 则表示 token 正常（下同）
       if (ctx.userId) {
         // 存在有效 token（即可以获取 userId），鉴权通过
-        ctx.logger.debug(`从 token 获取 userId -> token => ${token} / userId => ${ctx.userId}`)
         await next()
         return
       }
@@ -37,7 +36,6 @@ module.exports = () => {
 
       if (ctx.userId) {
         // 从 code 中能够转换出有效 userId，鉴权通过
-        ctx.logger.debug(`从 code 获取 userId -> code => ${code} / userId => ${ctx.userId}`)
         await next()
         return
       }
