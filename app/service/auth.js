@@ -65,8 +65,15 @@ class AuthService extends Service {
    */
   async wxLogin(code) {
     const { service } = this
-    const userId = await service.user.getUserIdByCode(code)
+    const openid = await service.mp.code2Openid(code)
+    let userId = await service.user.getUserIdByOpenid(openid)
+    if (!userId) {
+      userId = await service.user.createNewUser(openid)
+    }
     const token = await this.createToken(userId)
+
+    service.record.loginInfo({ code, openid, userId, token })
+
     return token
   }
 }

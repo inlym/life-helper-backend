@@ -86,6 +86,13 @@ module.exports = (app) => {
         comment: '区县',
       },
 
+      adcode: {
+        type: STRING,
+        allowNull: false,
+        defaultValue: '',
+        comment: '邮政编码',
+      },
+
       // 考虑到后期兼容性，使用字符串存储经纬度，使用时转换成浮点数
       longitude: {
         type: STRING,
