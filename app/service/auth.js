@@ -12,9 +12,7 @@ class AuthService extends Service {
    * @returns {Promise<string>} 生成的 token
    */
   async createToken(userId) {
-    if (!userId || typeof userId !== 'number') {
-      throw new Error('参数错误: userId为空或非数字')
-    }
+    const { app, logger } = this
 
     /** token 的长度为 64 个英文字符 */
     const TOKEN_LENGTH = 64
@@ -23,12 +21,11 @@ class AuthService extends Service {
     const EXPIRATION = 3600 * 24 * 2
 
     /** 生成随机字符串的 token */
-    const token = this.app.kit.randomString(TOKEN_LENGTH)
+    const token = app.kit.randomString(TOKEN_LENGTH)
 
-    this.logger.debug(`为指定userId生成token - userId => ${userId} / token => ${token}`)
+    logger.debug(`为指定userId生成token -> userId => ${userId} / token => ${token}`)
 
-    /** 将 token 存入 Redis 中 */
-    await this.app.redis.set(`token:${token}`, userId, 'EX', EXPIRATION)
+    await app.redis.set(`token:${token}`, userId, 'EX', EXPIRATION)
 
     return token
   }
@@ -39,14 +36,14 @@ class AuthService extends Service {
    * @returns {Promise<number>}
    */
   async getUserIdByToken(token) {
-    if (!token || typeof token !== 'string') {
-      throw new Error('参数错误: token为空或非字符串')
-    }
+    const { app, logger } = this
 
-    const result = await this.app.redis.get(`token:${token}`)
+    const result = await app.redis.get(`token:${token}`)
     if (!result) {
+      logger.debug(`token[${token}] 未从 Redis 中查询到对应 userId`)
       return NOT_EXIST_USER_ID
     } else {
+      logger.debug(`token[${token}] 从 Redis 中查询到 userId => ${result}`)
       return parseInt(result, 10)
     }
   }

@@ -12,24 +12,22 @@ class UserService extends Service {
    * @returns {Promise<number>} userId
    */
   async getUserIdByOpenid(openid) {
-    if (!openid || typeof openid !== 'string') {
-      throw new Error('参数错误: openid为空或非字符串')
-    }
+    const { app, logger } = this
 
-    const result = await this.app.model.User.findOne({
+    const result = await app.model.User.findOne({
       where: {
         openid,
       },
     })
 
     if (!result) {
-      this.logger.debug(
-        `通过openid从用户表中查询获取userId > openid => ${openid} 在用户表中未找到，为新用户`
+      logger.debug(
+        `通过openid从用户表中查询获取userId -> openid => ${openid} 在用户表中未找到，为新用户`
       )
       return NOT_EXIST_USER_ID
     } else {
-      this.logger.debug(
-        `通过openid从用户表中查询获取userId openid => ${openid} / userId => ${result.id}`
+      logger.debug(
+        `通过openid从用户表中查询获取userId -> openid => ${openid} / userId => ${result.id}`
       )
       return result.id
     }
@@ -45,12 +43,14 @@ class UserService extends Service {
       throw new Error('参数错误: openid为空或非字符串')
     }
 
+    const { app, logger } = this
+
     const row = {
       openid,
     }
 
-    const result = await this.app.model.User.create(row)
-    this.logger.info(`创建新用户 - userId => ${result.id}`)
+    const result = await app.model.User.create(row)
+    logger.info(`创建新用户 - userId => ${result.id}`)
     return result.id
   }
 

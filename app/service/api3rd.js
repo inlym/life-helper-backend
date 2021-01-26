@@ -75,7 +75,7 @@ class Api3rdService extends Service {
     const { logger, app } = this
 
     /** 缓存时长：10天 */
-    const EXP_TIME = 3600 * 24 * 10
+    const EXPIRATION = 3600 * 24 * 10
 
     const res = await app.redis.get(`ip2location:${ip}`)
     if (res) {
@@ -83,7 +83,9 @@ class Api3rdService extends Service {
       return JSON.parse(res)
     } else {
       const location = await this.fetchLocation(ip)
-      app.redis.set(`ip2location:${ip}`, JSON.stringify(location), 'EX', EXP_TIME)
+
+      /** [Redis][SET] */
+      app.redis.set(`ip2location:${ip}`, JSON.stringify(location), 'EX', EXPIRATION)
       return location
     }
   }

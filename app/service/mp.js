@@ -21,7 +21,9 @@ class MpService extends Service {
       dataType: 'json',
     })
     this.logger.info(
-      `从微信服务器使用code换取session - code => ${code} / session => ${JSON.stringify(res.data)}`
+      `从微信服务器使用 code 换取 session -> code => ${code} / session => ${JSON.stringify(
+        res.data
+      )}`
     )
     return res.data
   }
@@ -47,14 +49,14 @@ class MpService extends Service {
       dataType: 'json',
     })
     this.logger.info(
-      `获取小程序全局唯一后台接口调用凭据 - access_token => ${res.data.access_token}`
+      `获取小程序全局唯一后台接口调用凭据 -> access_token => ${res.data.access_token}`
     )
     return res.data
   }
 
   /**
    * 更新 Redis 中的微信调用凭证（access_token）
-   * 1. 定时任务调用
+   * [schedule]
    *
    */
   async updateAccessToken() {
