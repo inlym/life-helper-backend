@@ -90,6 +90,72 @@ class Api3rdService extends Service {
   }
 
   /**
+   * @typedef WeatherCondition
+   * @type {object}
+   *
+   * @example
+   * {
+   * 		"city": {
+   * 			"cityId": 284873,
+   * 			"counname": "中国",
+   * 			"ianatimezone": "Asia/Shanghai",
+   * 			"name": "杭州市西湖区",
+   * 			"pname": "浙江省",
+   * 			"secondaryname": "杭州市",
+   * 			"timezone": "8"
+   * 		},
+   * 		"condition": {
+   * 			"condition": "多云",
+   * 			"conditionId": "8",
+   * 			"humidity": "77",
+   * 			"icon": "31",
+   * 			"pressure": "1024",
+   * 			"realFeel": "3",
+   * 			"sunRise": "2021-01-26 06:53:00",
+   * 			"sunSet": "2021-01-26 17:31:00",
+   * 			"temp": "8",
+   * 			"tips": "明天有雨，天气阴冷，穿暖和点吧！",
+   * 			"updatetime": "2021-01-26 19:15:08",
+   * 			"uvi": "1",
+   * 			"vis": "5464",
+   * 			"windDegrees": "0",
+   * 			"windDir": "北风",
+   * 			"windLevel": "4",
+   * 			"windSpeed": "6.4"
+   * 		}
+   * }
+   */
+
+  /**
+   * 根据经纬度获取天气实况
+   * @see https://market.aliyun.com/products/57096001/cmapi012364.html
+   * @param {number} longitude 经度
+   * @param {number} latitude 纬度
+   * @returns {Promise<WeatherCondition>}
+   */
+  async fetchWeatherCondition(longitude, latitude) {
+    const { app, logger } = this
+    const { APPCODE_MOJI } = app.config
+
+    const requestOptions = {
+      url: 'http://aliv8.data.moji.com/whapi/json/aliweather/condition',
+      method: 'POST',
+      headers: {
+        Authorization: `APPCODE ${APPCODE_MOJI}`,
+      },
+      data: `lat=${latitude}&lon=${longitude}&token=ff826c205f8f4a59701e64e9e64e01c4`,
+    }
+
+    const response = await app.axios(requestOptions)
+
+    if (!response.data.code) {
+      return response.data.data
+    } else {
+      logger.error(`请求第三方接口错误，错误原因：${response.data.msg}`)
+    }
+  }
+
+  /**
    * 查询快递物流信息
    * @see https://market.aliyun.com/products/57126001/cmapi021863.html
    * @param {!string} expressNumber 快递单号
