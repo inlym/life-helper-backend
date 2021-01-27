@@ -113,23 +113,23 @@ class Api3rdService extends Service {
    * 			"timezone": "8"
    * 		},
    * 		"condition": {
-   * 			"condition": "多云",
-   * 			"conditionId": "8",
-   * 			"humidity": "77",
-   * 			"icon": "31",
-   * 			"pressure": "1024",
-   * 			"realFeel": "3",
-   * 			"sunRise": "2021-01-26 06:53:00",
-   * 			"sunSet": "2021-01-26 17:31:00",
-   * 			"temp": "8",
-   * 			"tips": "明天有雨，天气阴冷，穿暖和点吧！",
-   * 			"updatetime": "2021-01-26 19:15:08",
-   * 			"uvi": "1",
-   * 			"vis": "5464",
-   * 			"windDegrees": "0",
-   * 			"windDir": "北风",
-   * 			"windLevel": "4",
-   * 			"windSpeed": "6.4"
+   * 			"condition": "多云",  // 实时天气
+   * 			"conditionId": "8",  // 实时天气id
+   * 			"humidity": "77",  // 湿度
+   * 			"icon": "31",  // 天气icon
+   * 			"pressure": "1024",  // 气压
+   * 			"realFeel": "3",  // 体感温度
+   * 			"sunRise": "2021-01-26 06:53:00",  // 日出时间
+   * 			"sunSet": "2021-01-26 17:31:00",  // 日落时间
+   * 			"temp": "8",  // 温度
+   * 			"tips": "明天有雨，天气阴冷，穿暖和点吧！",  // 一句话提示
+   * 			"updatetime": "2021-01-26 19:15:08",  // 发布时间
+   * 			"uvi": "1",  // 紫外线强度
+   * 			"vis": "5464",  // 能见度
+   * 			"windDegrees": "0",  // 风向角度
+   * 			"windDir": "北风",  // 风向
+   * 			"windLevel": "4",  // 风级
+   * 			"windSpeed": "6.4"  // 风速
    * 		}
    * }
    */
