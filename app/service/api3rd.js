@@ -63,7 +63,7 @@ class Api3rdService extends Service {
       throw new Error(`第三方错误：错误原因：${response.data.message}`)
     } else {
       logger.info(
-        `[Aliyun API Market] IP归属地查询，ip => ${ip} 对应位置信息 => ${JSON.stringify(
+        `[Aliyun API Market] IP归属地查询 -> ip => ${ip} 对应位置信息 => ${JSON.stringify(
           response.data.result
         )}}`
       )
@@ -87,7 +87,7 @@ class Api3rdService extends Service {
     const res = await app.redis.get(key)
 
     if (res) {
-      logger.debug(`[Redis] IP归属地查询，ip => ${ip} 对应位置信息 => ${res}`)
+      logger.debug(`[Redis] IP归属地查询 -> ip => ${ip} 对应位置信息 => ${res}`)
       return JSON.parse(res)
     } else {
       const location = await this.fetchLocation(ip)

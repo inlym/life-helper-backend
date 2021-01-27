@@ -21,14 +21,10 @@ class UserService extends Service {
     })
 
     if (!result) {
-      logger.debug(
-        `通过openid从用户表中查询获取userId -> openid => ${openid} 在用户表中未找到，为新用户`
-      )
+      logger.debug(`[Mysql][user] -> openid => ${openid} 对应用户不存在`)
       return NOT_EXIST_USER_ID
     } else {
-      logger.debug(
-        `通过openid从用户表中查询获取userId -> openid => ${openid} / userId => ${result.id}`
-      )
+      logger.debug(`[Mysql][user] -> openid => ${openid} / userId => ${result.id}`)
       return result.id
     }
   }
@@ -50,7 +46,7 @@ class UserService extends Service {
     }
 
     const result = await app.model.User.create(row)
-    logger.info(`创建新用户 - userId => ${result.id}`)
+    logger.info(`[Mysql][user] 创建新用户 -> userId => ${result.id}`)
     return result.id
   }
 
