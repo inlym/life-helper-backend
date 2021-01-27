@@ -37,7 +37,7 @@ class Api3rdService extends Service {
    * @returns {Promise<LocationInfo>}
    */
   async fetchLocation(ip) {
-    const { app } = this
+    const { app, logger } = this
     const { APPCODE_IPLOCATION } = app.config
     const { axios } = app
 
@@ -62,7 +62,11 @@ class Api3rdService extends Service {
     } else if (response.data.code !== SUCCESS_CODE) {
       throw new Error(`第三方错误：错误原因：${response.data.message}`)
     } else {
-      this.logger.info(`IP归属地查询 - 返回数据为 ${JSON.stringify(response.data)}`)
+      logger.info(
+        `[Aliyun API Market] IP归属地查询，ip => ${ip} 对应位置信息 => ${JSON.stringify(
+          response.data.result
+        )}}`
+      )
       return response.data.result
     }
   }
@@ -74,17 +78,21 @@ class Api3rdService extends Service {
   async getLocation(ip) {
     const { logger, app } = this
 
+    /** Redis 键名 */
+    const key = `ip#location:${ip}`
+
     /** 缓存时长：10天 */
     const EXPIRATION = 3600 * 24 * 10
 
-    const res = await app.redis.get(`ip#location:${ip}`)
+    const res = await app.redis.get(key)
+
     if (res) {
-      logger.debug(`从 Redis 中获取 ip：${ip} 的位置信息 => ${res}`)
+      logger.debug(`[Redis] IP归属地查询，ip => ${ip} 对应位置信息 => ${res}`)
       return JSON.parse(res)
     } else {
       const location = await this.fetchLocation(ip)
 
-      app.redis.set(`ip#location:${ip}`, JSON.stringify(location), 'EX', EXPIRATION)
+      app.redis.set(key, JSON.stringify(location), 'EX', EXPIRATION)
       return location
     }
   }
@@ -149,9 +157,40 @@ class Api3rdService extends Service {
     const response = await app.axios(requestOptions)
 
     if (!response.data.code) {
+      logger.info(
+        `[Aliyun API Market] 经度 => ${longitude} / 纬度 => ${latitude} 对应天气实况 -> ${JSON.stringify(
+          response.data.data
+        )}`
+      )
       return response.data.data
     } else {
       logger.error(`请求第三方接口错误，错误原因：${response.data.msg}`)
+    }
+  }
+
+  /**
+   * fetchWeatherCondition(longitude, latitude) 函数的带 Redis 缓存升级版
+   * [Redis]
+   */
+  async getWeatherCondition(longitude, latitude) {
+    const { logger, app } = this
+
+    /** 缓存时长：1小时 */
+    const EXPIRATION = 3600
+
+    /** Redis 键名 */
+    const key = `location#weather_condition:${longitude}/${latitude}`
+
+    const res = await app.redis.get(key)
+
+    if (res) {
+      logger.debug(`[Redis] 经度 => ${longitude} / 纬度 => ${latitude} 对应天气实况 -> ${res}`)
+      return JSON.parse(res)
+    } else {
+      const condition = await this.fetchWeatherCondition(longitude, latitude)
+      app.redis.set(key, JSON.stringify(condition), 'EX', EXPIRATION)
+
+      return condition
     }
   }
 
