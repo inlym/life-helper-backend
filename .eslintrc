@@ -56,7 +56,6 @@
     "no-new-func": "error",
     "no-new-wrappers": "error",
     "no-octal-escape": "error",
-    "no-param-reassign": "error",
     "no-proto": "error",
     "no-restricted-properties": "error",
     "no-return-await": "off",

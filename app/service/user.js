@@ -72,6 +72,57 @@ class UserService extends Service {
 
     return userId
   }
+
+  /**
+   * 更新用户资料（从小程序授权获取的用户信息）
+   * @param {object} userInfo 用户资料
+   * @param {string} userInfo.avatarUrl 用户头像图片的 URL
+   * @param {string} userInfo.city 用户所在城市
+   * @param {string} userInfo.country 用户所在国家
+   * @param {number} userInfo.gender 用户性别：0-未知，1-男性，2-女性
+   * @param {string} userInfo.language 显示 country，province，city 所用的语言：'en'-英文，'zh_CN'-简体中文	，'zh_TW'-繁体中文
+   * @param {string} userInfo.nickName 用户昵称
+   * @param {string} userInfo.province 用户所在省份
+   */
+  async updateUserInfo(userInfo) {
+    const { ctx } = this
+
+    const { avatarUrl: avatar_url, city, country, gender, nickName: nickname, province } = userInfo
+
+    const result = await ctx.model.User.update(
+      {
+        avatar_url,
+        city,
+        country,
+        gender,
+        nickname,
+        province,
+      },
+      {
+        where: {
+          id: ctx.userId,
+        },
+      }
+    )
+
+    return result
+  }
+
+  /**
+   * 获取指定用户的个人信息（昵称、头像、性别）
+   * @param {?number} userId 用户 id
+   * @returns {Promise<{nickname:string;avatar_url:string;gender:number;}>}
+   */
+  async getUserInfo(userId) {
+    const { ctx } = this
+    userId = userId || ctx.userId
+
+    const result = await ctx.model.User.findByPk(userId, {
+      attributes: ['nickname', 'avatar_url', 'gender'],
+    })
+
+    return result
+  }
 }
 
 module.exports = UserService
