@@ -66,6 +66,24 @@ class WeatherController extends Controller {
     /** 气压 */
     response.airPressure = weatherCondition.condition.pressure
 
+    /** 湿度 */
+    response.humidity = weatherCondition.condition.humidity
+
+    /** 紫外线强度 */
+    response.ultraviolet = weatherCondition.condition.uvi
+
+    /** 能见度 */
+    response.visibility = weatherCondition.condition.vis
+
+    /** 风向 */
+    response.windDirection = weatherCondition.condition.windDir
+
+    /** 风力等级 */
+    response.windScale = weatherCondition.condition.windLevel
+
+    /** 风速 */
+    response.windSpeed = weatherCondition.condition.windSpeed
+
     /** 一句话提示 */
     response.tip = weatherCondition.condition.tips
 
