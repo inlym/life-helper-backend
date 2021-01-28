@@ -17,7 +17,7 @@ class WeatherController extends Controller {
    * longitude, latitude
    */
   async realtime() {
-    const { ctx, service, logger } = this
+    const { app, ctx, service, logger } = this
 
     /** 经度 */
     let longitude = ''
@@ -39,7 +39,43 @@ class WeatherController extends Controller {
     longitude = Number(longitude).toFixed(5)
     latitude = Number(latitude).toFixed(5)
 
-    ctx.body = await service.api3rd.getWeatherCondition(longitude, latitude)
+    // 获取天气实况
+    const weatherCondition = await service.api3rd.getWeatherCondition(longitude, latitude)
+
+    /** icon 图片地址前缀 */
+    const iconUrlPrefix = 'https://img.lh.inlym.com/weather_icon/'
+
+    /** 响应内容 */
+    const response = {}
+
+    /** 市区定位名称 */
+    response.location = weatherCondition.city.name
+
+    /** 实时天气情况 */
+    response.condition = weatherCondition.condition.condition
+
+    /** 温度 */
+    response.temperature = weatherCondition.condition.temp
+
+    /** 体感温度 */
+    response.sensibleTemperature = weatherCondition.condition.realFeel
+
+    /** 天气 icon 图标的 url */
+    response.iconUrl = `${iconUrlPrefix}${weatherCondition.condition.icon}.png`
+
+    /** 气压 */
+    response.airPressure = weatherCondition.condition.pressure
+
+    /** 一句话提示 */
+    response.tip = weatherCondition.condition.tips
+
+    /** 日出时间，格式化为 '6:08' 输出 */
+    response.sunrise = app.dayjs(weatherCondition.condition.sunRise).format('H:mm')
+
+    /** 日落时间，格式化为 '6:08' 输出 */
+    response.sunset = app.dayjs(weatherCondition.condition.sunSet).format('H:mm')
+
+    ctx.body = response
   }
 }
 
