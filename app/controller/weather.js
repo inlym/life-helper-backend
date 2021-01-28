@@ -43,7 +43,7 @@ class WeatherController extends Controller {
     const weatherCondition = await service.api3rd.getWeatherCondition(longitude, latitude)
 
     /** icon 图片地址前缀 */
-    const iconUrlPrefix = 'https://img.lh.inlym.com/weather_icon/'
+    const iconUrlPrefix = '/image/weather_icon/'
 
     /** 响应内容 */
     const response = {}
