@@ -14,7 +14,7 @@ class WeatherService extends Service {
 
     /**
      * icon 图片地址前缀（存储在阿里云 OSS 上）
-     * const iconUrlPrefixOnline = 'https://img.lh.inlym.com/weather_icon/'
+     * 'https://img.lh.inlym.com/weather_icon/'
      */
 
     return `${iconUrlPrefix}${id}.png`
@@ -88,6 +88,9 @@ class WeatherService extends Service {
       obj.moonset = app.dayjs(current.moonset).format('H:mm')
       obj.sunrise = app.dayjs(current.sunrise).format('H:mm')
       obj.sunset = app.dayjs(current.sunset).format('H:mm')
+
+      /** 文案：昨天，今天，明天，后天，周一，周二，…… */
+      obj.weekday = service.format.weekdayA(obj.date)
 
       result.push(obj)
     }
