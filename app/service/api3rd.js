@@ -164,7 +164,7 @@ class Api3rdService extends Service {
       )
       return response.data.data
     } else {
-      logger.error(`请求第三方接口错误，错误原因：${response.data.msg}`)
+      logger.error(`[Aliyun API Market] 请求第三方接口错误，错误原因：${response.data.msg}`)
     }
   }
 
@@ -175,11 +175,11 @@ class Api3rdService extends Service {
   async getWeatherCondition(longitude, latitude) {
     const { logger, app } = this
 
-    /** 缓存时长：1小时 */
-    const EXPIRATION = 3600
+    /** 缓存时长：30 分钟 */
+    const EXPIRATION = 60 * 30
 
     /** Redis 键名 */
-    const key = `location#weather_condition:${longitude}/${latitude}`
+    const key = `location#weatherCondition:${longitude}/${latitude}`
 
     const res = await app.redis.get(key)
 
@@ -188,6 +188,114 @@ class Api3rdService extends Service {
       return JSON.parse(res)
     } else {
       const condition = await this.fetchWeatherCondition(longitude, latitude)
+      app.redis.set(key, JSON.stringify(condition), 'EX', EXPIRATION)
+
+      return condition
+    }
+  }
+
+  /**
+   * @typedef WeatherForecast15Days
+   * @type {object}
+   *
+   * @example
+   * {
+   * 		"city": {
+   * 			"cityId": 284873,
+   * 			"counname": "中国",
+   * 			"ianatimezone": "Asia/Shanghai",
+   * 			"name": "杭州市西湖区",
+   * 			"pname": "浙江省",
+   * 			"secondaryname": "杭州市",
+   * 			"timezone": "8"
+   * 		},
+   * 		forecast: [
+   * 		    {
+   * 		      conditionDay: '晴',  // 白天天气
+   * 		      conditionIdDay: '0',  // 白天天气id
+   * 		      conditionIdNight: '30',  // 夜间天气id
+   * 		      conditionNight: '晴',  // 夜间天气
+   * 		      humidity: '50',  // 湿度
+   * 		      moonphase: 'WaxingGibbous',  // 月相
+   * 		      moonrise: '2021-01-28 16:59:00',  // 月出
+   * 		      moonset: '2021-01-28 06:28:00',  // 月落
+   * 		      pop: '20',  // 降水概率
+   * 		      predictDate: '2021-01-28',  // 预报日期
+   * 		      qpf: '0.0',  // 定量降水预报（mm）
+   * 		      sunrise: '2021-01-28 06:52:00',  // 日出
+   * 		      sunset: '2021-01-28 17:32:00',  // 日落
+   * 		      tempDay: '11',  // 白天温度
+   * 		      tempNight: '-1',  // 夜间温度
+   * 		      updatetime: '2021-01-28 23:08:00',  // 更新时间
+   * 		      uvi: '5',  // 紫外线强度
+   * 		      windDegreesDay: '225',  // 白天风向角度
+   * 		      windDegreesNight: '0',  // 夜间风向角度
+   * 		      windDirDay: '西南风',  // 白天风向
+   * 		      windDirNight: '微风',  // 夜间风向
+   * 		      windLevelDay: '5-6',  // 白天风级
+   * 		      windLevelNight: '1',  // 夜间风级
+   * 		      windSpeedDay: '10.8',  // 白天风速
+   * 		      windSpeedNight: '0.9'  // 夜间风速
+   * 		    },
+   *        ...
+   * 		]
+   * }
+   */
+
+  /**
+   * 根据经纬度获取未来 15 天的天气预报
+   * @see https://market.aliyun.com/products/57096001/cmapi012364.html
+   * @param {number} longitude 经度
+   * @param {number} latitude 纬度
+   * @returns {Promise<WeatherForecast15Days>}
+   */
+  async fetchWeatherForecast15Days(longitude, latitude) {
+    const { app, logger } = this
+    const { APPCODE_MOJI } = app.config
+
+    const requestOptions = {
+      url: 'http://aliv8.data.moji.com/whapi/json/aliweather/forecast15days',
+      method: 'POST',
+      headers: {
+        Authorization: `APPCODE ${APPCODE_MOJI}`,
+      },
+      data: `lat=${latitude}&lon=${longitude}&token=7538f7246218bdbf795b329ab09cc524`,
+    }
+
+    const response = await app.axios(requestOptions)
+
+    if (!response.data.code) {
+      logger.info(
+        `[Aliyun API Market] 经度 => ${longitude} / 纬度 => ${latitude} 已获取未来 15 天的天气预报 -> 数据太多，不予打印`
+      )
+      return response.data.data
+    } else {
+      logger.error(`[Aliyun API Market] 请求第三方接口错误，错误原因：${response.data.msg}`)
+    }
+  }
+
+  /**
+   * fetchWeatherForecast15Days(longitude, latitude) 函数的带 Redis 缓存升级版
+   * [Redis]
+   */
+  async getWeatherForecast15Days(longitude, latitude) {
+    const { logger, app } = this
+
+    /** 缓存时长：30 分钟 */
+    const EXPIRATION = 60 * 30
+
+    /** Redis 键名 */
+    const key = `location#weatherForecast15Days:${longitude}/${latitude}`
+
+    const res = await app.redis.get(key)
+
+    if (res) {
+      logger.debug(
+        `[Redis] 经度 => ${longitude} / 纬度 => ${latitude} 对应未来 15 天的天气预报 -> 数据太多，不予打印`
+      )
+      return JSON.parse(res)
+    } else {
+      const condition = await this.fetchWeatherForecast15Days(longitude, latitude)
       app.redis.set(key, JSON.stringify(condition), 'EX', EXPIRATION)
 
       return condition
