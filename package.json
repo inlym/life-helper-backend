@@ -65,6 +65,7 @@
     "egg-view-nunjucks": "^2.2.0",
     "mysql2": "^2.2.5",
     "only": "0.0.2",
+    "only2": "^1.0.0",
     "spawn-object": "^1.1.0"
   }
 }
