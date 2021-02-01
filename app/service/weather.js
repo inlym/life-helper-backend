@@ -72,8 +72,14 @@ class WeatherService extends Service {
       'updatetime:updateTime',
     ]
 
-    /** 处理结果 */
-    const result = []
+    /** 未来 15 天预报列表 */
+    const list = []
+
+    /** 每日温度最大值列表（即白天温度） */
+    const maxTemperature = []
+
+    /** 每日温度最小值列表（即白天温度） */
+    const minTemperature = []
 
     for (let i = 0; i < forecast.length; i++) {
       const current = forecast[i]
@@ -92,10 +98,18 @@ class WeatherService extends Service {
       /** 文案：昨天，今天，明天，后天，周一，周二，…… */
       obj.weekday = service.format.weekdayA(obj.date)
 
-      result.push(obj)
+      // 将最高温、最低温添加至列表
+      maxTemperature.push(parseInt(current.tempDay, 10))
+      minTemperature.push(parseInt(current.tempNight, 10))
+
+      list.push(obj)
     }
 
-    return result
+    return {
+      list,
+      maxTemperature,
+      minTemperature,
+    }
   }
 }
 
