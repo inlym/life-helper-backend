@@ -98,6 +98,9 @@ class WeatherService extends Service {
       /** 文案：昨天，今天，明天，后天，周一，周二，…… */
       obj.weekday = service.format.weekdayA(obj.date)
 
+      /** 以 '01/31' 格式输出日期 */
+      obj.dateFormatted = app.dayjs(obj.date).format('MM/DD')
+
       // 将最高温、最低温添加至列表
       maxTemperature.push(parseInt(current.tempDay, 10))
       minTemperature.push(parseInt(current.tempNight, 10))
