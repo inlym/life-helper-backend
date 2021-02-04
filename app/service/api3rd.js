@@ -303,6 +303,102 @@ class Api3rdService extends Service {
   }
 
   /**
+   * @typedef WeatherShortForecast
+   * @type {object}
+   * @example
+   * {
+   *   "city": {
+   *     ...
+   *   },
+   *   "sfc": {
+   *     "banner": "未来一小时不会下雨", // 提示文案
+   *     "confirmInfo": {
+   *       "comfirmIcon": 255, // 反馈待确认信息
+   *       "comfirmIconDesc": "", // 待确认天气名称
+   *       "isConfirm": 0 // 底部确认天气文案是否展示（0:否 1:是）
+   *     },
+   *     "isCorrect": 255, // 当前天气是否被纠正（0:否 1:是）
+   *     "isFeedback": 0, // 首页反馈按钮是否展示（0:否 1:是）
+   *     "notice": "未来一小时不会下雨", // 完整说明
+   *     "percent": [
+   *       {
+   *         "dbz": 0,
+   *         "desc": "无雨", // 降雨级别
+   *         "icon": -1, // 天气图标
+   *         "percent": 0.0 // 降水强度：0-0.05 无雨，0.05-0.063 毛毛细雨，0.063-0.33 小雨，0.33-0.66 中雨，0.66-1 大雨
+   *        },
+   *        ...
+   *      ],
+   *      "rain": 0, 是否降水，“0”代表当前位置没有降水，“1”代表有降水
+   *      "rainLastTime": 0,
+   *      "sfCondition": 0, // 反演实况
+   *      "timestamp": 1612410102000 // 更新时间戳
+   *   }
+   * }
+   */
+
+  /**
+   * 根据经纬度获取天气短时预报
+   * @see https://market.aliyun.com/products/57096001/cmapi012364.html
+   * @param {number} longitude 经度
+   * @param {number} latitude 纬度
+   * @returns {Promise<WeatherShortForecast>}
+   * @since 2021-02-04
+   */
+  async fetchWeatherShortForecast(longitude, latitude) {
+    const { app, logger } = this
+    const { APPCODE_MOJI } = app.config
+
+    const requestOptions = {
+      url: 'http://aliv8.data.moji.com/whapi/json/aliweather/shortforecast',
+      method: 'POST',
+      headers: {
+        Authorization: `APPCODE ${APPCODE_MOJI}`,
+      },
+      data: `lat=${latitude}&lon=${longitude}&token=bbc0fdc738a3877f3f72f69b1a4d30fe`,
+    }
+
+    const response = await app.axios(requestOptions)
+
+    if (!response.data.code) {
+      logger.info(
+        `[Aliyun API Market] 经度 => ${longitude} / 纬度 => ${latitude} 已获取短时天气预报 -> 数据太多，不予打印`
+      )
+      return response.data.data
+    } else {
+      logger.error(`[Aliyun API Market] 请求第三方接口错误，错误原因：${response.data.msg}`)
+    }
+  }
+
+  /**
+   * fetchWeatherShortForecast(longitude, latitude) 函数的带 Redis 缓存升级版
+   * @since 2021-02-04
+   * [Redis]
+   */
+  async getWeatherShortForecast(longitude, latitude) {
+    const { logger, app } = this
+
+    /** 缓存时长：30 分钟 */
+    const EXPIRATION = 60 * 30
+
+    /** Redis 键名 */
+    const key = `location#weatherShortForecast:${longitude}/${latitude}`
+
+    const res = await app.redis.get(key)
+
+    if (res) {
+      logger.debug(
+        `[Redis] 经度 => ${longitude} / 纬度 => ${latitude} 已获取短时天气预报 -> 数据太多，不予打印`
+      )
+      return JSON.parse(res)
+    } else {
+      const result = await this.fetchWeatherShortForecast(longitude, latitude)
+      app.redis.set(key, JSON.stringify(result), 'EX', EXPIRATION)
+      return result
+    }
+  }
+
+  /**
    * 查询快递物流信息
    * @see https://market.aliyun.com/products/57126001/cmapi021863.html
    * @param {!string} expressNumber 快递单号
