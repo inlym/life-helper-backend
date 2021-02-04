@@ -167,4 +167,10 @@ module.exports = {
    * @see https://market.aliyun.com/products/57096001/cmapi012364.html
    */
   APPCODE_MOJI: 'xxxxxxxxxxxx',
+
+  /**
+   * 阿里云市场 - 墨迹天气（专业版CityID） - APPCODE
+   * @see https://market.aliyun.com/products/57096001/cmapi013828.html
+   */
+  APPCODE_MOJI2: 'xxxxxxxxxxxx',
 }
