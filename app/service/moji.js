@@ -8,7 +8,7 @@ class MojiService extends Service {
    * 返回所有的 API 列表：
    * 1. 限行数据 - limit
    * 2. 空气质量指数 - aqi
-   * 3. 短时预报 - shortforecast
+   * 3. 短时预报（经纬度版独有） - shortforecast
    * 4. 生活指数 - index
    * 5. 天气预警 - alert
    * 6. 天气预报24小时 - forecast24hours
@@ -17,11 +17,10 @@ class MojiService extends Service {
    * 9. AQI预报5天 - aqiforecast5days
    */
   apis() {
-    /** 所有的 api 列表 */
+    /** 所有的共有的 api 列表 */
     const apiList = [
       'limit',
       'aqi',
-      'shortforecast',
       'index',
       'alert',
       'forecast24hours',
@@ -53,7 +52,7 @@ class MojiService extends Service {
   }
 
   /**
-   * 封装墨迹天气的 API 请求
+   * 封装墨迹天气的 API 请求（经纬度版）
    * @see https://market.aliyun.com/products/57096001/cmapi012364.html
    * @param {string} apiName api 的英文名称
    * @param {number} longitude 经度
@@ -90,12 +89,58 @@ class MojiService extends Service {
 
     if (!response.data.code) {
       logger.info(
-        `[Aliyun API Market] 墨迹天气（经纬度）接口请求成功 API => ${apiName} / 经度 => ${longitude} / 纬度 => ${latitude}`
+        `[Aliyun API Market] 墨迹天气（经纬度版）接口请求成功 API => ${apiName} / 经度 => ${longitude} / 纬度 => ${latitude}`
       )
       return response.data.data
     } else {
       logger.error(
-        `[Aliyun API Market] 墨迹天气（经纬度）接口请求失败 API => ${apiName} / 经度 => ${longitude} / 纬度 => ${latitude} / 错误原因 => ${response.data.msg}`
+        `[Aliyun API Market] 墨迹天气（经纬度版）接口请求失败 API => ${apiName} / 经度 => ${longitude} / 纬度 => ${latitude} / 错误原因 => ${response.data.msg}`
+      )
+    }
+  }
+
+  /**
+   * 封装墨迹天气的 API 请求（城市ID版）
+   * @see https://market.aliyun.com/products/57096001/cmapi013828.html
+   * @param {string} apiName api 的英文名称
+   * @param {number} cityId 城市ID
+   * @returns {Promise<object>}
+   */
+  async fetchByCityId(apiName, cityId) {
+    const { app, logger } = this
+    const { APPCODE_MOJI2 } = app.config
+
+    /** 每个 API 都有不同的 token */
+    const token = {
+      limit: '27200005b3475f8b0e26428f9bfb13e9',
+      aqi: '8b36edf8e3444047812be3a59d27bab9',
+      index: '5944a84ec4a071359cc4f6928b797f91',
+      alert: '7ebe966ee2e04bbd8cdbc0b84f7f3bc7',
+      forecast24hours: '008d2ad9197090c5dddc76f583616606',
+      forecast15days: 'f9f212e1996e79e0e602b08ea297ffb0',
+      condition: '50b53ff8dd7d9fa320d3d3ca32cf8ed1',
+      aqiforecast5days: '0418c1f4e5e66405d33556418189d2d0',
+    }
+
+    const requestOptions = {
+      url: `http://aliv18.data.moji.com/whapi/json/alicityweather/${apiName}`,
+      method: 'POST',
+      headers: {
+        Authorization: `APPCODE ${APPCODE_MOJI2}`,
+      },
+      data: `cityId=${cityId}&token=${token[apiName]}`,
+    }
+
+    const response = await axios(requestOptions)
+
+    if (!response.data.code) {
+      logger.info(
+        `[Aliyun API Market] 墨迹天气（城市ID版）接口请求成功 API => ${apiName} / cityId => ${cityId}`
+      )
+      return response.data.data
+    } else {
+      logger.error(
+        `[Aliyun API Market] 墨迹天气（城市ID版）接口请求失败 API => ${apiName} / cityId => ${cityId} / 错误原因 => ${response.data.msg}`
       )
     }
   }
@@ -107,10 +152,13 @@ class MojiService extends Service {
    * @param {number} latitude 纬度
    */
   async getByLocation(apiName, longitude, latitude) {
-    const { logger, app } = this
+    const { logger, app, ctx } = this
 
-    /** 缓存时长：30 分钟 */
-    const EXPIRATION = 60 * 30
+    /** 天气数据缓存时长：30 分钟 */
+    const EXPIRATION_WEATHER = 60 * 30
+
+    /** 经纬度和城市ID对应关系缓存时长：10 天 */
+    const EXPIRATION_LOCATION = 60 * 24 * 10
 
     // 对经纬度格式化处理：统一转换成带 3 位小数的字符串
     longitude = Number(longitude).toFixed(3)
@@ -138,11 +186,24 @@ class MojiService extends Service {
       /** Redis 键名（城市） */
       const keyCity = `moji#${apiName}#city:${cityId}`
 
+      /** Redis 键名 */
+      const keyLocation2City = `location@cityId:${longitude}/${latitude}`
+
       // [Redis] 经纬度 -> 有效数据
-      app.redis.set(keyLocation, JSON.stringify(result[field]), 'EX', EXPIRATION)
+      app.redis.set(keyLocation, JSON.stringify(result[field]), 'EX', EXPIRATION_WEATHER)
 
       // [Redis] 额外存入一份 城市ID -> 有效数据
-      app.redis.set(keyCity, JSON.stringify(result[field]), 'EX', EXPIRATION)
+      app.redis.set(keyCity, JSON.stringify(result[field]), 'EX', EXPIRATION_WEATHER)
+
+      // [Redis] 额外存入一份 经纬度 -> 城市ID
+      app.redis.set(keyLocation2City, cityId, 'EX', EXPIRATION_LOCATION)
+
+      // [Redis] 额外存入一份 指定用户的城市ID信息
+      if (ctx.userId) {
+        /** Redis 键名 */
+        const keyUser = `user:${ctx.userId}`
+        app.redis.hset(keyUser, 'cityId', cityId)
+      }
 
       return result[field]
     }
