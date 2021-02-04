@@ -1,26 +1,20 @@
 'use strict'
 
-/**
- * 封装墨迹天气的 API 请求
- * @see https://market.aliyun.com/products/57096001/cmapi012364.html
- *
- * 限行数据 - limit
- * 空气质量指数 - aqi
- * 短时预报 - shortforecast
- * 生活指数 - index
- * 天气预警 - alert
- * 天气预报24小时 - forecast24hours
- * 天气预报15天 - forecast15days
- * 天气实况 - condition
- * AQI预报5天 - aqiforecast5days
- */
-
 const { Service } = require('egg')
 const axios = require('axios')
 
 class MojiService extends Service {
   /**
-   * 返回所有的 API 列表
+   * 返回所有的 API 列表：
+   * 1. 限行数据 - limit
+   * 2. 空气质量指数 - aqi
+   * 3. 短时预报 - shortforecast
+   * 4. 生活指数 - index
+   * 5. 天气预警 - alert
+   * 6. 天气预报24小时 - forecast24hours
+   * 7. 天气预报15天 - forecast15days
+   * 8. 天气实况 - condition
+   * 9. AQI预报5天 - aqiforecast5days
    */
   apis() {
     /** 所有的 api 列表 */
@@ -39,7 +33,8 @@ class MojiService extends Service {
   }
 
   /**
-   *
+   * 封装墨迹天气的 API 请求
+   * @see https://market.aliyun.com/products/57096001/cmapi012364.html
    * @param {string} apiName api 的英文名称
    * @param {number} longitude 经度
    * @param {number} latitude 纬度
@@ -75,13 +70,46 @@ class MojiService extends Service {
 
     if (!response.data.code) {
       logger.info(
-        `[Aliyun API Market] 墨迹天气（专业版经纬度）接口请求成功 API => ${apiName} / 经度 => ${longitude} / 纬度 => ${latitude}`
+        `[Aliyun API Market] 墨迹天气（经纬度）接口请求成功 API => ${apiName} / 经度 => ${longitude} / 纬度 => ${latitude}`
       )
       return response.data.data
     } else {
       logger.error(
-        `[Aliyun API Market] 墨迹天气（专业版经纬度）接口请求失败 API => ${apiName} / 经度 => ${longitude} / 纬度 => ${latitude} / 错误原因 => ${response.data.msg}`
+        `[Aliyun API Market] 墨迹天气（经纬度）接口请求失败 API => ${apiName} / 经度 => ${longitude} / 纬度 => ${latitude} / 错误原因 => ${response.data.msg}`
       )
+    }
+  }
+
+  /**
+   * 封装 fetchByLocation 函数取值，带缓存版本，其他函数应当调用当前函数
+   * @param {string} apiName api 的英文名称
+   * @param {number} longitude 经度
+   * @param {number} latitude 纬度
+   */
+  async getByLocation(apiName, longitude, latitude) {
+    const { logger, app } = this
+
+    /** 缓存时长：30 分钟 */
+    const EXPIRATION = 60 * 30
+
+    // 对经纬度格式化处理：统一转换成带 3 位小数的字符串
+    longitude = Number(longitude).toFixed(3)
+    latitude = Number(latitude).toFixed(3)
+
+    /** Redis 键名 */
+    const key = `moji#${apiName}:${longitude}/${latitude}`
+
+    const res = await app.redis.get(key)
+
+    if (res) {
+      logger.debug(
+        `[Redis] 墨迹天气（经纬度）从Redis获取数据 API => ${apiName} / 经度 => ${longitude} / 纬度 => ${latitude}`
+      )
+      return JSON.parse(res)
+    } else {
+      const result = await this.fetchByLocation(apiName, longitude, latitude)
+      app.redis.set(key, JSON.stringify(result), 'EX', EXPIRATION)
+      return result
     }
   }
 }
