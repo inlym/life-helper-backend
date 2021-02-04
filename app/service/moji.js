@@ -33,6 +33,26 @@ class MojiService extends Service {
   }
 
   /**
+   * 通过 fetch 获取的数据结构：
+   * { city:{ cityId: 284873, ...}, fieldName:{ ... }}
+   * 每个 api 的 fieldName 都不一样，返回该映射关系
+   */
+  fields() {
+    const obj = {
+      limit: 'limit',
+      aqi: 'aqi',
+      shortforecast: 'sfc',
+      index: 'liveIndex',
+      alert: 'alert',
+      forecast24hours: 'hourly',
+      forecast15days: 'forecast',
+      condition: 'condition',
+      aqiforecast5days: 'aqiForecast',
+    }
+    return obj
+  }
+
+  /**
    * 封装墨迹天气的 API 请求
    * @see https://market.aliyun.com/products/57096001/cmapi012364.html
    * @param {string} apiName api 的英文名称
@@ -81,7 +101,7 @@ class MojiService extends Service {
   }
 
   /**
-   * 封装 fetchByLocation 函数取值，带缓存版本，其他函数应当调用当前函数
+   * 封装 fetchByLocation 函数，返回其内部有效数据（带缓存版本）
    * @param {string} apiName api 的英文名称
    * @param {number} longitude 经度
    * @param {number} latitude 纬度
@@ -96,10 +116,10 @@ class MojiService extends Service {
     longitude = Number(longitude).toFixed(3)
     latitude = Number(latitude).toFixed(3)
 
-    /** Redis 键名 */
-    const key = `moji#${apiName}:${longitude}/${latitude}`
+    /** Redis 键名（经纬度） */
+    const keyLocation = `moji#${apiName}#location:${longitude}/${latitude}`
 
-    const res = await app.redis.get(key)
+    const res = await app.redis.get(keyLocation)
 
     if (res) {
       logger.debug(
@@ -108,8 +128,23 @@ class MojiService extends Service {
       return JSON.parse(res)
     } else {
       const result = await this.fetchByLocation(apiName, longitude, latitude)
-      app.redis.set(key, JSON.stringify(result), 'EX', EXPIRATION)
-      return result
+
+      /** 有效数据的字段名 */
+      const field = this.fields()[apiName]
+
+      /** 城市ID */
+      const { cityId } = result.city
+
+      /** Redis 键名（城市） */
+      const keyCity = `moji#${apiName}#city:${cityId}`
+
+      // [Redis] 经纬度 -> 有效数据
+      app.redis.set(keyLocation, JSON.stringify(result[field]), 'EX', EXPIRATION)
+
+      // [Redis] 额外存入一份 城市ID -> 有效数据
+      app.redis.set(keyCity, JSON.stringify(result[field]), 'EX', EXPIRATION)
+
+      return result[field]
     }
   }
 }
