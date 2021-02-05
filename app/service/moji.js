@@ -58,6 +58,8 @@ class MojiService extends Service {
    * @param {number} longitude 经度
    * @param {number} latitude 纬度
    * @returns {Promise<object>}
+   * @since 2021-02-04
+   *
    */
   async fetchByLocation(apiName, longitude, latitude) {
     const { app, logger } = this
@@ -105,6 +107,7 @@ class MojiService extends Service {
    * @param {string} apiName api 的英文名称
    * @param {number} cityId 城市ID
    * @returns {Promise<object>}
+   * @since 2021-02-04
    */
   async fetchByCityId(apiName, cityId) {
     const { app, logger } = this
@@ -146,10 +149,11 @@ class MojiService extends Service {
   }
 
   /**
-   * 封装 fetchByLocation 函数，返回其内部有效数据（带缓存版本）
+   * 封装 fetchByLocation 函数，返回其内部有效数据（带缓存处理）
    * @param {string} apiName api 的英文名称
    * @param {number} longitude 经度
    * @param {number} latitude 纬度
+   * @since 2021-02-04
    */
   async getByLocation(apiName, longitude, latitude) {
     const { logger, app, ctx } = this
@@ -204,6 +208,42 @@ class MojiService extends Service {
         const keyUser = `user:${ctx.userId}`
         app.redis.hset(keyUser, 'cityId', cityId)
       }
+
+      return result[field]
+    }
+  }
+
+  /**
+   * 封装 fetchByCityId 函数，返回其内部有效数据（带缓存处理）
+   * @param {string} apiName api 的英文名称
+   * @param {number} cityId 城市ID
+   * @returns {Promise<object>}
+   * @since 2021-02-05
+   */
+  async getByCityId(apiName, cityId) {
+    const { logger, app } = this
+
+    /** Redis 键名（城市） */
+    const keyCity = `moji#${apiName}#city:${cityId}`
+
+    const res = await app.redis.get(keyCity)
+
+    if (res) {
+      logger.debug(
+        `[Redis] 墨迹天气（城市ID）从Redis获取数据 API => ${apiName} / cityId => ${cityId}`
+      )
+      return JSON.parse(res)
+    } else {
+      const result = await this.fetchByCityId(apiName, cityId)
+
+      /** 有效数据的字段名 */
+      const field = this.fields()[apiName]
+
+      /** 天气数据缓存时长：30 分钟 */
+      const EXPIRATION_WEATHER = 60 * 30
+
+      // [Redis] 城市ID -> 有效数据
+      app.redis.set(keyCity, JSON.stringify(result[field]), 'EX', EXPIRATION_WEATHER)
 
       return result[field]
     }
