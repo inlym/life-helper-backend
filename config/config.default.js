@@ -173,4 +173,13 @@ module.exports = {
    * @see https://market.aliyun.com/products/57096001/cmapi013828.html
    */
   APPCODE_MOJI2: 'xxxxxxxxxxxx',
+
+  /**
+   * 腾讯位置服务 WebService API 开发者密钥（Key）
+   * @see https://lbs.qq.com/service/webService/webServiceGuide/webServiceOverview
+   *
+   * 这里实际上只需要一个 key，使用列表的原因是：
+   * 该 API 对于个人开发者的免费配额较低，准备多注册几个帐号轮询调用。
+   */
+  TENCENT_LBS_KEYS: ['xxxxxxxxxxxx'],
 }
