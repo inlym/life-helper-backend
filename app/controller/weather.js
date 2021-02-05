@@ -100,40 +100,50 @@ class WeatherController extends Controller {
 
   /**
    * 获取未来 15 天的天气预报
+   * @since 2021-02-05
+   *
    * method   =>    GET
    * path     =>    /weather/forecast15days
-   * query    =>    1. lon - 经度 - 可选
-   *                2. lat - 纬度 - 可选
+   * query    =>    1. lon - 经度（longitude） - 可选
+   *                2. lat - 纬度（latitude） - 可选
    * body     =>    null
    *
-   * 备注：
-   * 1. 经纬度如果在 query 中提供，则取该值，否则由 ip 转换获取
-   * 2. 经纬度格式化到 5 位小数
+   * 优先级：
+   * 1. 在 query 中提供的经纬度
+   * 2. 从缓存中获取用户的 cityId
+   * 3. 根据访问 ip 换取的经纬度
    */
   async forecast15Days() {
-    const { ctx, service, logger } = this
+    const { app, ctx, service, logger } = this
 
-    /** 经度 */
-    let longitude = ''
+    const { lon, lat } = ctx.query
 
-    /** 纬度 */
-    let latitude = ''
+    logger.debug(`[Query] lon => ${lon} / lat => ${lat}`)
 
-    if (ctx.query.lon && ctx.query.lat) {
-      longitude = ctx.query.lon
-      latitude = ctx.query.lat
-      logger.debug(`从 query 获取经纬度 -> longitude => ${longitude} / latitude => ${latitude}`)
-    } else {
-      const location = await service.api3rd.getLocation(ctx.ip)
-      longitude = location.lng
-      latitude = location.lat
+    if (lon && lat) {
+      ctx.body = await service.weather.forecast15Days({
+        longitude: lon,
+        latitude: lat,
+      })
+      return
     }
 
-    // 对经纬度格式化处理：统一转换成带 5 位小数的字符串
-    longitude = Number(longitude).toFixed(5)
-    latitude = Number(latitude).toFixed(5)
+    const userKey = `user:${ctx.userId}`
 
-    ctx.body = await service.weather.forecast15Days(longitude, latitude)
+    const cityId = await app.redis.hget(userKey, 'cityId')
+    if (cityId) {
+      logger.debug(`[Redis] [hash] ${userKey} -> cityId => ${cityId}`)
+      ctx.body = await service.weather.forecast15Days({
+        cityId,
+      })
+      return
+    }
+
+    const { lng: longitude, lat: latitude } = await service.api3rd.getLocation(ctx.ip)
+    ctx.body = await service.weather.forecast15Days({
+      longitude,
+      latitude,
+    })
   }
 }
 

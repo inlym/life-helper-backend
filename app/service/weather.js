@@ -4,7 +4,7 @@ const { Service } = require('egg')
 
 class WeatherService extends Service {
   /**
-   * 获取获取 icon 图片的路径
+   * 获取 icon 图片的路径
    * @param {number|string} id iconId
    * @returns {string}
    */
@@ -21,56 +21,44 @@ class WeatherService extends Service {
   }
 
   /**
-   * 根据经纬度获取未来 15 天的天气预报
-   * 对 api3rd.getWeatherForecast15Days(longitude, latitude) 做一层简单数据处理
+   * 获取未来 15 天的天气预报
+   * @param {object} options
+   * @param {?number} options.cityId 城市ID
+   * @param {?number|string} options.longitude 经度
+   * @param {?number|string} options.latitude 纬度
+   * @since 2021-02-05
    */
-  async forecast15Days(longitude, latitude) {
+  async forecast15Days(options) {
     const { service, app } = this
-    const { forecast } = await service.api3rd.getWeatherForecast15Days(longitude, latitude)
+    const { cityId, longitude, latitude } = options
 
-    /** 准备提取的属性的键名 */
+    let forecast = []
+    if (cityId) {
+      forecast = await service.moji.getByCityId('forecast15days', cityId)
+    } else if (longitude && latitude) {
+      forecast = await service.moji.getByLocation('forecast15days', longitude, latitude)
+    }
+
+    /** 准备提取和转化的属性 - 白天 */
     const dayKeys = [
-      /** 天气情况 */
       'conditionDay:condition',
-
-      /** 风向 */
       'windDirDay:windDirection',
-
-      /** 风力等级 */
       'windLevelDay:windScale',
-
-      /** 风速 */
       'windSpeedDay:windSpeed',
-
-      /** 温度 */
       'tempDay:temperature',
     ]
 
+    /** 准备提取和转化的属性 - 夜间 */
     const nightKeys = [
       'conditionNight:condition',
-
       'windDirNight:windDirection',
-
       'windLevelNight:windScale',
-
       'windSpeedNight:windSpeed',
-
       'tempNight:temperature',
     ]
 
-    const commonKeys = [
-      /** 日期 */
-      'predictDate:date',
-
-      /** 紫外线强度 */
-      'uvi:ultraviolet',
-
-      /** 湿度 */
-      'humidity',
-
-      /** 更新时间 */
-      'updatetime:updateTime',
-    ]
+    /** 准备提取和转化的属性 - 公共 */
+    const commonKeys = ['predictDate:date', 'uvi:ultraviolet', 'humidity', 'updatetime:updateTime']
 
     /** 未来 15 天预报列表 */
     const list = []
@@ -109,7 +97,7 @@ class WeatherService extends Service {
     }
 
     return {
-      list,
+      forecast15days: list,
       maxTemperature,
       minTemperature,
     }
