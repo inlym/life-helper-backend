@@ -4,7 +4,7 @@ const { Service } = require('egg')
 
 class CacheService extends Service {
   /**
-   * 设置原生函数的待缓存版本
+   * 设置原生函数的待缓存版本，主要用于 HTTP 请求数据缓存
    * @param {object} options 配置项
    * @param {number} options.expiration 缓存有效期，单位：秒（s）
    * @param {string} options.service 原生函数所在的服务

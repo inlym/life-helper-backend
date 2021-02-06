@@ -10,6 +10,7 @@ class AuthService extends Service {
    * 为指定用户ID生成 token，并存入 Redis （如果 token 存在，则返回已有的 token 并重置有效期）
    * @param {number} userId
    * @returns {Promise<string>} 生成的 token
+   * @update 2021-02-06
    */
   async createToken(userId) {
     const { app, logger } = this
@@ -20,22 +21,30 @@ class AuthService extends Service {
     /** token 存入 Redis 的有效期为 2 天 */
     const EXPIRATION = 3600 * 24 * 2
 
-    const tokenInRedis = await app.redis.get(`user_id#token:${userId}`)
+    /** Redis 键名 */
+    const keyUserId2Token = `userId@token:${userId}`
+
+    const tokenInRedis = await app.redis.get(keyUserId2Token)
 
     // 如果 token 在 Redis 中已存在
     if (tokenInRedis) {
-      app.redis.expire(`user_id#token:${userId}`, EXPIRATION)
-      app.redis.expire(`token#user_id:${tokenInRedis}`, EXPIRATION)
+      const keyToken2UserId1 = `token@userId:${tokenInRedis}`
+
+      // 重置有效期
+      app.redis.expire(keyUserId2Token, EXPIRATION)
+      app.redis.expire(keyToken2UserId1, EXPIRATION)
       return tokenInRedis
     }
 
     /** 生成随机字符串的 token */
     const token = app.kit.randomString(TOKEN_LENGTH)
 
-    logger.debug(`为指定userId生成token -> userId => ${userId} / token => ${token}`)
+    const keyToken2UserId2 = `token@userId:${token}`
 
-    await app.redis.set(`token#user_id:${token}`, userId, 'EX', EXPIRATION)
-    await app.redis.set(`user_id#token:${userId}`, token, 'EX', EXPIRATION)
+    logger.debug(`[Redis] 为指定userId生成token -> userId => ${userId} / token => ${token}`)
+
+    app.redis.set(keyToken2UserId2, userId, 'EX', EXPIRATION)
+    app.redis.set(keyUserId2Token, token, 'EX', EXPIRATION)
 
     return token
   }
@@ -43,17 +52,20 @@ class AuthService extends Service {
   /**
    * 使用 token 从 Redis 中获取 userId，如果不存在则返回 0
    * @param {string} token
-   * @returns {Promise<number>}
+   * @returns {Promise<number>} userId
+   * @update 2021-02-06
    */
   async getUserIdByToken(token) {
     const { app, logger } = this
 
-    const result = await app.redis.get(`token#user_id:${token}`)
+    const keyToken2UserId = `token@userId:${token}`
+
+    const result = await app.redis.get(keyToken2UserId)
     if (!result) {
-      logger.debug(`token[${token}] 未从 Redis 中查询到对应 userId`)
+      logger.debug(`[Redis] token => ${token} 未从 Redis 中查询到对应 userId`)
       return NOT_EXIST_USER_ID
     } else {
-      logger.debug(`token[${token}] 从 Redis 中查询到 userId => ${result}`)
+      logger.debug(`[Redis] token => ${token} -> userId => ${result}`)
       return parseInt(result, 10)
     }
   }

@@ -13,6 +13,7 @@ class MpService extends Service {
    * @returns {Promise<{session_key:string;openid:string}>} 微信请求返回的数据
    * @example 返回内容样例:
    * {session_key:"xxxxxx",openid:"xxxxxx"}
+   * @update 2021-02-06
    */
   async code2Session(code) {
     const { appid, secret } = this.app.config.miniprogram
@@ -21,7 +22,7 @@ class MpService extends Service {
       dataType: 'json',
     })
     this.logger.info(
-      `从微信服务器使用 code 换取 session -> code => ${code} / session => ${JSON.stringify(
+      `[WEIXIN API] 从微信服务器使用 code 换取 session -> code => ${code} / session => ${JSON.stringify(
         res.data
       )}`
     )
@@ -49,7 +50,7 @@ class MpService extends Service {
       dataType: 'json',
     })
     this.logger.info(
-      `获取小程序全局唯一后台接口调用凭据 -> access_token => ${res.data.access_token}`
+      `[WEIXIN API] 获取小程序全局唯一后台接口调用凭据 -> access_token => ${res.data.access_token}`
     )
     return res.data
   }
