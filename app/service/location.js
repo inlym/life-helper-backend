@@ -68,6 +68,7 @@ class LocationService extends Service {
 
   /**
    * 根据经纬度坐标获取所在位置的文字描述
+   * @see https://lbs.qq.com/service/webService/webServiceGuide/webServiceGcoder
    * @label [HTTP Request]
    * @param {string|number} longitude 经度
    * @param {string|number} latitude 纬度
