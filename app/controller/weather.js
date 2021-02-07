@@ -114,6 +114,30 @@ class WeatherController extends Controller {
       list,
     }
   }
+
+  /**
+   * 获取 24 小时天气预报
+   * @since 2021-02-08
+   *
+   * method   =>    GET
+   * path     =>    /weather/forecast24hours
+   * query    =>    1. region - 省市区 - 可选
+   *                2. location - 经纬度 - 可选
+   * body     =>    null
+   *
+   * 格式：
+   * 1. region - `${province},${city},${district}` - '浙江省,杭州市,西湖区'
+   * 2. location - `${longitude},${latitude}` - '120.11111,30.11111'
+   */
+  async forecast24Hours() {
+    const { ctx, service } = this
+    const options = service.queryhandler.handleCityIdQueries(ctx)
+    const cityId = await service.moji.getCityId(options)
+    const list = await service.weather.forecast24Hours(cityId)
+    ctx.body = {
+      list,
+    }
+  }
 }
 
 module.exports = WeatherController

@@ -194,6 +194,28 @@ class WeatherService extends Service {
     }
     return list
   }
+
+  /**
+   * 天气预报 24 小时
+   * @param {number} cityId
+   * @since 2021-02-08
+   */
+  async forecast24Hours(cityId) {
+    const { app, service } = this
+    const list = await service.moji.getByCityId('forecast24hours', cityId)
+    const result = []
+    for (let i = 0; i < list.length; i++) {
+      const item = list[i]
+      const obj = app.only2(item, 'condition date hour temp:temperature windlevel:windScale windSpeed pop:rainProb')
+      if (parseInt(item.hour, 10) > 6 && parseInt(item.hour, 10) < 18) {
+        obj.iconUrl = this.getIconUrl(item.iconDay)
+      } else {
+        obj.iconUrl = this.getIconUrl(item.iconNight)
+      }
+      result.push(obj)
+    }
+    return result
+  }
 }
 
 module.exports = WeatherService
