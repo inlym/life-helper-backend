@@ -14,4 +14,7 @@ module.exports = (app) => {
 
   /** 获取空气质量指数 */
   router.get('/weather/aqi', controller.weather.aqi)
+
+  /** 获取空气质量指数 5 天预报 */
+  router.get('/weather/aqi5days', controller.weather.aqi5Days)
 }

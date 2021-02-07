@@ -64,9 +64,9 @@ class WeatherController extends Controller {
     const { ctx, service } = this
     const options = service.queryhandler.handleCityIdQueries(ctx)
     const cityId = await service.moji.getCityId(options)
-    const liveIndex = await service.weather.liveIndex(cityId)
+    const list = await service.weather.liveIndex(cityId)
     ctx.body = {
-      liveIndex,
+      list,
     }
   }
 
@@ -89,6 +89,30 @@ class WeatherController extends Controller {
     const options = service.queryhandler.handleCityIdQueries(ctx)
     const cityId = await service.moji.getCityId(options)
     ctx.body = await service.weather.aqi(cityId)
+  }
+
+  /**
+   * 获取空气质量指数 5 天预报
+   * @since 2021-02-07
+   *
+   * method   =>    GET
+   * path     =>    /weather/aqi5days
+   * query    =>    1. region - 省市区 - 可选
+   *                2. location - 经纬度 - 可选
+   * body     =>    null
+   *
+   * 格式：
+   * 1. region - `${province},${city},${district}` - '浙江省,杭州市,西湖区'
+   * 2. location - `${longitude},${latitude}` - '120.11111,30.11111'
+   */
+  async aqi5Days() {
+    const { ctx, service } = this
+    const options = service.queryhandler.handleCityIdQueries(ctx)
+    const cityId = await service.moji.getCityId(options)
+    const list = await service.weather.aqi5Days(cityId)
+    ctx.body = {
+      list,
+    }
   }
 }
 

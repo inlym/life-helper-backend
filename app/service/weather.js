@@ -124,7 +124,7 @@ class WeatherService extends Service {
     }
 
     return {
-      forecast15days: list,
+      list,
       maxTemperature,
       minTemperature,
     }
@@ -179,6 +179,20 @@ class WeatherService extends Service {
     delete res.cityName
     delete res.pubtime
     return res
+  }
+
+  /**
+   * 空气质量指数预报 5 天
+   * @param {number} cityId
+   * @since 2021-02-07
+   */
+  async aqi5Days(cityId) {
+    const { service } = this
+    const list = await service.moji.getByCityId('aqiforecast5days', cityId)
+    for (let i = 0; i < list.length; i++) {
+      delete list[i]['publishTime']
+    }
+    return list
   }
 }
 
