@@ -129,6 +129,44 @@ class WeatherService extends Service {
       minTemperature,
     }
   }
+
+  /**
+   * 生活指数
+   * @param {number} cityId
+   * @since 2021-02-07
+   */
+  async liveIndex(cityId) {
+    const { service } = this
+    const res = await service.moji.getByCityId('index', cityId)
+    const indexList = res[Object.getOwnPropertyNames(res)[0]]
+    const result = []
+
+    /** 将原有的名称缩短一下 */
+    const codeMap = {
+      5: '交通',
+      7: '化妆',
+      12: '感冒',
+      14: '旅游',
+      17: '洗车',
+      18: '空气污染',
+      20: '穿衣',
+      21: '紫外线',
+      26: '运动',
+      28: '钓鱼',
+      32: '过敏',
+    }
+
+    for (let i = 0; i < indexList.length; i++) {
+      const obj = {}
+      const item = indexList[i]
+      obj.name = codeMap[item.code]
+      obj.description = item.desc
+      obj.status = item.status
+      result.push(obj)
+    }
+
+    return result
+  }
 }
 
 module.exports = WeatherService
