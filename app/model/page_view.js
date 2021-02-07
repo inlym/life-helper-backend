@@ -15,7 +15,7 @@ module.exports = (app) => {
         comment: '主键 id',
       },
 
-      user_id: {
+      userId: {
         type: INTEGER,
         allowNull: false,
         comment: '访问用户的 user_id',
@@ -29,11 +29,12 @@ module.exports = (app) => {
 
       querystring: {
         type: STRING,
-        allowNull: true,
+        allowNull: false,
+        defaultValue: '',
         comment: '小程序页面的查询参数，例如 id=1',
       },
 
-      visit_time: {
+      visitTime: {
         type: DATE,
         allowNull: false,
         defaultValue: NOW,
@@ -50,6 +51,9 @@ module.exports = (app) => {
     {
       /** 数据表的表名 */
       tableName: 'page_view',
+
+      /** 驼峰形式命名的属性名称转化为下划线形式的数据库列名称 */
+      underscored: true,
 
       /** 启用时间戳 */
       timestamps: true,
