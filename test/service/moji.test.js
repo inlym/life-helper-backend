@@ -3,7 +3,7 @@
 const { app, assert } = require('egg-mock/bootstrap')
 
 describe('service/moji.js', () => {
-  it('[墨迹天气] [经纬度] 调接口查询信息', async () => {
+  it('fetchByLocation - 直接调一遍墨迹天气（经纬度版）的所有接口，接口都没挂', async () => {
     const ctx = app.mockContext()
 
     // 测试用的经纬度
@@ -24,7 +24,7 @@ describe('service/moji.js', () => {
     assert(apis.length === result.length)
   })
 
-  it('[墨迹天气] [经纬度] 从 Redis 中查询信息', async () => {
+  it('getByLocation- 从 Redis 中查询信息', async () => {
     const ctx = app.mockContext()
 
     // 测试用的经纬度
@@ -45,7 +45,7 @@ describe('service/moji.js', () => {
     assert(apis.length === result.length)
   })
 
-  it('[墨迹天气] [城市ID] 调接口查询信息', async () => {
+  it('fetchByCityId - 直接调一遍墨迹天气（城市ID版）的所有接口，接口都没挂', async () => {
     const ctx = app.mockContext()
 
     // 测试用的城市 ID
@@ -65,7 +65,7 @@ describe('service/moji.js', () => {
     assert(apis.length === result.length)
   })
 
-  it('[墨迹天气] [城市ID] 从 Redis 中查询信息', async () => {
+  it('getByCityId - 从 Redis 中查询信息', async () => {
     const ctx = app.mockContext()
 
     // 测试用的城市 ID
@@ -85,7 +85,7 @@ describe('service/moji.js', () => {
     assert(apis.length === result.length)
   })
 
-  it('getCityId - 预设几个省市区测试返回值应和预设值对应', async () => {
+  it('queryCityId - 预设几个省市区测试返回值应和预设值对应', async () => {
     const ctx = app.mockContext()
 
     const list = [
@@ -118,5 +118,47 @@ describe('service/moji.js', () => {
     for (let i = 0; i < list.length; i++) {
       assert(list[i]['id'] === result[i])
     }
+  })
+
+  it('getCityId - 根据省市区获取 cityId', async () => {
+    const ctx = app.mockContext()
+
+    /** 测试用的省市区信息 */
+    const obj = {
+      id: 284873,
+      province: '浙江省',
+      city: '杭州市',
+      district: '西湖区',
+    }
+
+    const cityId = await ctx.service.moji.getCityId(obj)
+    assert(cityId === obj.id)
+  })
+
+  it('getCityId - 根据经纬度获取 cityId', async () => {
+    const ctx = app.mockContext()
+
+    /** 测试用的经纬度信息 */
+    const obj = {
+      id: 284873,
+      longitude: 120.11111,
+      latitude: 30.11111,
+    }
+
+    const cityId = await ctx.service.moji.getCityId(obj)
+    assert(cityId === obj.id)
+  })
+
+  it('getCityId - 根据请求者 IP 获取 cityId', async () => {
+    const ctx = app.mockContext()
+
+    /** 测试用的 IP 地址 */
+    const obj = {
+      id: 284873,
+      ip: '183.156.98.100',
+    }
+
+    const cityId = await ctx.service.moji.getCityId(obj)
+    assert(cityId === obj.id)
   })
 })

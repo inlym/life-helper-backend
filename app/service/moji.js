@@ -94,6 +94,46 @@ class MojiService extends Service {
   }
 
   /**
+   * 根据提供的经纬度、省市区等信息或请求者 IP，计算获取 cityId
+   * @param {object} options
+   * @param {?string} options.province 省
+   * @param {?string} options.city 市
+   * @param {?string} options.district 区县
+   * @param {?string} options.longitude 经度
+   * @param {?string} options.latitude 纬度
+   * @param {?string} options.ip 考虑灵活性，由控制器传入请求者 IP，而不是在这里通过 ctx.ip 直接获取
+   * @returns {Promise<number>} cityId
+   * @since 2021-02-07
+   *
+   * 查询优先级：
+   * 1. 用户提交的省市区
+   * 2. 用户定位获取经纬度，转换的省市区
+   * 3. 用户未提供任何信息，请求者 IP 转换的省市区
+   */
+  async getCityId(options) {
+    const { ctx } = this
+    const { province, city, district, longitude, latitude, ip } = options
+
+    if (province && city && district) {
+      return await this.queryCityId(province, city, district)
+    }
+
+    if (longitude && latitude) {
+      const {
+        address_component: { province: province2, city: city2, district: district2 },
+      } = await ctx.service.location.getAddressByLocation(longitude, latitude)
+      return await this.queryCityId(province2, city2, district2)
+    }
+
+    if (ip) {
+      const {
+        ad_info: { province: province3, city: city3, district: district3 },
+      } = await ctx.service.location.getLocationByIp(ip)
+      return await this.queryCityId(province3, city3, district3)
+    }
+  }
+
+  /**
    * 封装墨迹天气的 API 请求（经纬度版）
    * @see https://market.aliyun.com/products/57096001/cmapi012364.html
    * @param {string} apiName api 的英文名称
