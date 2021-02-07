@@ -112,7 +112,7 @@ describe('service/moji.js', () => {
     const promises = []
     for (let i = 0; i < list.length; i++) {
       const { province, city, district } = list[i]
-      promises.push(ctx.service.moji.getCityId(province, city, district))
+      promises.push(ctx.service.moji.queryCityId(province, city, district))
     }
     const result = await Promise.all(promises)
     for (let i = 0; i < list.length; i++) {

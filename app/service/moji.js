@@ -52,14 +52,14 @@ class MojiService extends Service {
   }
 
   /**
-   * 根据省市区从 moji_city 数据表中获取 cityId
+   * 根据省市区从 moji_city 数据表中查询 cityId
    * @param {string} province 省
    * @param {string} city 市
    * @param {string} district 区县
    * @returns {Promise<number>} cityId
    * @since 2021-02-07
    */
-  async getCityId(province, city, district) {
+  async queryCityId(province, city, district) {
     const { app, logger } = this
     const { Op } = app.Sequelize
     const res = await app.model.MojiCity.findOne({
