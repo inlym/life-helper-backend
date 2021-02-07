@@ -51,7 +51,7 @@ class WeatherController extends Controller {
    * @since 2021-02-07
    *
    * method   =>    GET
-   * path     =>    /weather/forecast15days
+   * path     =>    /weather/liveindex
    * query    =>    1. region - 省市区 - 可选
    *                2. location - 经纬度 - 可选
    * body     =>    null
@@ -68,6 +68,27 @@ class WeatherController extends Controller {
     ctx.body = {
       liveIndex,
     }
+  }
+
+  /**
+   * 获取空气质量指数
+   * @since 2021-02-07
+   *
+   * method   =>    GET
+   * path     =>    /weather/aqi
+   * query    =>    1. region - 省市区 - 可选
+   *                2. location - 经纬度 - 可选
+   * body     =>    null
+   *
+   * 格式：
+   * 1. region - `${province},${city},${district}` - '浙江省,杭州市,西湖区'
+   * 2. location - `${longitude},${latitude}` - '120.11111,30.11111'
+   */
+  async aqi() {
+    const { ctx, service } = this
+    const options = service.queryhandler.handleCityIdQueries(ctx)
+    const cityId = await service.moji.getCityId(options)
+    ctx.body = await service.weather.aqi(cityId)
   }
 }
 

@@ -167,6 +167,19 @@ class WeatherService extends Service {
 
     return result
   }
+
+  /**
+   * 空气质量指数
+   * @param {number} cityId
+   * @since 2021-02-07
+   */
+  async aqi(cityId) {
+    const { service } = this
+    const res = await service.moji.getByCityId('aqi', cityId)
+    delete res.cityName
+    delete res.pubtime
+    return res
+  }
 }
 
 module.exports = WeatherService

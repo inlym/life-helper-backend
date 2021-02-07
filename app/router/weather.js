@@ -11,4 +11,7 @@ module.exports = (app) => {
 
   /** 获取生活指数 */
   router.get('/weather/liveindex', controller.weather.liveIndex)
+
+  /** 获取空气质量指数 */
+  router.get('/weather/aqi', controller.weather.aqi)
 }
