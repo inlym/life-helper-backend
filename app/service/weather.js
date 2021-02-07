@@ -21,6 +21,42 @@ class WeatherService extends Service {
   }
 
   /**
+   * 获取天气实况
+   * @param {number} cityId
+   * @since 2021-02-07
+   */
+  async condition(cityId) {
+    const { service, app } = this
+
+    /** 原生天气实况数据 */
+    const condition = await service.moji.getByCityId('condition', cityId)
+
+    /** 准备从 condition 中获取的属性名 */
+    const keys = [
+      'condition',
+      'temp:temperature',
+      'realFeel:sensibleTemperature',
+      'pressure:airPressure',
+      'humidity',
+      'uvi:ultraviolet',
+      'vis:visibility',
+      'windDir:windDirection',
+      'windLevel:windScale',
+      'windSpeed',
+      'tips:tip',
+    ]
+
+    const res = app.only2(condition, keys)
+
+    res.iconUrl = this.getIconUrl(condition.icon)
+    res.sunrise = app.dayjs(condition.sunRise).format('H:mm')
+    res.sunset = app.dayjs(condition.sunSet).format('H:mm')
+
+    return res
+  }
+
+  /**
+   * @todo 2021-02-07
    * 获取未来 15 天的天气预报
    * @param {object} options
    * @param {?number} options.cityId 城市ID
