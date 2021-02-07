@@ -6,14 +6,13 @@
     "es6": true,
     "mocha": true
   },
-  "extends": ["eslint:recommended", "plugin:prettier/recommended"],
+  "extends": ["eslint:recommended"],
   "parserOptions": {
     "ecmaVersion": 2019
   },
   "plugins": ["prettier"],
   "rules": {
-    "prettier/prettier": "error",
-    "no-await-in-loop": "warn",
+    "no-await-in-loop": "error",
     "accessor-pairs": "error",
     "array-callback-return": "error",
     "block-scoped-var": "error",

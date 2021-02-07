@@ -9,9 +9,6 @@ module.exports = (app) => {
   require('./router/user.js')(app)
   require('./router/weather.js')(app)
 
-  /** 临时测试使用 */
-  router.post('/test', controller.debug.test)
-
   /** 查看系统运行状态 */
   router.get('/status', controller.system.status)
 }

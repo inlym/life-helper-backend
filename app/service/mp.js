@@ -22,9 +22,7 @@ class MpService extends Service {
       dataType: 'json',
     })
     this.logger.info(
-      `[WEIXIN API] 从微信服务器使用 code 换取 session -> code => ${code} / session => ${JSON.stringify(
-        res.data
-      )}`
+      `[WEIXIN API] 从微信服务器使用 code 换取 session -> code => ${code} / session => ${JSON.stringify(res.data)}`
     )
     return res.data
   }
@@ -49,9 +47,7 @@ class MpService extends Service {
     const res = await this.ctx.curl(url, {
       dataType: 'json',
     })
-    this.logger.info(
-      `[WEIXIN API] 获取小程序全局唯一后台接口调用凭据 -> access_token => ${res.data.access_token}`
-    )
+    this.logger.info(`[WEIXIN API] 获取小程序全局唯一后台接口调用凭据 -> access_token => ${res.data.access_token}`)
     return res.data
   }
 
@@ -62,7 +58,7 @@ class MpService extends Service {
    */
   async updateAccessToken() {
     const { access_token, expires_in } = await this.getAccessToken()
-    this.app.redis.set('system:mp_token', access_token, 'EX', expires_in)
+    this.app.redis.set('system@mpToken', access_token, 'EX', expires_in)
   }
 }
 
