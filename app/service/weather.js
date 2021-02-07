@@ -31,7 +31,7 @@ class WeatherService extends Service {
     /** 原生天气实况数据 */
     const condition = await service.moji.getByCityId('condition', cityId)
 
-    /** 准备从 condition 中获取的属性名 */
+    /** 准备从 condition 中获取和转化的属性名 */
     const keys = [
       'condition',
       'temp:temperature',
@@ -56,24 +56,15 @@ class WeatherService extends Service {
   }
 
   /**
-   * @todo 2021-02-07
    * 获取未来 15 天的天气预报
-   * @param {object} options
-   * @param {?number} options.cityId 城市ID
-   * @param {?number|string} options.longitude 经度
-   * @param {?number|string} options.latitude 纬度
+   * @param {number} cityId
    * @since 2021-02-05
+   * @update 2021-02-07
    */
-  async forecast15Days(options) {
+  async forecast15Days(cityId) {
     const { service, app } = this
-    const { cityId, longitude, latitude } = options
 
-    let forecast = []
-    if (cityId) {
-      forecast = await service.moji.getByCityId('forecast15days', cityId)
-    } else if (longitude && latitude) {
-      forecast = await service.moji.getByLocation('forecast15days', longitude, latitude)
-    }
+    const forecast = await service.moji.getByCityId('forecast15days', cityId)
 
     /** 准备提取和转化的属性 - 白天 */
     const dayKeys = [
