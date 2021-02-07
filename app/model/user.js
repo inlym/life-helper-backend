@@ -28,7 +28,7 @@ module.exports = (app) => {
         comment: '微信用户昵称，从微信授权获取',
       },
 
-      avatar_url: {
+      avatarUrl: {
         type: STRING,
         allowNull: true,
         comment: '微信头像的URL，从微信授权获取',
@@ -62,6 +62,9 @@ module.exports = (app) => {
     {
       /** 数据表的表名 */
       tableName: 'user',
+
+      /** 驼峰形式命名的属性名称转化为下划线形式的数据库列名称 */
+      underscored: true,
 
       /** 启用时间戳 */
       timestamps: true,
