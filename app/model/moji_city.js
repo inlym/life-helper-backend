@@ -6,6 +6,10 @@ module.exports = (app) => {
   /**
    * 墨迹天气 API 中使用的城市列表
    * @since 2021-02-07
+   *
+   * 备注：
+   * 1. 该表数据由阿里云市场墨迹天气服务商提供，未做任何改动，由 Excel 转化为 CSV 后直接导入。
+   * 2. 由于该表仅用于查询，无任何新增、更新等操作，因此不使用创建时间、更新时间等字段。
    */
   const MojiCity = app.model.define(
     'MojiCity',
@@ -56,19 +60,16 @@ module.exports = (app) => {
       underscored: true,
 
       /** 启用时间戳 */
-      timestamps: true,
+      timestamps: false,
 
       /** 使用软删字段标记删除 */
-      paranoid: true,
-
-      /** 软删时间字段名 */
-      deletedAt: 'delete_time',
+      paranoid: false,
 
       /** 创建时间字段名 */
-      createdAt: 'create_time',
+      createdAt: false,
 
       /** 更新时间字段名 */
-      updatedAt: 'update_time',
+      updatedAt: false,
     }
   )
 

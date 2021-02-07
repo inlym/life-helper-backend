@@ -52,6 +52,48 @@ class MojiService extends Service {
   }
 
   /**
+   * 根据省市区从 moji_city 数据表中获取 cityId
+   * @param {string} province 省
+   * @param {string} city 市
+   * @param {string} district 区县
+   * @returns {Promise<number>} cityId
+   * @since 2021-02-07
+   */
+  async getCityId(province, city, district) {
+    const { app, logger } = this
+    const { Op } = app.Sequelize
+    const res = await app.model.MojiCity.findOne({
+      where: {
+        [Op.and]: [
+          {
+            province: {
+              [Op.like]: `%${province}%`,
+            },
+          },
+          {
+            city: {
+              [Op.like]: `%${city}%`,
+            },
+          },
+          {
+            district: {
+              [Op.like]: `%${district}%`,
+            },
+          },
+        ],
+      },
+    })
+
+    logger.debug(
+      `[Mysql] [moji_city] province => ${province} / city => ${city} / district => ${district} -> ${JSON.stringify(
+        res
+      )} `
+    )
+
+    return res.id
+  }
+
+  /**
    * 封装墨迹天气的 API 请求（经纬度版）
    * @see https://market.aliyun.com/products/57096001/cmapi012364.html
    * @param {string} apiName api 的英文名称
