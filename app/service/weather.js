@@ -216,6 +216,34 @@ class WeatherService extends Service {
     }
     return result
   }
+
+  /**
+   * 限行数据
+   * @param {number} cityId
+   * @since 2021-02-08
+   *
+   * 备注：
+   * 1. 该函数返回结果无对应控制器，不可单独获取，仅作为其他数据的一个附加项。
+   * 2. 返回结果样例：
+   * {
+   *   '2021-02-02': [ '2', '8' ],
+   *   '2021-02-03': [ '3', '7' ],
+   *   ......
+   *   '2021-02-17': [ 'W' ]
+   * }
+   */
+  async limit(cityId) {
+    const { service } = this
+    const list = await service.moji.getByCityId('limit', cityId)
+    const obj = {}
+    for (let i = 0; i < list.length; i++) {
+      const item = list[i]
+      const key = item.date
+      const value = item.prompt.split('')
+      obj[key] = value
+    }
+    return obj
+  }
 }
 
 module.exports = WeatherService
