@@ -47,4 +47,9 @@ module.exports = {
     enable: true,
     package: 'egg-kit',
   },
+
+  oss: {
+    enable: true,
+    package: 'egg-oss',
+  },
 }

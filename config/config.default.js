@@ -147,6 +147,28 @@ module.exports = {
     logdir: 'xxxxxxxxxxxx',
   },
 
+  /**
+   * 阿里云 OSS
+   * @see https://help.aliyun.com/document_detail/64097.html
+   */
+  oss: {
+    clients: {
+      /** 专用于存储图片文件的 OSS */
+      img: {
+        bucket: 'xxxxxxxxxxxx',
+      },
+    },
+
+    /** 所有 OSS 实例共享的配置项 */
+    default: {
+      endpoint: 'oss-cn-hangzhou-internal.aliyuncs.com',
+      region: 'oss-cn-hangzhou',
+      internal: true,
+      accessKeyId: 'xxxxxxxxxxxx',
+      accessKeySecret: 'xxxxxxxxxxxx',
+    },
+  },
+
   /** 小程序开发者ID */
   miniprogram: {
     /** 小程序 appId */
