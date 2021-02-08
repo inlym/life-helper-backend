@@ -43,4 +43,45 @@ describe('service/location.js', () => {
 
     assert(JSON.stringify(res1) === JSON.stringify(res2))
   })
+
+  it('getAddressDescription - 根据省市区获取位置描述与预设值相同', async () => {
+    const ctx = app.mockContext()
+
+    /** 测试用的省市区信息 */
+    const obj = {
+      desc: '西湖区',
+      province: '浙江省',
+      city: '杭州市',
+      district: '西湖区',
+    }
+
+    const desc = await ctx.service.location.getAddressDescription(obj)
+    assert(desc === obj.desc)
+  })
+
+  it('getAddressDescription - 根据经纬度获取位置描述与预设值相同', async () => {
+    const ctx = app.mockContext()
+
+    /** 测试用的经纬度信息 */
+    const obj = {
+      desc: '西湖区兰千桥西',
+      longitude: 120.11111,
+      latitude: 30.11111,
+    }
+
+    const desc = await ctx.service.location.getAddressDescription(obj)
+    assert(desc === obj.desc)
+  })
+
+  it('getAddressDescription - 根据请求者 IP 获取位置描述是一个字符串', async () => {
+    const ctx = app.mockContext()
+
+    /** 测试用的 IP 地址 */
+    const obj = {
+      ip: '39.185.100.100',
+    }
+
+    const desc = await ctx.service.location.getAddressDescription(obj)
+    assert(typeof desc === 'string')
+  })
 })
