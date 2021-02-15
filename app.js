@@ -5,5 +5,5 @@ module.exports = (app) => {
   app.redis.set('system#lastLaunchTime', app.now())
 
   // 记录启动次数 +1
-  app.redis.incr('system:launchCounter')
+  app.redis.incr('system#launchCounter')
 }
