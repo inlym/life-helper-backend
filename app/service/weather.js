@@ -162,6 +162,7 @@ class WeatherService extends Service {
       obj.name = codeMap[item.code]
       obj.description = item.desc
       obj.status = item.status
+      obj.icon = `https://img.lh.inlym.com/liveindex/${item.code}.svg`
       result.push(obj)
     }
 
