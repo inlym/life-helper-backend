@@ -10,7 +10,7 @@ class WeatherService extends Service {
    */
   getIconUrl(id) {
     /** icon 图片地址前缀（小程序本地） */
-    const iconUrlPrefix = '/image/weather_icon/'
+    const iconUrlPrefix = '/app/static/image/weather_icon/'
 
     /**
      * icon 图片地址前缀（存储在阿里云 OSS 上）
