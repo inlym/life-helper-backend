@@ -142,10 +142,8 @@ class WeatherController extends Controller {
     const { ctx, service } = this
     const options = service.queryhandler.handleCityIdQueries(ctx)
     const cityId = await service.moji.getCityId(options)
-    const list = await service.weather.forecast24Hours(cityId)
-    ctx.body = {
-      list,
-    }
+    const res = await service.weather.forecast24Hours(cityId)
+    ctx.body = res
   }
 }
 

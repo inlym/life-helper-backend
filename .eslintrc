@@ -179,7 +179,6 @@
     "no-plusplus": "off",
     "no-restricted-syntax": ["error", "SwitchStatement"],
     "no-tabs": "off",
-    "no-ternary": "error",
     "no-trailing-spaces": [
       "error",
       {

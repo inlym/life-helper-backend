@@ -205,6 +205,8 @@ class WeatherService extends Service {
     const { app, service } = this
     const list = await service.moji.getByCityId('forecast24hours', cityId)
     const result = []
+    let maxTemperature = -999
+    let minTemperature = 999
     for (let i = 0; i < list.length; i++) {
       const item = list[i]
       const obj = app.only2(item, 'condition date hour temp:temperature windlevel:windScale windSpeed pop:rainProb')
@@ -213,9 +215,18 @@ class WeatherService extends Service {
       } else {
         obj.iconUrl = this.getIconUrl(item.iconNight)
       }
+
+      const temperature = parseInt(obj.temperature, 10)
+      maxTemperature = maxTemperature > temperature ? maxTemperature : temperature
+      minTemperature = minTemperature < temperature ? minTemperature : temperature
+
       result.push(obj)
     }
-    return result
+    return {
+      list: result,
+      maxTemperature,
+      minTemperature,
+    }
   }
 
   /**
