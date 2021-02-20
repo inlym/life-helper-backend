@@ -117,6 +117,8 @@ class LocationService extends Service {
    * 根据提供的省市区、经纬度等信息或请求者 IP，计算获取对所在位置的一句话粗略描述
    * @see moji.getCityId 封装逻辑和该函数类似
    * @param {object} options
+   * @param {?string} options.name 位置名称
+   * @param {?string} options.address 位置地址
    * @param {?string} options.province 省
    * @param {?string} options.city 市
    * @param {?string} options.district 区县
@@ -125,15 +127,25 @@ class LocationService extends Service {
    * @param {?string} options.ip 考虑灵活性，由控制器传入请求者 IP，而不是在这里通过 ctx.ip 直接获取
    * @returns {Promise<string>} AddressDescription
    * @since 2021-02-08
+   * @update 2021-02-20
    *
    * 查询优先级：
-   * 1. 用户提交的省市区
-   * 2. 用户定位获取经纬度，转换的省市区
-   * 3. 用户未提供任何信息，请求者 IP 转换的省市区
+   * 1. 包含 name 和 address 字段，直接回传
+   * 2. 用户提交的省市区
+   * 3. 用户定位获取经纬度，转换的省市区
+   * 4. 用户未提供任何信息，请求者 IP 转换的省市区
    */
 
   async getAddressDescription(options) {
-    const { district = '', longitude, latitude, ip } = options
+    const { name, address, district = '', longitude, latitude, ip } = options
+
+    if (name) {
+      return name
+    }
+
+    if (address) {
+      return address
+    }
 
     if (district) {
       return district

@@ -20,13 +20,15 @@ class QueryhandlerService extends Service {
    * 2. location - `${longitude},${latitude}` - '120.11111,30.11111'
    */
   handleCityIdQueries(ctx) {
-    const { region, location } = ctx.query
+    const { region, location, name, address } = ctx.query
     if (region) {
       const [province, city, district] = region.split(',')
       return {
         province,
         city,
         district,
+        name,
+        address,
       }
     }
 
@@ -35,11 +37,15 @@ class QueryhandlerService extends Service {
       return {
         longitude,
         latitude,
+        name,
+        address,
       }
     }
 
     return {
       ip: ctx.ip,
+      name,
+      address,
     }
   }
 }
