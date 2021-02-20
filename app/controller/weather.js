@@ -4,18 +4,22 @@ const { Controller } = require('egg')
 
 class WeatherController extends Controller {
   /**
+   * 当前控制器的接受同样的 query，如下：
+   * - province - 省份 - 可选
+   * - city - 城市 - 可选
+   * - district - 区县 - 可选
+   * - latitude - 纬度 - 可选
+   * - longitude - 经度 - 可选
+   * - name - 地点名称 - 可选
+   * - address - 地址 - 可选
+   */
+
+  /**
    * 获取实时天气情况
-   * @update 2021-02-07
+   * @update 2021-02-20
    *
    * method   =>    GET
    * path     =>    /weather/now
-   * query    =>    1. region - 省市区 - 可选
-   *                2. location - 经纬度 - 可选
-   * body     =>    null
-   *
-   * 格式：
-   * 1. region - `${province},${city},${district}` - '浙江省,杭州市,西湖区'
-   * 2. location - `${longitude},${latitude}` - '120.11111,30.11111'
    */
   async now() {
     const { ctx, service } = this
@@ -36,17 +40,10 @@ class WeatherController extends Controller {
   /**
    * 获取未来 15 天的天气预报
    * @since 2021-02-05
-   * @update 2021-02-07
+   * @update 2021-02-20
    *
    * method   =>    GET
    * path     =>    /weather/forecast15days
-   * query    =>    1. region - 省市区 - 可选
-   *                2. location - 经纬度 - 可选
-   * body     =>    null
-   *
-   * 格式：
-   * 1. region - `${province},${city},${district}` - '浙江省,杭州市,西湖区'
-   * 2. location - `${longitude},${latitude}` - '120.11111,30.11111'
    */
   async forecast15Days() {
     const { ctx, service } = this
@@ -58,16 +55,10 @@ class WeatherController extends Controller {
   /**
    * 获取生活指数
    * @since 2021-02-07
+   * @update 2021-02-20
    *
    * method   =>    GET
    * path     =>    /weather/liveindex
-   * query    =>    1. region - 省市区 - 可选
-   *                2. location - 经纬度 - 可选
-   * body     =>    null
-   *
-   * 格式：
-   * 1. region - `${province},${city},${district}` - '浙江省,杭州市,西湖区'
-   * 2. location - `${longitude},${latitude}` - '120.11111,30.11111'
    */
   async liveIndex() {
     const { ctx, service } = this
@@ -82,16 +73,10 @@ class WeatherController extends Controller {
   /**
    * 获取空气质量指数
    * @since 2021-02-07
+   * @update 2021-02-20
    *
    * method   =>    GET
    * path     =>    /weather/aqi
-   * query    =>    1. region - 省市区 - 可选
-   *                2. location - 经纬度 - 可选
-   * body     =>    null
-   *
-   * 格式：
-   * 1. region - `${province},${city},${district}` - '浙江省,杭州市,西湖区'
-   * 2. location - `${longitude},${latitude}` - '120.11111,30.11111'
    */
   async aqi() {
     const { ctx, service } = this
@@ -103,16 +88,10 @@ class WeatherController extends Controller {
   /**
    * 获取空气质量指数 5 天预报
    * @since 2021-02-07
+   * @update 2021-02-20
    *
    * method   =>    GET
    * path     =>    /weather/aqi5days
-   * query    =>    1. region - 省市区 - 可选
-   *                2. location - 经纬度 - 可选
-   * body     =>    null
-   *
-   * 格式：
-   * 1. region - `${province},${city},${district}` - '浙江省,杭州市,西湖区'
-   * 2. location - `${longitude},${latitude}` - '120.11111,30.11111'
    */
   async aqi5Days() {
     const { ctx, service } = this
@@ -127,16 +106,10 @@ class WeatherController extends Controller {
   /**
    * 获取 24 小时天气预报
    * @since 2021-02-08
+   * @update 2021-02-20
    *
    * method   =>    GET
    * path     =>    /weather/forecast24hours
-   * query    =>    1. region - 省市区 - 可选
-   *                2. location - 经纬度 - 可选
-   * body     =>    null
-   *
-   * 格式：
-   * 1. region - `${province},${city},${district}` - '浙江省,杭州市,西湖区'
-   * 2. location - `${longitude},${latitude}` - '120.11111,30.11111'
    */
   async forecast24Hours() {
     const { ctx, service } = this
