@@ -23,4 +23,7 @@ module.exports = (app) => {
 
   /** 获取当前服务器时间 */
   router.get('/debug/now', controller.debug.now)
+
+  /** 查看请求日志 */
+  router.get('/request/:id', controller.debug.request)
 }

@@ -2,6 +2,7 @@
 
 const { Controller } = require('egg')
 const only = require('only')
+const sp = require('spawn-object')
 
 class DebugController extends Controller {
   async index() {
@@ -99,6 +100,38 @@ class DebugController extends Controller {
 
   err() {
     throw new Error('自定义错误')
+  }
+
+  /**
+   * 用于查看请求日志
+   * @since 2021-02-20
+   */
+  async request() {
+    const { app, ctx } = this
+    const { ots } = app
+
+    const { id } = ctx.params
+
+    if (!id) {
+      ctx.body = {}
+      return
+    }
+
+    const params = {
+      tableName: 'request_log',
+      primaryKey: sp({ request_id: id }),
+    }
+
+    const res = await ots.getRow(params)
+
+    const list = res.row.attributes
+
+    const response = {}
+
+    for (let i = 0; i < list.length; i++) {
+      response[list[i]['columnName']] = list[i]['columnValue']
+    }
+    ctx.body = response
   }
 }
 
