@@ -12,7 +12,7 @@ class UserInfoController extends Controller {
    */
   async getUserInfo() {
     const { ctx, service } = this
-    ctx.body = await service.user.getUserInfo()
+    ctx.body = await service.userInfo.getUserInfo()
   }
 
   /**
@@ -28,7 +28,7 @@ class UserInfoController extends Controller {
   async updateUserInfo() {
     const { ctx, service } = this
     const userInfo = ctx.request.body
-    await service.user.updateUserInfo(userInfo)
+    await service.userInfo.updateUserInfo(ctx.userId, userInfo)
     ctx.body = {
       errcode: 0,
     }
