@@ -45,10 +45,9 @@ class UserinfoService extends Service {
    */
   async getUserInfo(userId) {
     const { ctx } = this
-    userId = userId || ctx.userId
 
     const result = await ctx.model.User.findByPk(userId, {
-      attributes: ['nickname', 'avatar_url', 'gender'],
+      attributes: ['nickname', 'avatarUrl', 'gender', 'createTime'],
     })
 
     return result

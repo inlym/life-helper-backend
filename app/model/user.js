@@ -73,13 +73,13 @@ module.exports = (app) => {
       paranoid: true,
 
       /** 软删时间字段名 */
-      deletedAt: 'delete_time',
+      deletedAt: 'deleteTime',
 
       /** 创建时间字段名 */
-      createdAt: 'create_time',
+      createdAt: 'createTime',
 
       /** 更新时间字段名 */
-      updatedAt: 'update_time',
+      updatedAt: 'updateTime',
     }
   )
 
