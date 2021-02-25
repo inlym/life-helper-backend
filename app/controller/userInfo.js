@@ -12,7 +12,7 @@ class UserInfoController extends Controller {
    */
   async getUserInfo() {
     const { ctx, service } = this
-    ctx.body = await service.userInfo.getUserInfo()
+    ctx.body = await service.userInfo.getUserInfo(ctx.userId)
   }
 
   /**

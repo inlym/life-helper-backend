@@ -5,6 +5,8 @@ const { Service } = require('egg')
 class UserinfoService extends Service {
   /**
    * 更新用户资料（从小程序授权获取的用户信息）
+   * - 小程序端使用 wx.getUserInfo() 方法获取的信息
+   * @see https://developers.weixin.qq.com/miniprogram/dev/api/open-api/user-info/wx.getUserInfo.html
    * @param {object} userInfo 用户资料
    * @param {string} userInfo.avatarUrl 用户头像图片的 URL
    * @param {string} userInfo.city 用户所在城市
@@ -15,11 +17,10 @@ class UserinfoService extends Service {
    * @param {string} userInfo.province 用户所在省份
    */
   async updateUserInfo(userId, userInfo) {
-    const { ctx } = this
-
+    const { app } = this
     const { avatarUrl, city, country, gender, nickName: nickname, province } = userInfo
 
-    const result = await ctx.model.User.update(
+    const result = await app.model.User.update(
       {
         avatarUrl,
         city,
@@ -44,10 +45,10 @@ class UserinfoService extends Service {
    * @returns {Promise<{nickname:string;avatar_url:string;gender:number;}>}
    */
   async getUserInfo(userId) {
-    const { ctx } = this
+    const { app } = this
 
-    const result = await ctx.model.User.findByPk(userId, {
-      attributes: ['nickname', 'avatarUrl', 'gender', 'createTime'],
+    const result = await app.model.User.findByPk(userId, {
+      attributes: ['nickname', 'avatarUrl'],
     })
 
     return result
