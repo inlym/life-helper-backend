@@ -24,17 +24,8 @@ class WeatherController extends Controller {
   async now() {
     const { ctx, service } = this
     const options = service.queryhandler.handleCityIdQueries(ctx)
-    const promises = []
-    promises.push(service.moji.getCityId(options))
-    promises.push(service.location.getAddressDescription(options))
-
-    const [cityId, address] = await Promise.all(promises)
-
-    const response = await service.weather.condition(cityId)
-
-    response.address = address
-
-    ctx.body = response
+    const cityId = await service.moji.getCityId(options)
+    ctx.body = await service.weather.condition(cityId)
   }
 
   /**
