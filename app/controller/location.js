@@ -17,7 +17,9 @@ class LocationController extends Controller {
    */
   async address() {
     const { ctx, service } = this
-    let { latitude, longitude } = ctx.query
+    const options = service.queryhandler.handleCityIdQueries(ctx)
+
+    let { latitude, longitude } = options
 
     if (!latitude || !longitude) {
       const {
