@@ -34,6 +34,9 @@ package-lock.json
 # sequelize 的数据库配置信息
 database/config.json
 
+# apidoc 输出文档
+apidoc/
+
 # 临时屏蔽
 .travis.yml
 appveyor.yml
