@@ -13,6 +13,25 @@ class WeatherController extends Controller {
    * @apiParam (Query) {Number} [longitude] 经度
    * @apiParam (Query) {Number} [latitude] 经度
    *
+   * @apiParamExample {json} Query
+   * {
+   *   region: '浙江省,杭州市,西湖区',
+   *   location: '120.11111,30.11111',
+   *   province: '浙江省',
+   *   city: '杭州市',
+   *   district: '西湖区',
+   *   longitude: 120.11111,
+   *   latitude: 30.11111,
+   * }
+   *
+   * @apiDescription
+   * ``` sh
+   * 1. 所有参数都可以不传，服务端会使用客户端的请求者 IP 来定位。
+   * 2. province, city, district 3个参数如果传递必须一起传递，缺一不可。
+   * 3. longitude, latitude 2个参数如果传递必须一起传递，缺一不可。
+   * 4. region 参数是 province, city, district 3个参数的缩略形式，不要同时传递。
+   * 5. location 参数是 longitude, latitude 2个参数的缩略形式，不要同时传递。
+   * ```
    */
 
   /**
@@ -37,6 +56,24 @@ class WeatherController extends Controller {
    * @apiSuccess (Response) {String} windDirection 风向
    * @apiSuccess (Response) {String} windScale 风级
    * @apiSuccess (Response) {String} windSpeed 风速
+   *
+   * @apiSuccessExample {json} 返回值示例
+   * {
+   *   "condition":"阴",
+   *   "temperature":"12",
+   *   "sensibleTemperature":"10",
+   *   "airPressure":"1024",
+   *   "humidity":"93",
+   *   "ultraviolet":"1",
+   *   "visibility":"21370",
+   *   "windDirection":"北风",
+   *   "windScale":"3",
+   *   "windSpeed":"4.8",
+   *   "tip":"今天有雨，天冷了，该加衣服了！",
+   *   "iconUrl":"/app/static/image/weather_icon/2.png",
+   *   "sunrise":"6:26",
+   *   "sunset":"17:58"
+   * }
    */
   async now() {
     const { ctx, service } = this

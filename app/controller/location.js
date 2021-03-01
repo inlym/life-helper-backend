@@ -4,16 +4,17 @@ const { Controller } = require('egg')
 
 class LocationController extends Controller {
   /**
-   * 获取所在位置地址描述
-   * @since 2021-02-27
-   * 接口说明：
-   * 1. 如果提供经纬度，则使用，否则从请求者 IP 地址换取经纬度
-   * 2. 使用腾讯逆地址解析服务，将经纬度转换为地址描述
+   * @api {get} /location/address 获取所在位置地址描述
+   * @apiName address
+   * @apiGroup location
+   * @apiVersion 0.0.3
    *
-   * method   =>    GET
-   * path     =>    /location/address
-   * query    =>    1. latitude - 纬度 - 可选
-   *                2. longitude - 经度 - 可选
+   * @apiParam (Query) {Number} [longitude] 经度
+   * @apiParam (Query) {Number} [latitude] 经度
+   * @apiParam (Query) {String} [location] 经纬度坐标，格式：`location=${longitude},${latitude}`
+   *
+   * @apiDescription
+   * location 参数是 longitude, latitude 2个参数的缩略形式，不要同时传递。
    */
   async address() {
     const { ctx, service } = this
