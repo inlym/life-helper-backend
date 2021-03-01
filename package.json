@@ -1,7 +1,7 @@
 {
   "name": "life-helper-backend",
-  "version": "1.0.0",
-  "description": "「我的个人助手」小程序服务端部分代码。",
+  "version": "0.0.3",
+  "description": "「我的个人助手」小程序服务端部分代码",
   "main": "index.js",
   "directories": {
     "doc": "doc"
@@ -23,7 +23,7 @@
     "lint": "eslint .",
     "ci": "npm run lint && npm run cov",
     "autod": "autod",
-    "apidoc": "apidoc -i app/controller/ -o apidoc/"
+    "apidoc": "apidoc -i app/controller/ -o output/"
   },
   "repository": {
     "type": "git",
@@ -36,13 +36,15 @@
   },
   "homepage": "https://github.com/inlym/life-helper-backend#readme",
   "apidoc": {
-    "name": "life-helper-doc",
-    "version": "1.0.0",
-    "description": "我的个人助手小程序项目后端 API 接口文档",
-    "url": "https://doc.lh.inlym.com",
-    "apidoc": {
-      "title": "我的个人助手小程序项目后端 API 接口文档",
-      "url": "https://doc.lh.inlym.com"
+    "name": "我的个人助手",
+    "title": "我的个人助手服务端 API 接口文档",
+    "description": "服务端 API 接口文档",
+    "url": "https://api.lh.inlym.com",
+    "sampleUrl": null,
+    "template": {
+      "forceLanguage": "zh_cn",
+      "withCompare": false,
+      "withGenerator": false
     }
   },
   "devDependencies": {

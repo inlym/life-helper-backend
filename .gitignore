@@ -35,7 +35,7 @@ package-lock.json
 database/config.json
 
 # apidoc 输出文档
-apidoc/
+output/
 
 # 临时屏蔽
 .travis.yml
