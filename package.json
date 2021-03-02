@@ -1,6 +1,6 @@
 {
   "name": "life-helper-backend",
-  "version": "0.0.3",
+  "version": "0.1.0",
   "description": "「我的个人助手」小程序服务端部分代码",
   "main": "index.js",
   "directories": {
