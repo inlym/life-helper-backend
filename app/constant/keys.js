@@ -9,5 +9,5 @@ module.exports = {
    * @since 0.1.0
    * 键名完整格式：`${KEY_HTTP_PREFIX}:${url}`
    */
-  KEY_HTTP_PREFIX: 'http_response',
+  KEY_HTTP_PREFIX: 'http_data',
 }

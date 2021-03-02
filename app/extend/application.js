@@ -14,14 +14,14 @@ module.exports = {
   },
 
   /**
-   * 封装对外请求，对响应结果自动添加缓存
+   * 封装待缓存版本的请求，返回响应数据
    * @since 0.1.0
    * @param {object} requestOptions 请求参数
    * @param {object} cacheOptions 缓存相关参数
    * @param {boolean} [cacheOptions.disableCache=false] 强制不使用缓存而直接发送请求
    * @param {number} [cacheOptions.expiration=0] 存储缓存的有效期，单位：秒
    */
-  async request(requestOptions, cacheOptions = {}) {
+  async getData(requestOptions, cacheOptions = {}) {
     const { url, params = {} } = requestOptions
     const { disableCache, expiration = 0 } = cacheOptions
 
@@ -39,11 +39,11 @@ module.exports = {
       }
     }
 
-    const { status, headers, data } = await axios(requestOptions)
+    const { data } = await axios(requestOptions)
     if (expiration) {
-      this.redis.set(key, JSON.stringify({ status, headers, data }), 'EX', expiration)
+      this.redis.set(key, JSON.stringify(data), 'EX', expiration)
     }
 
-    return { status, headers, data }
+    return data
   },
 }
