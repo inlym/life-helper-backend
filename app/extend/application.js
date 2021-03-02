@@ -4,6 +4,7 @@ const dayjs = require('dayjs')
 const axios = require('axios')
 const querystring = require('querystring')
 const keys = require('../constant/keys.js')
+const { v4: uuidv4 } = require('uuid')
 
 module.exports = {
   /**
@@ -45,5 +46,13 @@ module.exports = {
     }
 
     return data
+  },
+
+  /**
+   * 获取无短横线的 UUID v4
+   * @since 0.1.0
+   */
+  clearuuid4() {
+    return uuidv4().replace(/[-]/gu, '')
   },
 }

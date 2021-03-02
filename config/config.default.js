@@ -153,7 +153,7 @@ module.exports = {
    */
   oss: {
     clients: {
-      /** 专用于存储图片文件的 OSS */
+      /** 专用于存储用户生成图片文件的 OSS */
       img: {
         bucket: 'xxxxxxxxxxxx',
       },
@@ -176,6 +176,18 @@ module.exports = {
 
     /** 小程序 appSecret */
     secret: 'xxxxxxxxxxxx',
+  },
+
+  /** 返回给前端使用的域名 */
+  domain: {
+    /** 统一 API 请求域名 */
+    api: 'api.lh.inlym.com',
+
+    /** 由官方内置的图片的 OSS 域名 */
+    ossImageOfficial: 'img.lh.inlym.com',
+
+    /** 用户上传图片用途的 OSS 域名 */
+    ossImageUgc: 'img3rd.lh.inlym.com',
   },
 
   /**

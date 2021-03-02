@@ -35,7 +35,7 @@ class OssService extends Service {
     }
 
     /** 文件名 */
-    const name = app.kit.randomString(16)
+    const name = app.clearuuid4()
 
     const result = await oss.put(`${dirname}/${name}.${imageType}`, data)
     return result.name
