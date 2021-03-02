@@ -10,7 +10,7 @@
 ### 客户端
 目前客户端仅包含**小程序**，以下是小程序码：
 
-![](https://img.inlym.com/650141858e36405191f4f752cf765de9.jpg)
+![](https://img.inlym.com/ed5676d20f6243328c2e89a1403e4ff0.jpg)
 
 小程序部分源码地址：https://github.com/inlym/life-helper-miniprogram
 
