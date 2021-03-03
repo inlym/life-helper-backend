@@ -4,9 +4,9 @@ const { Controller } = require('egg')
 
 class UserInfoController extends Controller {
   /**
-   * @api {get} /user/info 获取用户的个人资料
+   * @api {get} /user/info 获取
    * @apiName getUserInfo
-   * @apiGroup userinfo
+   * @apiGroup 用户资料
    * @apiDescription 用于获取用户的个人资料
    * @apiVersion 0.0.3
    *
@@ -19,9 +19,9 @@ class UserInfoController extends Controller {
   }
 
   /**
-   * @api {post} /user/info 更新用户个人信息
+   * @api {post} /user/info 更新
    * @apiName updateUserInfo
-   * @apiGroup userinfo
+   * @apiGroup 用户资料
    * @apiDescription 用于更新用户个人信息
    * @apiVersion 0.0.3
    *

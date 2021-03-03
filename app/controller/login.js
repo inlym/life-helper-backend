@@ -4,16 +4,16 @@ const { Controller } = require('egg')
 
 class LoginController extends Controller {
   /**
-   * @api {get} /login 小程序静默登录
+   * @api {get} /login 小程序登录
    * @apiName wxLogin
-   * @apiGroup login
+   * @apiGroup 登录
    * @apiVersion 0.0.3
    *
    * @apiParam (Query) {String} code 小程序下发的 code
    *
    * @apiSuccess (Response) {String} token 登录状态凭证
    *
-   * @apiSuccessExample {json} 请求成功 返回值
+   * @apiSuccessExample {json} 返回值示例
    *   {
    *     "token": "QvRNCjAovQTvLnBAphKkrjG2Bf5hV5Lb1rxZcxyVWpQyOhfOddaSUozIkbEYZS8N"
    *   }
