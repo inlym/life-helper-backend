@@ -261,35 +261,61 @@ class WeatherService extends Service {
    * @since 2021-03-04(0.1.0)
    */
   aqiDesc(aqi) {
-    if (aqi > 500) {
-      return '污染爆表'
+    const descList = [
+      {
+        level: '一级',
+        class: '优',
+        color: '#00E400',
+      },
+
+      {
+        level: '二级',
+        class: '良',
+        color: '#E1E100',
+      },
+
+      {
+        level: '三级',
+        class: '轻度污染',
+        color: '#E17E00',
+      },
+
+      {
+        level: '四级',
+        class: '中度污染',
+        color: '#E10000',
+      },
+
+      {
+        level: '五级',
+        class: '重度污染',
+        color: '#99004C',
+      },
+
+      {
+        level: '六级',
+        class: '严重污染',
+        color: '#7E0023',
+      },
+    ]
+
+    let index = 0
+    const value = parseInt(aqi, 10) || 0
+    if (value <= 50) {
+      index = 0
+    } else if (value <= 100) {
+      index = 1
+    } else if (value <= 150) {
+      index = 2
+    } else if (value <= 200) {
+      index = 3
+    } else if (value <= 300) {
+      index = 4
+    } else {
+      index = 5
     }
 
-    if (aqi > 300) {
-      return '严重污染'
-    }
-
-    if (aqi > 200) {
-      return '重度污染'
-    }
-
-    if (aqi > 150) {
-      return '中度污染'
-    }
-
-    if (aqi > 100) {
-      return '轻度污染'
-    }
-
-    if (aqi > 50) {
-      return '良'
-    }
-
-    if (aqi > 0) {
-      return '优'
-    }
-
-    return '未知'
+    return descList[index]
   }
 
   /**
@@ -326,7 +352,8 @@ class WeatherService extends Service {
 
       const aqiDesc = this.aqiDesc(value)
 
-      item.aqiDesc = aqiDesc
+      item.aqiClass = aqiDesc.class
+      item.aqiColor = aqiDesc.color
 
       list.push(item)
     }
