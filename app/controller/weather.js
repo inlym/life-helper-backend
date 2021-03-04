@@ -37,7 +37,7 @@ class WeatherController extends Controller {
   /**
    * @api {get} /weather/now 获取实时天气情况
    * @apiName now
-   * @apiGroup weather
+   * @apiGroup 天气
    * @apiVersion 0.0.3
    *
    * @apiUse WeatherCommonQuery
@@ -85,7 +85,7 @@ class WeatherController extends Controller {
   /**
    * @api {get} /weather/forecast15days 获取未来 15 天的天气预报
    * @apiName forecast15Days
-   * @apiGroup weather
+   * @apiGroup 天气
    * @apiVersion 0.0.3
    *
    * @apiUse WeatherCommonQuery
@@ -100,7 +100,7 @@ class WeatherController extends Controller {
   /**
    * @api {get} /weather/liveindex 获取生活指数
    * @apiName liveIndex
-   * @apiGroup weather
+   * @apiGroup 天气
    * @apiVersion 0.0.3
    *
    * @apiUse WeatherCommonQuery
@@ -118,7 +118,7 @@ class WeatherController extends Controller {
   /**
    * @api {get} /weather/aqi 获取生活指数
    * @apiName aqi
-   * @apiGroup weather
+   * @apiGroup 天气
    * @apiVersion 0.0.3
    *
    * @apiUse WeatherCommonQuery
@@ -133,7 +133,7 @@ class WeatherController extends Controller {
   /**
    * @api {get} /weather/aqi5days 获取空气质量指数 5 天预报
    * @apiName aqi
-   * @apiGroup weather
+   * @apiGroup 天气
    * @apiVersion 0.0.3
    *
    * @apiUse WeatherCommonQuery
@@ -151,18 +151,55 @@ class WeatherController extends Controller {
   /**
    * @api {get} /weather/forecast24hours 获取 24 小时天气预报
    * @apiName forecast24Hours
-   * @apiGroup weather
+   * @apiGroup 天气
    * @apiVersion 0.0.3
    *
    * @apiUse WeatherCommonQuery
    */
-
   async forecast24Hours() {
     const { ctx, service } = this
     const options = service.queryhandler.handleCityIdQueries(ctx)
     const cityId = await service.moji.getCityId(options)
     const res = await service.weather.forecast24Hours(cityId)
     ctx.body = res
+  }
+
+  /**
+   * @api {get} /weather/forecast2days 获取今天和明天两天的天气情况
+   * @apiName forecast2Days
+   * @apiGroup 天气
+   * @apiVersion 0.1.0
+   *
+   * @apiUse WeatherCommonQuery
+   *
+   * @apiSuccess (Response) {String} max 最高温度
+   * @apiSuccess (Response) {String} min 最低温度
+   * @apiSuccess (Response) {String} iconUrl icon 图标的 URL
+   * @apiSuccess (Response) {String} desc 天气转变情况描述
+   * @apiSuccess (Response) {String} aqiDesc 空气质量指数等级描述
+   *
+   * @apiSuccessExample {json} 返回值示例
+   * {
+   *   list: [
+   *     {
+   *       max: '16',
+   *       min: '9',
+   *       iconUrl: '/app/static/image/weather_icon/7.png',
+   *       desc: '小到中雨转中雨',
+   *       aqiDesc: '优'
+   *     },
+   *     ...
+   *   ]
+   * }
+   */
+  async forecast2Days() {
+    const { ctx, service } = this
+    const options = service.queryhandler.handleCityIdQueries(ctx)
+    const cityId = await service.moji.getCityId(options)
+    const list = await service.weather.forecast2Days(cityId)
+    ctx.body = {
+      list,
+    }
   }
 }
 

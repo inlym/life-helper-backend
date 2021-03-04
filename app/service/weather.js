@@ -234,9 +234,7 @@ class WeatherService extends Service {
    * @param {number} cityId
    * @since 2021-02-08
    *
-   * 备注：
-   * 1. 该函数返回结果无对应控制器，不可单独获取，仅作为其他数据的一个附加项。
-   * 2. 返回结果样例：
+   * 返回结果样例：
    * {
    *   '2021-02-02': [ '2', '8' ],
    *   '2021-02-03': [ '3', '7' ],
@@ -255,6 +253,85 @@ class WeatherService extends Service {
       obj[key] = value
     }
     return obj
+  }
+
+  /**
+   * 将空气质量指数的数字转换为对应的文本
+   * @param {number} aqi 空气质量指数
+   * @since 2021-03-04(0.1.0)
+   */
+  aqiDesc(aqi) {
+    if (aqi > 500) {
+      return '污染爆表'
+    }
+
+    if (aqi > 300) {
+      return '严重污染'
+    }
+
+    if (aqi > 200) {
+      return '重度污染'
+    }
+
+    if (aqi > 150) {
+      return '中度污染'
+    }
+
+    if (aqi > 100) {
+      return '轻度污染'
+    }
+
+    if (aqi > 50) {
+      return '良'
+    }
+
+    if (aqi > 0) {
+      return '优'
+    }
+
+    return '未知'
+  }
+
+  /**
+   * 获取未来 2 天（即今天和明天）天气情况
+   * @since 2021-03-04(0.1.0)
+   * @param {number} cityId 城市 ID
+   * @returns {Promise<Array>}
+   */
+  async forecast2Days(cityId) {
+    const { service } = this
+
+    const promises = []
+
+    promises.push(service.moji.getByCityId('forecast15days', cityId))
+    promises.push(service.moji.getByCityId('aqiforecast5days', cityId))
+
+    const [forecast15days, aqiforecast5days] = await Promise.all(promises)
+
+    const list = []
+    for (let i = 1; i < 3; i++) {
+      const { conditionDay, conditionNight, tempDay, tempNight, conditionIdDay } = forecast15days[i]
+      const { value } = aqiforecast5days[i]
+      const iconUrl = this.getIconUrl(conditionIdDay)
+      const item = {
+        max: tempDay,
+        min: tempNight,
+        iconUrl,
+      }
+      if (conditionDay === conditionNight) {
+        item.desc = conditionDay
+      } else {
+        item.desc = `${conditionDay}转${conditionNight}`
+      }
+
+      const aqiDesc = this.aqiDesc(value)
+
+      item.aqiDesc = aqiDesc
+
+      list.push(item)
+    }
+
+    return list
   }
 }
 
