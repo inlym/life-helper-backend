@@ -176,7 +176,8 @@ class WeatherController extends Controller {
    * @apiSuccess (Response) {String} min 最低温度
    * @apiSuccess (Response) {String} iconUrl icon 图标的 URL
    * @apiSuccess (Response) {String} desc 天气转变情况描述
-   * @apiSuccess (Response) {String} aqiDesc 空气质量指数等级描述
+   * @apiSuccess (Response) {String} aqiClass 空气质量指数等级描述
+   * @apiSuccess (Response) {String} aqiClass 显示 aqi 等级的背景色
    *
    * @apiSuccessExample {json} 返回值示例
    * {
@@ -186,7 +187,8 @@ class WeatherController extends Controller {
    *       min: '9',
    *       iconUrl: '/app/static/image/weather_icon/7.png',
    *       desc: '小到中雨转中雨',
-   *       aqiDesc: '优'
+   *       aqiClass: '优',
+   *       aqiColor: '#00E400'
    *     },
    *     ...
    *   ]
