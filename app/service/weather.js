@@ -21,6 +21,39 @@ class WeatherService extends Service {
   }
 
   /**
+   * 对天气情况做的简单归类，用于客户端展示对应天气样式
+   * @since 2021-03-05
+   * @param {number} conditionId 墨迹天气 API 接口的提供的 conditionId
+   * @returns {string} 天气值：0-未知、1-晴、2-云、3-阴、4-雨、5-雪、6-雾、7-尘
+   */
+  getWeatherType(conditionId) {
+    const { includeNum } = this.service.utils
+    const id = parseInt(conditionId, 10)
+    if (includeNum(['1-7'], id)) {
+      return 1
+    }
+    if (includeNum(['8-12', '80-82'], id)) {
+      return 2
+    }
+    if (includeNum([13, 14, 36, 85], id)) {
+      return 3
+    }
+    if (includeNum(['15-23', '37-57', '66-70', 78, '86-93'], id)) {
+      return 4
+    }
+    if (includeNum(['24-25', '58-63', '71-77', 94], id)) {
+      return 5
+    }
+    if (includeNum(['26-28', '64-65', '83-84'], id)) {
+      return 6
+    }
+    if (includeNum(['29-35', 79], id)) {
+      return 7
+    }
+    return 0
+  }
+
+  /**
    * 获取天气实况
    * @param {number} cityId
    * @since 2021-02-07
