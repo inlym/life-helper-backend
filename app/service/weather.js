@@ -257,6 +257,7 @@ class WeatherService extends Service {
 
   /**
    * 将空气质量指数的数字转换为对应的文本
+   * @description 以下对应的文本及颜色均来自于国家标准文件要求，请勿轻易改动。
    * @param {number} aqi 空气质量指数
    * @since 2021-03-04(0.1.0)
    */
@@ -354,6 +355,12 @@ class WeatherService extends Service {
 
       item.aqiClass = aqiDesc.class
       item.aqiColor = aqiDesc.color
+
+      if (i === 1) {
+        item.daytext = '今天'
+      } else if (i === 2) {
+        item.daytext = '明天'
+      }
 
       list.push(item)
     }
