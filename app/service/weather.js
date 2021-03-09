@@ -458,11 +458,11 @@ class WeatherService extends Service {
     for (let i = 1; i < 3; i++) {
       const { conditionDay, conditionNight, tempDay, tempNight, conditionIdDay } = forecast15days[i]
       const { value } = aqiforecast5days[i]
-      const iconUrl = this.getIconUrl(conditionIdDay)
+      const icon = conditionIdDay
       const item = {
         max: tempDay,
         min: tempNight,
-        iconUrl,
+        icon,
       }
       if (conditionDay === conditionNight) {
         item.desc = conditionDay
