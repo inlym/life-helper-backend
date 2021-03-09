@@ -54,6 +54,83 @@ class WeatherService extends Service {
   }
 
   /**
+   * 根据 conditionId 计算客户端首页的 天空 面板需要展示哪些元素
+   * @since 2021-03-09
+   * @param {number} conditionId 墨迹天气 API 接口的提供的 conditionId
+   *
+   * 背景类：
+   * - 普通 wbg-common
+   * - 夜晚 wbg-night
+   * - 小中雨 wbg-lightrain
+   * - 灰暗 wbg-grey
+   *
+   * 天空元素类：
+   * - 满月 fullmoon
+   * - 半月 halfmoon
+   * - 太阳 sun
+   * - 固定云 fixed-cloud
+   * - 浮动云 moving-cloud
+   * - 乌云 darkcloud
+   * - 雨点 rain
+   *
+   * 1-晴、2-云、3-阴、4-雨、5-雪、6-雾、7-尘
+   */
+  skyElement(conditionId) {
+    /** 当前时间的 小时 */
+    const hour = new Date().getHours()
+
+    /** 最终输出的内容 */
+    let result = {}
+
+    const weatherType = this.getWeatherType(conditionId)
+
+    if (weatherType === 1) {
+      result = {
+        bgClass: 'wbg-common',
+        sun: true,
+      }
+    } else if (weatherType === 2) {
+      result = {
+        bgClass: 'wbg-common',
+        sun: true,
+        fixedCloud: true,
+      }
+    } else if (weatherType === 3) {
+      result = {
+        bgClass: 'wbg-common',
+        sun: true,
+        fixedCloud: true,
+        movingCloud: true,
+      }
+    } else if (weatherType === 4) {
+      result = {
+        bgClass: 'wbg-lightrain',
+        sun: true,
+        fixedCloud: true,
+        movingCloud: true,
+        darkCloud: true,
+        rain: true,
+      }
+    } else {
+      result = {
+        bgClass: 'wbg-grey',
+        sun: true,
+        fixedCloud: true,
+        movingCloud: true,
+        darkCloud: true,
+      }
+    }
+
+    if (hour <= 6 || hour >= 18) {
+      delete result.sun
+      result.fullmoon = true
+      result.bgClass = 'wbg-night'
+    }
+
+    return result
+  }
+
+  /**
    * 获取天气实况
    * @param {number} cityId
    * @since 2021-02-07
@@ -84,6 +161,8 @@ class WeatherService extends Service {
     res.iconUrl = this.getIconUrl(condition.icon)
     res.sunrise = app.dayjs(condition.sunRise).format('H:mm')
     res.sunset = app.dayjs(condition.sunSet).format('H:mm')
+
+    res.skyElement = this.skyElement(condition.conditionId)
 
     return res
   }
