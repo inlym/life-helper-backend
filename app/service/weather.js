@@ -154,11 +154,14 @@ class WeatherService extends Service {
       'windLevel:windScale',
       'windSpeed',
       'tips:tip',
+      'icon',
     ]
 
     const res = app.only2(condition, keys)
 
+    // 下面这行后面去掉
     res.iconUrl = this.getIconUrl(condition.icon)
+
     res.sunrise = app.dayjs(condition.sunRise).format('H:mm')
     res.sunset = app.dayjs(condition.sunSet).format('H:mm')
 
@@ -214,8 +217,12 @@ class WeatherService extends Service {
       obj.day = app.only2(current, dayKeys)
       obj.night = app.only2(current, nightKeys)
 
+      // 以下两行过两天就去掉，图片地址由客户端维护
       obj.day.iconUrl = this.getIconUrl(current.conditionIdDay)
       obj.night.iconUrl = this.getIconUrl(current.conditionIdNight)
+
+      obj.day.icon = current.conditionIdDay
+      obj.night.icon = current.conditionIdNight
 
       obj.moonrise = app.dayjs(current.moonrise).format('H:mm')
       obj.moonset = app.dayjs(current.moonset).format('H:mm')
