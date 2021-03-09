@@ -30,7 +30,7 @@ module.exports = () => {
       }
     }
 
-    // 如果 token 为空，则从 code 中获取 userId
+    // 如果 token 为空或无效，则从 code 中获取 userId
     if (code) {
       ctx.userId = await ctx.service.user.getUserIdByCode(code)
 
