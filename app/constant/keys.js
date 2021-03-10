@@ -10,4 +10,10 @@ module.exports = {
    * 键名完整格式：`${KEY_HTTP_PREFIX}:${url}`
    */
   KEY_HTTP_PREFIX: 'http_data',
+
+  /**
+   * 缓存和风天气城市信息查询接口数据
+   * @see https://dev.qweather.com/docs/api/geo/city-lookup/
+   */
+  KEY_HEFENG_LOCATION_PREFIX: 'hefeng:geo:',
 }

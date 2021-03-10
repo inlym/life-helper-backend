@@ -55,4 +55,7 @@ module.exports = {
   clearuuid4() {
     return uuidv4().replace(/[-]/gu, '')
   },
+
+  /** Redis 键名映射文件 */
+  keys,
 }

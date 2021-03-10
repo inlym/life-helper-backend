@@ -216,4 +216,19 @@ module.exports = {
    * 该 API 对于个人开发者的免费配额较低，准备多注册几个帐号轮询调用。
    */
   TENCENT_LBS_KEYS: ['xxxxxxxxxxxx'],
+
+  /**
+   * 和风天气开发平台密钥（key）
+   * @see https://dev.qweather.com/docs/start/get-key/
+   */
+  QWEATHER: {
+    basic: {
+      baseURL: 'https://devapi.qweather.com/v7/',
+      key: 'xxxxxxxxxxxx',
+    },
+    pro: {
+      baseURL: 'https://api.qweather.com/v7/',
+      key: 'xxxxxxxxxxxx',
+    },
+  },
 }
