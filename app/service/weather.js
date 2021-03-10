@@ -325,19 +325,35 @@ class WeatherService extends Service {
   async forecast24Hours(cityId) {
     const { app, service } = this
     const list = await service.moji.getByCityId('forecast24hours', cityId)
+    const nowHour = new Date().getHours()
     const result = []
     let maxTemperature = -999
     let minTemperature = 999
     for (let i = 0; i < list.length; i++) {
       const item = list[i]
-      const obj = app.only2(item, 'condition:text date hour temp windlevel:windScale windSpeed humidity windSpeed pop')
+
+      // 可能缓存临界点时，第 1 条为过期数据
+      if (i === 0 && parseInt(item.hour, 10) < nowHour) {
+        continue
+      }
+
+      const obj = app.only2(item, 'condition:text date temp windlevel:windScale windSpeed humidity windSpeed pop')
+
+      // 天气图标根据时间决定白天还是夜晚图标
       if (parseInt(item.hour, 10) > 6 && parseInt(item.hour, 10) < 18) {
         obj.icon = item.iconDay
       } else {
         obj.icon = item.iconNight
       }
 
-      const temperature = parseInt(obj.temperature, 10)
+      // 小时的时间文案
+      if (parseInt(item.hour, 10) === nowHour) {
+        obj.hour = '现在'
+      } else {
+        obj.hour = `${item.hour}时`
+      }
+
+      const temperature = parseInt(obj.temp, 10)
       maxTemperature = maxTemperature > temperature ? maxTemperature : temperature
       minTemperature = minTemperature < temperature ? minTemperature : temperature
 
