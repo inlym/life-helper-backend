@@ -347,7 +347,7 @@ class WeatherService extends Service {
       }
 
       // 小时的时间文案
-      if (parseInt(item.hour, 10) === nowHour) {
+      if (parseInt(item.hour, 10) === nowHour && i < 3) {
         obj.hour = '现在'
       } else {
         obj.hour = `${item.hour}时`
