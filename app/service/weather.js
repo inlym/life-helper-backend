@@ -317,8 +317,10 @@ class WeatherService extends Service {
 
   /**
    * 天气预报 24 小时
+   * @tag 墨迹天气
    * @param {number} cityId
    * @since 2021-02-08
+   * @update 2021-03-10
    */
   async forecast24Hours(cityId) {
     const { app, service } = this
@@ -328,11 +330,11 @@ class WeatherService extends Service {
     let minTemperature = 999
     for (let i = 0; i < list.length; i++) {
       const item = list[i]
-      const obj = app.only2(item, 'condition date hour temp:temperature windlevel:windScale windSpeed pop:rainProb')
+      const obj = app.only2(item, 'condition:text date hour temp windlevel:windScale windSpeed humidity windSpeed pop')
       if (parseInt(item.hour, 10) > 6 && parseInt(item.hour, 10) < 18) {
-        obj.iconUrl = this.getIconUrl(item.iconDay)
+        obj.icon = item.iconDay
       } else {
-        obj.iconUrl = this.getIconUrl(item.iconNight)
+        obj.icon = item.iconNight
       }
 
       const temperature = parseInt(obj.temperature, 10)
