@@ -203,6 +203,30 @@ class WeatherController extends Controller {
       list,
     }
   }
+
+  /**
+   * @api {get} /weather/airnow 获取实时空气质量
+   * @apiName airnow
+   * @apiGroup 天气
+   *
+   * @apiParam (Query) {String} [location] 经纬度坐标，格式：`location=${longitude},${latitude}`
+   */
+  async airnow() {
+    const { ctx, service } = this
+    const { location } = ctx.query
+
+    if (location) {
+      const [longitude, latitude] = location.split(',')
+      if (longitude && latitude) {
+        ctx.body = await service.hefeng.airNow(longitude, latitude)
+      }
+    } else {
+      const {
+        location: { lng, lat },
+      } = await service.location.getLocationByIp(ctx.ip)
+      ctx.body = await service.hefeng.airNow(lng, lat)
+    }
+  }
 }
 
 module.exports = WeatherController

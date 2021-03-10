@@ -23,4 +23,7 @@ module.exports = (app) => {
 
   /** 获取今天和明天的天气情况 */
   router.get('/weather/forecast2days', controller.weather.forecast2Days)
+
+  /** 获取实时空气质量 */
+  router.get('/weather/airnow', controller.weather.airnow)
 }

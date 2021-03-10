@@ -12,8 +12,14 @@ module.exports = {
   KEY_HTTP_PREFIX: 'http_data',
 
   /**
-   * 缓存和风天气城市信息查询接口数据
+   * 缓存和风天气 城市信息查询 接口数据
    * @see https://dev.qweather.com/docs/api/geo/city-lookup/
    */
   KEY_HEFENG_LOCATION_PREFIX: 'hefeng:geo:',
+
+  /**
+   * 缓存和风天气 实时空气质量 接口数据
+   * @see https://dev.qweather.com/docs/api/air/air-now/
+   */
+  KEY_HEFENG_AIRNOW_PREFIX: 'hefeng:airnow:',
 }
