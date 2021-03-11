@@ -533,6 +533,13 @@ class WeatherService extends Service {
 
       /** 日期的缩略格式，例如：3/9, 3/10 */
       item.dateText = `${itemDate.getMonth() + 1}/${itemDate.getDate()}`
+
+      /** 天气变化的文本描述，例如：阴转小雨 */
+      if (item.textDay === item.textNight) {
+        item.desc = item.textDay
+      } else {
+        item.desc = `${item.textDay}转${item.textNight}`
+      }
     }
 
     return list15d
