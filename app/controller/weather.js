@@ -209,6 +209,8 @@ class WeatherController extends Controller {
    * @apiName airnow
    * @apiGroup 天气
    *
+   * @description 使用 [和风天气] API
+   *
    * @apiParam (Query) {String} [location] 经纬度坐标，格式：`location=${longitude},${latitude}`
    */
   async airnow() {
@@ -225,6 +227,45 @@ class WeatherController extends Controller {
         location: { lng, lat },
       } = await service.location.getLocationByIp(ctx.ip)
       ctx.body = await service.hefeng.airNow(lng, lat)
+    }
+  }
+
+  /**
+   * @api {get} /weather/15d 获取未来 15 天预报
+   * @apiName fore15d
+   * @apiGroup 天气
+   * @apiVersion 1.0
+   *
+   * @description 使用 [和风天气] API
+   *
+   * @apiParam (Query) {String} [location] 经纬度坐标，格式：`location=${longitude},${latitude}`
+   */
+  async fore15d() {
+    const { ctx, service } = this
+    const { location } = ctx.query
+
+    let longitude = ''
+    let latitude = ''
+
+    if (location) {
+      const [lng, lat] = location.split(',')
+      if (lng && lat) {
+        longitude = lng
+        latitude = lat
+      }
+    } else {
+      const {
+        location: { lng, lat },
+      } = await service.location.getLocationByIp(ctx.ip)
+      longitude = lng
+      latitude = lat
+    }
+
+    const locationId = await service.hefeng.getLocationId(longitude, latitude)
+    const list15d = await service.weather.fore15d(locationId)
+    ctx.body = {
+      list: list15d,
+      iconUrlPrefix: 'https://img.lh.inlym.com/hefeng/s1/',
     }
   }
 }

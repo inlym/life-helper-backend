@@ -182,13 +182,7 @@ class WeatherService extends Service {
     const forecast = await service.moji.getByCityId('forecast15days', cityId)
 
     /** 准备提取和转化的属性 - 白天 */
-    const dayKeys = [
-      'conditionDay:condition',
-      'windDirDay:windDirection',
-      'windLevelDay:windScale',
-      'windSpeedDay:windSpeed',
-      'tempDay:temperature',
-    ]
+    const dayKeys = ['conditionDay:condition', 'windDirDay:windDirection', 'windLevelDay:windScale', 'windSpeedDay:windSpeed', 'tempDay:temperature']
 
     /** 准备提取和转化的属性 - 夜间 */
     const nightKeys = [
@@ -503,6 +497,42 @@ class WeatherService extends Service {
     }
 
     return list
+  }
+
+  /**
+   * 使用和风天气获取未来 15 天预报
+   * @tag 和风天气
+   * @since 2021-03-11
+   * @param {string} locationId 和风天气 API 使用的 LocationId
+   */
+  async fore15d(locationId) {
+    const { service } = this
+    const weekdayList = ['周日', '周一', '周二', '周三', '周四', '周五', '周六']
+    const list15d = await service.hefeng.fore15d(locationId)
+
+    for (let i = 0; i < list15d.length; i++) {
+      const item = list15d[i]
+      const now = new Date()
+      const itemDate = new Date(item.fxDate)
+
+      if (now.getDate() === itemDate.getDate()) {
+        item.weekday = '今天'
+        if (i > 0) {
+          list15d[i - 1]['weekday'] = '昨天'
+        }
+      } else if (list15d[i - 1]['weekday'] === '今天') {
+        item.weekday = '明天'
+      } else if (list15d[i - 2]['weekday'] === '今天') {
+        item.weekday = '后天'
+      } else {
+        item.weekday = weekdayList[itemDate.getDay()]
+      }
+
+      item.date = item.fxDate
+      delete item.fxDate
+    }
+
+    return list15d
   }
 }
 

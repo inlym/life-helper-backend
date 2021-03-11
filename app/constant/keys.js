@@ -22,4 +22,10 @@ module.exports = {
    * @see https://dev.qweather.com/docs/api/air/air-now/
    */
   KEY_HEFENG_AIRNOW_PREFIX: 'hefeng:airnow:',
+
+  /**
+   * 缓存和风天气 逐天天气预报（15天） 接口数据
+   * @see https://dev.qweather.com/docs/api/weather/weather-daily-forecast/
+   */
+  KEY_HEFENG_15D_PREFIX: 'hefeng:15d:',
 }
