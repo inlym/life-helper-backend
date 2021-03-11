@@ -540,6 +540,16 @@ class WeatherService extends Service {
       } else {
         item.desc = `${item.textDay}转${item.textNight}`
       }
+
+      /** 线性图标地址前缀 */
+      const url1 = 'https://img.lh.inlym.com/hefeng/s1/'
+
+      /** 拟物图标地址前缀 */
+      const url2 = 'https://img.lh.inlym.com/hefeng/s2/'
+
+      item.iconUrl = `${url2}${item.iconDay}.png`
+      item.iconDayUrl = `${url1}${item.iconDay}.png`
+      item.iconNightUrl = `${url1}${item.iconNight}.png`
     }
 
     return list15d

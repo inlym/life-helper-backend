@@ -265,7 +265,6 @@ class WeatherController extends Controller {
     const list15d = await service.weather.fore15d(locationId)
     ctx.body = {
       list: list15d,
-      iconUrlPrefix: 'https://img.lh.inlym.com/hefeng/s2/',
     }
   }
 }
