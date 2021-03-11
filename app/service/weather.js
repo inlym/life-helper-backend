@@ -530,6 +530,9 @@ class WeatherService extends Service {
 
       item.date = item.fxDate
       delete item.fxDate
+
+      /** 日期的缩略格式，例如：3/9, 3/10 */
+      item.dateText = `${itemDate.getMonth() + 1}/${itemDate.getDate()}`
     }
 
     return list15d
