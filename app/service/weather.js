@@ -452,7 +452,9 @@ class WeatherService extends Service {
 
   /**
    * 获取未来 2 天（即今天和明天）天气情况
-   * @since 2021-03-04(0.1.0)
+   * @tag 墨迹天气
+   * @since 2021-03-04
+   * @update 2021-03-12
    * @param {number} cityId 城市 ID
    * @returns {Promise<Array>}
    */
@@ -468,13 +470,14 @@ class WeatherService extends Service {
 
     const list = []
     for (let i = 1; i < 3; i++) {
-      const { conditionDay, conditionNight, tempDay, tempNight, conditionIdDay } = forecast15days[i]
+      const { conditionDay, conditionNight, tempDay, tempNight, conditionIdDay, predictDate } = forecast15days[i]
       const { value } = aqiforecast5days[i]
       const icon = conditionIdDay
       const item = {
         max: tempDay,
         min: tempNight,
         icon,
+        date: predictDate,
       }
       if (conditionDay === conditionNight) {
         item.desc = conditionDay
