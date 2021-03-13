@@ -20,12 +20,12 @@ class HefengService extends Service {
    * @returns {Promise<string>} locationId
    */
   async getLocationId(longitude, latitude) {
-    const { app, logger } = this
+    const { app, service, logger } = this
 
     const lng = parseFloat(longitude, 10).toFixed(3)
     const lat = parseFloat(latitude, 10).toFixed(3)
 
-    const redisKey = `${app.keys.KEY_HEFENG_LOCATION_PREFIX}${lng},${lat}`
+    const { key: redisKey, timeout } = service.keys.hefengLocationId(lng, lat)
 
     // 先检查是否有缓存，若有则直接从缓存中获取并返回
     const cacheResult = await app.redis.get(redisKey)
@@ -35,7 +35,6 @@ class HefengService extends Service {
 
     // 无缓存则请求接口获取数据，并将接口数据缓存（有效期 10 天）
     const { key } = app.config.QWEATHER.basic
-    const EXP = 60 * 60 * 24 * 10
     const requestOptions = {
       url: 'https://geoapi.qweather.com/v2/city/lookup',
       params: {
@@ -46,7 +45,7 @@ class HefengService extends Service {
     const { data: resData } = await app.axios(requestOptions)
     if (parseInt(resData.code, 10) === 200) {
       logger.info(`[接口请求成功] 和风天气 - 城市信息查询, location ${requestOptions.params.location}`)
-      app.redis.set(redisKey, JSON.stringify(resData), 'EX', EXP)
+      app.redis.set(redisKey, JSON.stringify(resData), 'EX', timeout)
       return resData.location[0].id
     } else {
       logger.error(`[接口请求错误] 和风天气 - 城市信息查询, 请求参数 ${JSON.stringify(requestOptions.params)}, 响应 code ${resData.code}`)
@@ -59,12 +58,12 @@ class HefengService extends Service {
    * @see https://dev.qweather.com/docs/api/air/air-now/
    */
   async airNow(longitude, latitude) {
-    const { app, logger } = this
+    const { app, service, logger } = this
 
     const lng = parseFloat(longitude, 10).toFixed(2)
     const lat = parseFloat(latitude, 10).toFixed(2)
 
-    const redisKey = `${app.keys.KEY_HEFENG_AIRNOW_PREFIX}${lng},${lat}`
+    const { key: redisKey, timeout } = service.keys.hefengAirNowLocation(lng, lat)
 
     const cacheResult = await app.redis.get(redisKey)
     if (cacheResult) {
@@ -72,7 +71,6 @@ class HefengService extends Service {
     }
 
     const { key, baseURL } = app.config.QWEATHER.basic
-    const EXP = 60 * 60
     const requestOptions = {
       baseURL,
       url: '/air/now',
@@ -84,7 +82,7 @@ class HefengService extends Service {
     const { data: resData } = await app.axios(requestOptions)
     if (parseInt(resData.code, 10) === 200) {
       logger.info(`[接口请求成功] 和风天气 - 实时空气质量, location ${requestOptions.params.location}`)
-      app.redis.set(redisKey, JSON.stringify(resData), 'EX', EXP)
+      app.redis.set(redisKey, JSON.stringify(resData), 'EX', timeout)
       return resData.now
     } else {
       logger.error(`[接口请求错误] 和风天气 - 实时空气质量, 请求参数 ${JSON.stringify(requestOptions.params)}, 响应 code ${resData.code}`)
@@ -97,9 +95,9 @@ class HefengService extends Service {
    * @see https://dev.qweather.com/docs/api/weather/weather-daily-forecast/
    */
   async fore15d(locationId) {
-    const { app, logger } = this
+    const { app, service, logger } = this
 
-    const redisKey = `${app.keys.KEY_HEFENG_15D_PREFIX}${locationId}`
+    const { key: redisKey, timeout } = service.keys.hefengFore15LocationId(locationId)
 
     const cacheResult = await app.redis.get(redisKey)
     if (cacheResult) {
@@ -107,7 +105,6 @@ class HefengService extends Service {
     }
 
     const { key, baseURL } = app.config.QWEATHER.pro
-    const EXP = 60 * 60 * 5
     const requestOptions = {
       baseURL,
       url: '/weather/15d',
@@ -119,7 +116,7 @@ class HefengService extends Service {
     const { data: resData } = await app.axios(requestOptions)
     if (parseInt(resData.code, 10) === 200) {
       logger.info(`[接口请求成功] 和风天气 - 逐天天气预报（15天）, location ${requestOptions.params.location}`)
-      app.redis.set(redisKey, JSON.stringify(resData), 'EX', EXP)
+      app.redis.set(redisKey, JSON.stringify(resData), 'EX', timeout)
       return resData.daily
     } else {
       logger.error(`[接口请求错误] 和风天气 - 逐天天气预报（15天）, 请求参数 ${JSON.stringify(requestOptions.params)}, 响应 code ${resData.code}`)

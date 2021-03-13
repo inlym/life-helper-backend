@@ -13,38 +13,13 @@ class AuthService extends Service {
    * @update 2021-02-06
    */
   async createToken(userId) {
-    const { app, logger } = this
+    const { app, service, logger } = this
 
-    /** token 的长度为 64 个英文字符 */
-    const TOKEN_LENGTH = 64
-
-    /** token 存入 Redis 的有效期为 2 天 */
-    const EXPIRATION = 3600 * 24 * 2
-
-    /** Redis 键名 */
-    const keyUserId2Token = `userId@token:${userId}`
-
-    const tokenInRedis = await app.redis.get(keyUserId2Token)
-
-    // 如果 token 在 Redis 中已存在
-    if (tokenInRedis) {
-      const keyToken2UserId1 = `token@userId:${tokenInRedis}`
-
-      // 重置有效期
-      app.redis.expire(keyUserId2Token, EXPIRATION)
-      app.redis.expire(keyToken2UserId1, EXPIRATION)
-      return tokenInRedis
-    }
-
-    /** 生成随机字符串的 token */
-    const token = app.kit.randomString(TOKEN_LENGTH)
-
-    const keyToken2UserId2 = `token@userId:${token}`
+    const token = app.clearuuid4()
+    const { key, timeout } = service.keys.token2UserId(token)
+    app.redis.set(key, userId, 'EX', timeout)
 
     logger.debug(`[Redis] 为指定userId生成token -> userId => ${userId} / token => ${token}`)
-
-    app.redis.set(keyToken2UserId2, userId, 'EX', EXPIRATION)
-    app.redis.set(keyUserId2Token, token, 'EX', EXPIRATION)
 
     return token
   }
@@ -56,11 +31,11 @@ class AuthService extends Service {
    * @update 2021-02-06
    */
   async getUserIdByToken(token) {
-    const { app, logger } = this
+    const { app, service, logger } = this
 
-    const keyToken2UserId = `token@userId:${token}`
+    const { key } = service.keys.token2UserId(token)
 
-    const result = await app.redis.get(keyToken2UserId)
+    const result = await app.redis.get(key)
     if (!result) {
       logger.debug(`[Redis] token => ${token} 未从 Redis 中查询到对应 userId`)
       return NOT_EXIST_USER_ID

@@ -18,16 +18,7 @@ class MojiService extends Service {
    */
   apis() {
     /** 所有的共有的 api 列表 */
-    const apiList = [
-      'limit',
-      'aqi',
-      'index',
-      'alert',
-      'forecast24hours',
-      'forecast15days',
-      'condition',
-      'aqiforecast5days',
-    ]
+    const apiList = ['limit', 'aqi', 'index', 'alert', 'forecast24hours', 'forecast15days', 'condition', 'aqiforecast5days']
     return apiList
   }
 
@@ -84,11 +75,7 @@ class MojiService extends Service {
       },
     })
 
-    logger.debug(
-      `[Mysql] [moji_city] province => ${province} / city => ${city} / district => ${district} -> ${JSON.stringify(
-        res
-      )} `
-    )
+    logger.debug(`[Mysql] [moji_city] province => ${province} / city => ${city} / district => ${district} -> ${JSON.stringify(res)} `)
 
     return res.id
   }
@@ -120,15 +107,19 @@ class MojiService extends Service {
 
     if (longitude && latitude) {
       const {
-        address_component: { province: province2, city: city2, district: district2 },
-      } = await ctx.service.location.getAddressByLocation(longitude, latitude)
+        result: {
+          address_component: { province: province2, city: city2, district: district2 },
+        },
+      } = await ctx.service.lbsqq.getAddressByLocation(longitude, latitude)
       return await this.queryCityId(province2, city2, district2)
     }
 
     if (ip) {
       const {
-        ad_info: { province: province3, city: city3, district: district3 },
-      } = await ctx.service.location.getLocationByIp(ip)
+        result: {
+          ad_info: { province: province3, city: city3, district: district3 },
+        },
+      } = await ctx.service.lbsqq.getLocationByIp(ip)
       return await this.queryCityId(province3, city3, district3)
     }
   }
@@ -172,9 +163,7 @@ class MojiService extends Service {
     const response = await axios(requestOptions)
 
     if (!response.data.code) {
-      logger.info(
-        `[Aliyun API Market] 墨迹天气（经纬度版）接口请求成功 API => ${apiName} / 经度 => ${longitude} / 纬度 => ${latitude}`
-      )
+      logger.info(`[Aliyun API Market] 墨迹天气（经纬度版）接口请求成功 API => ${apiName} / 经度 => ${longitude} / 纬度 => ${latitude}`)
       return response.data.data
     } else {
       logger.error(
@@ -219,14 +208,10 @@ class MojiService extends Service {
     const response = await axios(requestOptions)
 
     if (!response.data.code) {
-      logger.info(
-        `[Aliyun API Market] 墨迹天气（城市ID版）接口请求成功 API => ${apiName} / cityId => ${cityId}`
-      )
+      logger.info(`[Aliyun API Market] 墨迹天气（城市ID版）接口请求成功 API => ${apiName} / cityId => ${cityId}`)
       return response.data.data
     } else {
-      logger.error(
-        `[Aliyun API Market] 墨迹天气（城市ID版）接口请求失败 API => ${apiName} / cityId => ${cityId} / 错误原因 => ${response.data.msg}`
-      )
+      logger.error(`[Aliyun API Market] 墨迹天气（城市ID版）接口请求失败 API => ${apiName} / cityId => ${cityId} / 错误原因 => ${response.data.msg}`)
     }
   }
 
@@ -251,14 +236,12 @@ class MojiService extends Service {
     latitude = Number(latitude).toFixed(3)
 
     /** Redis 键名（经纬度） */
-    const keyLocation = `moji#${apiName}#location:${longitude}/${latitude}`
+    const keyLocation = `moji:${apiName}:location:${longitude},${latitude}`
 
     const res = await app.redis.get(keyLocation)
 
     if (res) {
-      logger.debug(
-        `[Redis] 墨迹天气（经纬度）从Redis获取数据 API => ${apiName} / 经度 => ${longitude} / 纬度 => ${latitude}`
-      )
+      logger.debug(`[Redis] 墨迹天气（经纬度）从Redis获取数据 API => ${apiName} / 经度 => ${longitude} / 纬度 => ${latitude}`)
       return JSON.parse(res)
     } else {
       const result = await this.fetchByLocation(apiName, longitude, latitude)
@@ -270,10 +253,10 @@ class MojiService extends Service {
       const { cityId } = result.city
 
       /** Redis 键名（城市） */
-      const keyCity = `moji#${apiName}#city:${cityId}`
+      const keyCity = `moji:${apiName}:city:${cityId}`
 
       /** Redis 键名 */
-      const keyLocation2City = `location@cityId:${longitude}/${latitude}`
+      const keyLocation2City = `location@cityId:${longitude},${latitude}`
 
       // [Redis] 经纬度 -> 有效数据
       app.redis.set(keyLocation, JSON.stringify(result[field]), 'EX', EXPIRATION_WEATHER)
@@ -306,14 +289,12 @@ class MojiService extends Service {
     const { logger, app } = this
 
     /** Redis 键名（城市） */
-    const keyCity = `moji#${apiName}#city:${cityId}`
+    const keyCity = `moji:${apiName}:city:${cityId}`
 
     const res = await app.redis.get(keyCity)
 
     if (res) {
-      logger.debug(
-        `[Redis] 墨迹天气（城市ID）从Redis获取数据 API => ${apiName} / cityId => ${cityId}`
-      )
+      logger.debug(`[Redis] 墨迹天气（城市ID）从Redis获取数据 API => ${apiName} / cityId => ${cityId}`)
       return JSON.parse(res)
     } else {
       const result = await this.fetchByCityId(apiName, cityId)

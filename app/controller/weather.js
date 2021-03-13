@@ -223,10 +223,8 @@ class WeatherController extends Controller {
         ctx.body = await service.hefeng.airNow(longitude, latitude)
       }
     } else {
-      const {
-        location: { lng, lat },
-      } = await service.location.getLocationByIp(ctx.ip)
-      ctx.body = await service.hefeng.airNow(lng, lat)
+      const { longitude, latitude } = await service.location.getCoordByIp(ctx.ip)
+      ctx.body = await service.hefeng.airNow(longitude, latitude)
     }
   }
 
@@ -254,11 +252,9 @@ class WeatherController extends Controller {
         latitude = lat
       }
     } else {
-      const {
-        location: { lng, lat },
-      } = await service.location.getLocationByIp(ctx.ip)
-      longitude = lng
-      latitude = lat
+      const coord = await service.location.getCoordByIp(ctx.ip)
+      longitude = coord.longitude
+      latitude = coord.latitude
     }
 
     const locationId = await service.hefeng.getLocationId(longitude, latitude)

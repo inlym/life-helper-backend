@@ -23,18 +23,16 @@ class LocationController extends Controller {
     let { latitude, longitude } = options
 
     if (!latitude || !longitude) {
-      const {
-        location: { lat, lng },
-      } = await service.location.getLocationByIp(ctx.ip)
+      const coord = await service.location.getCoordByIp(ctx.ip)
 
-      latitude = lat
-      longitude = lng
+      latitude = coord.latitude
+      longitude = coord.longitude
     }
 
-    const result = await service.location.getAddressByLocation(longitude, latitude)
+    const result = await service.location.getFormattedAddress(longitude, latitude)
 
     ctx.body = {
-      address: result.formatted_addresses.recommend,
+      address: result,
     }
   }
 }

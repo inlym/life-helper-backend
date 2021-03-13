@@ -15,9 +15,11 @@ class RecordService extends Service {
     }
 
     const {
-      ad_info: { nation, province, city, district, adcode },
-      location: { lat, lng },
-    } = await service.location.getLocationByIp(ip)
+      result: {
+        ad_info: { nation, province, city, district, adcode },
+        location: { lat, lng },
+      },
+    } = await service.lbsqq.getLocationByIp(ip)
 
     const row = {
       user_id: userId,
