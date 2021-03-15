@@ -2,6 +2,9 @@
 
 const { Controller } = require('egg')
 
+/** 用于传递微信小程序 wx.login 获取的 code 的请求头字段 */
+const HEADER_CODE_FIELD = 'X-Lh-Code'
+
 class LoginController extends Controller {
   /**
    * @api {get} /login 小程序登录
@@ -42,7 +45,7 @@ class LoginController extends Controller {
     }
 
     // 获取参数
-    const { code } = ctx.query
+    const { code } = ctx.query || ctx.get(HEADER_CODE_FIELD)
 
     const token = await this.service.auth.wxLogin(code)
     this.ctx.body = {
