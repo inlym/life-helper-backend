@@ -51,27 +51,102 @@ class KeysService extends Service {
   }
 
   /**
-   * 缓存和风天气 城市信息查询 接口数据
+   * [和风天气] [城市信息查询] 接口响应数据
    * @see https://dev.qweather.com/docs/api/geo/city-lookup/
    */
   hefengLocationId(longitude, latitude) {
-    return { key: `hefeng:location_id:location:${longitude},${latitude}`, timeout: 3600 * 24 * 10 }
+    return { key: `hefeng:id:location:${longitude},${latitude}`, timeout: 3600 * 24 * 10 }
   }
 
   /**
-   * 缓存和风天气 实时空气质量（经纬度） 接口数据
-   * @see https://dev.qweather.com/docs/api/air/air-now/
-   */
-  hefengAirNowLocation(longitude, latitude) {
-    return { key: `hefeng:airnow:location:${longitude},${latitude}`, timeout: 3600 }
-  }
-
-  /**
-   * 缓存和风天气 逐天天气预报（15天） 接口数据
+   * [和风天气] [逐天天气预报] [15d] 接口响应数据
    * @see https://dev.qweather.com/docs/api/weather/weather-daily-forecast/
    */
-  hefengFore15LocationId(locationId) {
-    return { key: `hefeng:fore15d:location_id:${locationId}`, timeout: 3600 * 4 }
+  hefengFore15d(location) {
+    const timeout = 3600 * 4
+    if (location.indexOf(',') === -1) {
+      return { key: `hefeng:fore15d:id:${location}`, timeout }
+    } else {
+      return { key: `hefeng:fore15d:location:${location}`, timeout }
+    }
+  }
+
+  /**
+   * [和风天气] [逐小时天气预报] [24h] 接口响应数据
+   * @see https://dev.qweather.com/docs/api/weather/weather-hourly-forecast/
+   */
+  hefengFore24h(location) {
+    const timeout = 600
+    if (location.indexOf(',') === -1) {
+      return { key: `hefeng:fore24h:id:${location}`, timeout }
+    } else {
+      return { key: `hefeng:fore24h:location:${location}`, timeout }
+    }
+  }
+
+  /**
+   * [和风天气] [实时天气] 接口响应数据
+   * @see https://dev.qweather.com/docs/api/weather/weather-now/
+   */
+  hefengWeatherNow(location) {
+    const timeout = 1800
+    if (location.indexOf(',') === -1) {
+      return { key: `hefeng:now:id:${location}`, timeout }
+    } else {
+      return { key: `hefeng:now:location:${location}`, timeout }
+    }
+  }
+
+  /**
+   * [和风天气] [分钟级降水] [5m] 接口响应数据
+   * @see https://dev.qweather.com/docs/api/weather/weather-now/
+   */
+  hefengMinutelyRain(location) {
+    const timeout = 600
+    if (location.indexOf(',') === -1) {
+      return { key: `hefeng:rain:id:${location}`, timeout }
+    } else {
+      return { key: `hefeng:rain:location:${location}`, timeout }
+    }
+  }
+
+  /**
+   * [和风天气] [天气生活指数] [1d] 接口响应数据
+   * @see https://dev.qweather.com/docs/api/indices/
+   */
+  hefengIndices(location) {
+    const timeout = 1800
+    if (location.indexOf(',') === -1) {
+      return { key: `hefeng:indices:id:${location}`, timeout }
+    } else {
+      return { key: `hefeng:indices:location:${location}`, timeout }
+    }
+  }
+
+  /**
+   * [和风天气] [实时空气质量] 接口响应数据
+   * @see https://dev.qweather.com/docs/api/air/air-now/
+   */
+  hefengAirNow(location) {
+    const timeout = 600
+    if (location.indexOf(',') === -1) {
+      return { key: `hefeng:airnow:id:${location}`, timeout }
+    } else {
+      return { key: `hefeng:airnow:location:${location}`, timeout }
+    }
+  }
+
+  /**
+   * [和风天气] [空气质量预报] [5d] 接口响应数据
+   * @see https://dev.qweather.com/docs/api/air/air-daily-forecast/
+   */
+  hefengAir5d(location) {
+    const timeout = 3600 * 4
+    if (location.indexOf(',') === -1) {
+      return { key: `hefeng:air5d:id:${location}`, timeout }
+    } else {
+      return { key: `hefeng:air5d:location:${location}`, timeout }
+    }
   }
 }
 

@@ -32,8 +32,6 @@ class HefengService extends Service {
     if (cacheResult) {
       return JSON.parse(cacheResult).location[0].id
     }
-
-    // 无缓存则请求接口获取数据，并将接口数据缓存（有效期 10 天）
     const { key } = app.config.QWEATHER.basic
     const requestOptions = {
       url: 'https://geoapi.qweather.com/v2/city/lookup',
@@ -44,26 +42,54 @@ class HefengService extends Service {
     }
     const { data: resData } = await app.axios(requestOptions)
     if (parseInt(resData.code, 10) === 200) {
-      logger.info(`[接口请求成功] 和风天气 - 城市信息查询, location ${requestOptions.params.location}`)
+      logger.debug(`[接口请求成功] 和风天气 - 城市信息查询, location=${location}`)
       app.redis.set(redisKey, JSON.stringify(resData), 'EX', timeout)
       return resData.location[0].id
     } else {
-      logger.error(`[接口请求错误] 和风天气 - 城市信息查询, 请求参数 ${JSON.stringify(requestOptions.params)}, 响应 code ${resData.code}`)
+      logger.error(`[接口请求错误] 和风天气 - 城市信息查询, 请求参数 params=${JSON.stringify(requestOptions.params)}, 响应 code=${resData.code}`)
     }
   }
 
   /**
-   * 获取实时空气质量（经纬度）
-   * @since 2021-03-10
-   * @see https://dev.qweather.com/docs/api/air/air-now/
+   * 处理和风天气中使用的 location 参数
+   * @since 2021-03-15
+   * @param {string|object} location 地区的 LocationID 或以英文逗号分隔的经度,纬度坐标，或为包含经纬度的对象
+   * @returns {string}
    */
-  async airNow(longitude, latitude) {
+  handleLocationParams(location) {
+    if (!location) {
+      throw new Error('location 为空')
+    }
+
+    if (typeof location === 'string') {
+      if (location.indexOf(',') === -1) {
+        return location
+      } else {
+        const [longitude, latitude] = location.split(',')
+        const lng = parseFloat(longitude, 10).toFixed(3)
+        const lat = parseFloat(latitude, 10).toFixed(3)
+        return `${lng},${lat}`
+      }
+    } else if (typeof location === 'object') {
+      const { longitude, latitude } = location
+      const lng = parseFloat(longitude, 10).toFixed(3)
+      const lat = parseFloat(latitude, 10).toFixed(3)
+      return `${lng},${lat}`
+    }
+  }
+
+  /**
+   * 实时天气
+   * @since 2021-03-15
+   * @see https://dev.qweather.com/docs/api/weather/weather-now/
+   * @param {string} location 地区的 LocationID 或以英文逗号分隔的经度,纬度坐标
+   * @returns {Promise<object>}
+   */
+  async weatherNow(location) {
     const { app, service, logger } = this
 
-    const lng = parseFloat(longitude, 10).toFixed(2)
-    const lat = parseFloat(latitude, 10).toFixed(2)
-
-    const { key: redisKey, timeout } = service.keys.hefengAirNowLocation(lng, lat)
+    location = this.handleLocationParams(location)
+    const { key: redisKey, timeout } = service.keys.hefengWeatherNow(location)
 
     const cacheResult = await app.redis.get(redisKey)
     if (cacheResult) {
@@ -73,31 +99,32 @@ class HefengService extends Service {
     const { key, baseURL } = app.config.QWEATHER.basic
     const requestOptions = {
       baseURL,
-      url: '/air/now',
+      url: '/weather/now',
       params: {
-        location: `${lng},${lat}`,
+        location,
         key,
       },
     }
     const { data: resData } = await app.axios(requestOptions)
     if (parseInt(resData.code, 10) === 200) {
-      logger.info(`[接口请求成功] 和风天气 - 实时空气质量, location ${requestOptions.params.location}`)
+      logger.debug(`[接口请求成功] 和风天气 - 实时天气, location=${location}`)
       app.redis.set(redisKey, JSON.stringify(resData), 'EX', timeout)
       return resData.now
     } else {
-      logger.error(`[接口请求错误] 和风天气 - 实时空气质量, 请求参数 ${JSON.stringify(requestOptions.params)}, 响应 code ${resData.code}`)
+      logger.error(`[接口请求错误] 和风天气 - 实时天气, 请求参数 params=${JSON.stringify(requestOptions.params)}, 响应 code=${resData.code}`)
     }
   }
 
   /**
-   * 获取 15 天逐天天气预报
+   * 获取逐天天气预报（15 天）
    * @since 2021-03-11
    * @see https://dev.qweather.com/docs/api/weather/weather-daily-forecast/
    */
-  async fore15d(locationId) {
+  async fore15d(location) {
     const { app, service, logger } = this
+    location = this.handleLocationParams(location)
 
-    const { key: redisKey, timeout } = service.keys.hefengFore15LocationId(locationId)
+    const { key: redisKey, timeout } = service.keys.hefengFore15LocationId(location)
 
     const cacheResult = await app.redis.get(redisKey)
     if (cacheResult) {
@@ -109,17 +136,180 @@ class HefengService extends Service {
       baseURL,
       url: '/weather/15d',
       params: {
-        location: locationId,
+        location,
         key,
       },
     }
     const { data: resData } = await app.axios(requestOptions)
     if (parseInt(resData.code, 10) === 200) {
-      logger.info(`[接口请求成功] 和风天气 - 逐天天气预报（15天）, location ${requestOptions.params.location}`)
+      logger.debug(`[接口请求成功] 和风天气 - 逐天天气预报（15天）, location=${requestOptions.params.location}`)
       app.redis.set(redisKey, JSON.stringify(resData), 'EX', timeout)
       return resData.daily
     } else {
-      logger.error(`[接口请求错误] 和风天气 - 逐天天气预报（15天）, 请求参数 ${JSON.stringify(requestOptions.params)}, 响应 code ${resData.code}`)
+      logger.error(`[接口请求错误] 和风天气 - 逐天天气预报（15天）, 请求参数 params=${JSON.stringify(requestOptions.params)}, 响应 code=${resData.code}`)
+    }
+  }
+
+  /**
+   * 获取逐小时天气预报（24 小时）
+   * @since 2021-03-15
+   * @see https://dev.qweather.com/docs/api/weather/weather-hourly-forecast/
+   */
+  async fore24h(location) {
+    const { app, service, logger } = this
+    location = this.handleLocationParams(location)
+
+    const { key: redisKey, timeout } = service.keys.hefengFore24h(location)
+
+    const cacheResult = await app.redis.get(redisKey)
+    if (cacheResult) {
+      return JSON.parse(cacheResult).hourly
+    }
+
+    const { key, baseURL } = app.config.QWEATHER.basic
+    const requestOptions = {
+      baseURL,
+      url: '/weather/24h',
+      params: {
+        location,
+        key,
+      },
+    }
+    const { data: resData } = await app.axios(requestOptions)
+    if (parseInt(resData.code, 10) === 200) {
+      logger.debug(`[接口请求成功] 和风天气 - 逐小时天气预报（24小时）, location=${location}`)
+      app.redis.set(redisKey, JSON.stringify(resData), 'EX', timeout)
+      return resData.hourly
+    } else {
+      logger.error(`[接口请求错误] 和风天气 - 逐小时天气预报（24小时）, 请求参数 params=${JSON.stringify(requestOptions.params)}, 响应 code=${resData.code}`)
+    }
+  }
+
+  /**
+   * 获取分钟级降水
+   * @since 2021-03-15
+   * @see https://dev.qweather.com/docs/api/grid-weather/minutely/
+   */
+  async minutelyRain(location) {
+    const { app, service, logger } = this
+    location = this.handleLocationParams(location)
+    const { key: redisKey, timeout } = service.keys.hefengMinutelyRain(location)
+    const cacheResult = await app.redis.get(redisKey)
+    if (cacheResult) {
+      return JSON.parse(cacheResult).minutely
+    }
+    const { key, baseURL } = app.config.QWEATHER.pro
+    const requestOptions = {
+      baseURL,
+      url: '/minutely/5m',
+      params: {
+        location,
+        key,
+      },
+    }
+    const { data: resData } = await app.axios(requestOptions)
+    if (parseInt(resData.code, 10) === 200) {
+      logger.debug(`[接口请求成功] 和风天气 - 分钟级降水, location=${location}`)
+      app.redis.set(redisKey, JSON.stringify(resData), 'EX', timeout)
+      return resData.minutely
+    } else {
+      logger.error(`[接口请求错误] 和风天气 - 分钟级降水, 请求参数 params=${JSON.stringify(requestOptions.params)}, 响应 code=${resData.code}`)
+    }
+  }
+
+  /**
+   * 获取天气生活指数
+   * @since 2021-03-15
+   * @see https://dev.qweather.com/docs/api/indices/
+   */
+  async indices(location) {
+    const { app, service, logger } = this
+    location = this.handleLocationParams(location)
+    const { key: redisKey, timeout } = service.keys.hefengIndices(location)
+    const cacheResult = await app.redis.get(redisKey)
+    if (cacheResult) {
+      return JSON.parse(cacheResult).daily
+    }
+    const { key, baseURL } = app.config.QWEATHER.basic
+    const requestOptions = {
+      baseURL,
+      url: '/indices/1d',
+      params: {
+        location,
+        key,
+      },
+    }
+    const { data: resData } = await app.axios(requestOptions)
+    if (parseInt(resData.code, 10) === 200) {
+      logger.debug(`[接口请求成功] 和风天气 - 天气生活指数, location=${location}`)
+      app.redis.set(redisKey, JSON.stringify(resData), 'EX', timeout)
+      return resData.daily
+    } else {
+      logger.error(`[接口请求错误] 和风天气 - 天气生活指数, 请求参数 params=${JSON.stringify(requestOptions.params)}, 响应 code=${resData.code}`)
+    }
+  }
+
+  /**
+   * 获取实时空气质量
+   * @since 2021-03-15
+   * @see https://dev.qweather.com/docs/api/air/air-now/
+   */
+  async airNow(location) {
+    const { app, service, logger } = this
+    location = this.handleLocationParams(location)
+    const { key: redisKey, timeout } = service.keys.hefengAirNow(location)
+    const cacheResult = await app.redis.get(redisKey)
+    if (cacheResult) {
+      return JSON.parse(cacheResult).now
+    }
+    const { key, baseURL } = app.config.QWEATHER.basic
+    const requestOptions = {
+      baseURL,
+      url: '/air/now',
+      params: {
+        location,
+        key,
+      },
+    }
+    const { data: resData } = await app.axios(requestOptions)
+    if (parseInt(resData.code, 10) === 200) {
+      logger.debug(`[接口请求成功] 和风天气 - 实时空气质量, location=${location}`)
+      app.redis.set(redisKey, JSON.stringify(resData), 'EX', timeout)
+      return resData.now
+    } else {
+      logger.error(`[接口请求错误] 和风天气 - 实时空气质量, 请求参数 params=${JSON.stringify(requestOptions.params)}, 响应 code=${resData.code}`)
+    }
+  }
+
+  /**
+   * 获取空气质量预报
+   * @since 2021-03-15
+   * @see https://dev.qweather.com/docs/api/air/air-daily-forecast/
+   */
+  async air5d(location) {
+    const { app, service, logger } = this
+    location = this.handleLocationParams(location)
+    const { key: redisKey, timeout } = service.keys.hefengAir5d(location)
+    const cacheResult = await app.redis.get(redisKey)
+    if (cacheResult) {
+      return JSON.parse(cacheResult).daily
+    }
+    const { key, baseURL } = app.config.QWEATHER.pro
+    const requestOptions = {
+      baseURL,
+      url: '/air/5d',
+      params: {
+        location,
+        key,
+      },
+    }
+    const { data: resData } = await app.axios(requestOptions)
+    if (parseInt(resData.code, 10) === 200) {
+      logger.debug(`[接口请求成功] 和风天气 - 空气质量预报（5天）, location=${location}`)
+      app.redis.set(redisKey, JSON.stringify(resData), 'EX', timeout)
+      return resData.daily
+    } else {
+      logger.error(`[接口请求错误] 和风天气 - 空气质量预报（5天）, 请求参数 params=${JSON.stringify(requestOptions.params)}, 响应 code=${resData.code}`)
     }
   }
 }

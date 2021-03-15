@@ -220,11 +220,11 @@ class WeatherController extends Controller {
     if (location) {
       const [longitude, latitude] = location.split(',')
       if (longitude && latitude) {
-        ctx.body = await service.hefeng.airNow(longitude, latitude)
+        ctx.body = await service.hefeng.airNow({ longitude, latitude })
       }
     } else {
       const { longitude, latitude } = await service.location.getCoordByIp(ctx.ip)
-      ctx.body = await service.hefeng.airNow(longitude, latitude)
+      ctx.body = await service.hefeng.airNow({ longitude, latitude })
     }
   }
 
