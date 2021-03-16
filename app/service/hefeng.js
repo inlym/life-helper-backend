@@ -124,7 +124,7 @@ class HefengService extends Service {
     const { app, service, logger } = this
     location = this.handleLocationParams(location)
 
-    const { key: redisKey, timeout } = service.keys.hefengFore15LocationId(location)
+    const { key: redisKey, timeout } = service.keys.hefengFore15d(location)
 
     const cacheResult = await app.redis.get(redisKey)
     if (cacheResult) {
@@ -142,7 +142,7 @@ class HefengService extends Service {
     }
     const { data: resData } = await app.axios(requestOptions)
     if (parseInt(resData.code, 10) === 200) {
-      logger.debug(`[接口请求成功] 和风天气 - 逐天天气预报（15天）, location=${requestOptions.params.location}`)
+      logger.debug(`[接口请求成功] 和风天气 - 逐天天气预报（15天）, location=${location}`)
       app.redis.set(redisKey, JSON.stringify(resData), 'EX', timeout)
       return resData.daily
     } else {
