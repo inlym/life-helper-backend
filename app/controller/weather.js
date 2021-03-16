@@ -261,6 +261,12 @@ class WeatherController extends Controller {
     const list15d = await service.weather.fore15d(locationId)
     ctx.body = {
       list: list15d,
+
+      /** 线性图标地址前缀 */
+      baseURL1: 'https://img.lh.inlym.com/hefeng/s1/',
+
+      /** 拟物图标地址前缀 */
+      baseURL2: 'https://img.lh.inlym.com/hefeng/s2/',
     }
   }
 }

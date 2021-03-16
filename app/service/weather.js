@@ -173,6 +173,7 @@ class WeatherService extends Service {
   /**
    * 获取未来 15 天的天气预报
    * @param {number} cityId
+   * @deprecated
    * @since 2021-02-05
    * @update 2021-02-07
    */
