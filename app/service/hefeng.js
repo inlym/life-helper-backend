@@ -186,7 +186,7 @@ class HefengService extends Service {
   }
 
   /**
-   * 获取分钟级降水
+   * 获取分钟级降水（未来 2 小时，间隔 5 分钟）
    * @since 2021-03-15
    * @see https://dev.qweather.com/docs/api/grid-weather/minutely/
    */
@@ -196,7 +196,7 @@ class HefengService extends Service {
     const { key: redisKey, timeout } = service.keys.hefengMinutelyRain(location)
     const cacheResult = await app.redis.get(redisKey)
     if (cacheResult) {
-      return JSON.parse(cacheResult).minutely
+      return JSON.parse(cacheResult)
     }
     const { key, baseURL } = app.config.QWEATHER.pro
     const requestOptions = {
@@ -211,7 +211,7 @@ class HefengService extends Service {
     if (parseInt(resData.code, 10) === 200) {
       logger.debug(`[接口请求成功] 和风天气 - 分钟级降水, location=${location}`)
       app.redis.set(redisKey, JSON.stringify(resData), 'EX', timeout)
-      return resData.minutely
+      return resData
     } else {
       logger.error(`[接口请求错误] 和风天气 - 分钟级降水, 请求参数 params=${JSON.stringify(requestOptions.params)}, 响应 code=${resData.code}`)
     }

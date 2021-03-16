@@ -558,6 +558,31 @@ class WeatherService extends Service {
 
     return list15d
   }
+
+  /**
+   * 获取分钟级降水（未来 2 小时，间隔 5 分钟）
+   * @since 2021-03-16
+   * @tag [和风天气]
+   * @param {string} longitude
+   * @param {string} latitude
+   */
+  async minutelyRain(longitude, latitude) {
+    const { service } = this
+    const location = `${longitude},${latitude}`
+    const { summary, minutely } = await service.hefeng.minutelyRain(location)
+    const list = []
+    for (let i = 0; i < minutely.length; i++) {
+      const item = minutely[i]
+      const time = new Date(item.fxTime)
+      const obj = {
+        precip: item.precip,
+        time: time.getHours() + ':' + service.utils.zerofill(time.getMinutes()),
+        height: parseFloat(item.precip) * 200 + 10,
+      }
+      list.push(obj)
+    }
+    return { summary, list }
+  }
 }
 
 module.exports = WeatherService

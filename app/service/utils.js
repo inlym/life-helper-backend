@@ -30,6 +30,23 @@ class UtilsService extends Service {
     }
     return false
   }
+
+  /**
+   * 对数字补零到指定位数
+   * @param {number} number 被格式化的数字
+   * @param {number} digit 格式化的位数
+   * @returns {string}
+   */
+  zerofill(number, digit = 2) {
+    const zero = '0'
+    for (let i = 0; i < digit; i++) {
+      if (number < Math.pow(10, i + 1)) {
+        const str = zero.repeat(digit - i - 1) + number.toString()
+        return str
+      }
+    }
+    return number
+  }
 }
 
 module.exports = UtilsService

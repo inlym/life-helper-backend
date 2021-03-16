@@ -165,7 +165,6 @@
     "no-bitwise": "error",
     "no-inline-comments": "error",
     "no-lonely-if": "error",
-    "no-mixed-operators": "error",
     "no-mixed-spaces-and-tabs": "error",
     "no-multi-assign": "error",
     "no-multiple-empty-lines": [
@@ -211,7 +210,6 @@
     "prefer-const": "warn",
     "prefer-rest-params": "error",
     "prefer-spread": "warn",
-    "prefer-template": "warn",
     "rest-spread-spacing": ["error", "never"],
     "symbol-description": "error",
     "spaced-comment": ["error", "always"]

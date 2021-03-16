@@ -29,4 +29,7 @@ module.exports = (app) => {
 
   /** [和风天气] 获取未来 15 天预报 */
   router.get('/weather/15d', controller.weather.fore15d)
+
+  /** [和风天气] 分钟级降水信息 */
+  router.get('/weather/rain', controller.weather.minutelyRain)
 }

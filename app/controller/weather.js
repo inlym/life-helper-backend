@@ -232,7 +232,7 @@ class WeatherController extends Controller {
    * @api {get} /weather/15d 获取未来 15 天预报
    * @apiName fore15d
    * @apiGroup 天气
-   * @apiVersion 1.0
+   * @apiVersion v1
    *
    * @description 使用 [和风天气] API
    *
@@ -268,6 +268,38 @@ class WeatherController extends Controller {
       /** 拟物图标地址前缀 */
       baseURL2: 'https://img.lh.inlym.com/hefeng/s2/',
     }
+  }
+
+  /**
+   * @api {get} /weather/rain 获取分钟级降水信息
+   * @apiName minutelyRain
+   * @apiGroup 天气
+   * @apiVersion v1
+   *
+   * @description 使用 [和风天气] API
+   *
+   * @apiParam (Query) {String} [location] 经纬度坐标，格式：`location=${longitude},${latitude}`
+   */
+  async minutelyRain() {
+    const { ctx, service } = this
+    const { location } = ctx.query
+
+    let longitude = ''
+    let latitude = ''
+
+    if (location) {
+      const [lng, lat] = location.split(',')
+      if (lng && lat) {
+        longitude = lng
+        latitude = lat
+      }
+    } else {
+      const coord = await service.location.getCoordByIp(ctx.ip)
+      longitude = coord.longitude
+      latitude = coord.latitude
+    }
+
+    ctx.body = await service.weather.minutelyRain(longitude, latitude)
   }
 }
 
