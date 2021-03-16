@@ -42,7 +42,7 @@ class HefengService extends Service {
     }
     const { data: resData } = await app.axios(requestOptions)
     if (parseInt(resData.code, 10) === 200) {
-      logger.debug(`[接口请求成功] 和风天气 - 城市信息查询, location=${location}`)
+      logger.debug(`[接口请求成功] 和风天气 - 城市信息查询, location=${lng},${lat}`)
       app.redis.set(redisKey, JSON.stringify(resData), 'EX', timeout)
       return resData.location[0].id
     } else {
