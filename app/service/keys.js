@@ -59,15 +59,28 @@ class KeysService extends Service {
   }
 
   /**
+   * [和风天气] [逐天天气预报] [7d] 接口响应数据
+   * @see https://dev.qweather.com/docs/api/weather/weather-daily-forecast/
+   */
+  hefengFore7d(location) {
+    const timeout = 3600 * 4
+    if (location.indexOf(',') === -1) {
+      return { key: `hefeng:7d:id:${location}`, timeout }
+    } else {
+      return { key: `hefeng:7d:location:${location}`, timeout }
+    }
+  }
+
+  /**
    * [和风天气] [逐天天气预报] [15d] 接口响应数据
    * @see https://dev.qweather.com/docs/api/weather/weather-daily-forecast/
    */
   hefengFore15d(location) {
     const timeout = 3600 * 4
     if (location.indexOf(',') === -1) {
-      return { key: `hefeng:fore15d:id:${location}`, timeout }
+      return { key: `hefeng:15d:id:${location}`, timeout }
     } else {
-      return { key: `hefeng:fore15d:location:${location}`, timeout }
+      return { key: `hefeng:15d:location:${location}`, timeout }
     }
   }
 
@@ -78,9 +91,9 @@ class KeysService extends Service {
   hefengFore24h(location) {
     const timeout = 600
     if (location.indexOf(',') === -1) {
-      return { key: `hefeng:fore24h:id:${location}`, timeout }
+      return { key: `hefeng:24h:id:${location}`, timeout }
     } else {
-      return { key: `hefeng:fore24h:location:${location}`, timeout }
+      return { key: `hefeng:24h:location:${location}`, timeout }
     }
   }
 

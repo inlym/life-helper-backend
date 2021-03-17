@@ -216,7 +216,8 @@ class WeatherController extends Controller {
   async airnow() {
     const { ctx, service } = this
     const location = await service.hefeng.handleControllerParams('location')
-    ctx.body = await service.hefeng.airNow(location)
+    const { now } = await service.hefeng.airNow(location)
+    ctx.body = now
   }
 
   /**
@@ -258,6 +259,22 @@ class WeatherController extends Controller {
     const { ctx, service } = this
     const location = await service.hefeng.handleControllerParams('location')
     ctx.body = await service.weather.minutelyRain(location)
+  }
+
+  /**
+   * @api {get} /weather/now2 获取实时天气情况
+   * @apiName now2
+   * @apiGroup 天气
+   * @apiVersion v1
+   *
+   * @description 使用 [和风天气] API
+   *
+   * @apiParam (Query) {String} [location] 经纬度坐标，格式：`location=${longitude},${latitude}`
+   */
+  async now2() {
+    const { ctx, service } = this
+    const location = await service.hefeng.handleControllerParams('id')
+    ctx.body = await service.weather.weatherNow(location)
   }
 }
 

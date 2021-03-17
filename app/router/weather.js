@@ -32,4 +32,7 @@ module.exports = (app) => {
 
   /** [和风天气] 分钟级降水信息 */
   router.get('/weather/rain', controller.weather.minutelyRain)
+
+  /** [和风天气] 获取实时天气情况 */
+  router.get('/weather/now2', controller.weather.now2)
 }

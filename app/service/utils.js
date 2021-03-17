@@ -47,6 +47,22 @@ class UtilsService extends Service {
     }
     return number
   }
+
+  /**
+   * 获取指定时间的“年月日”部分
+   * @since 2021-03-17
+   * @description
+   * 输出格式为 '2021-03-17'
+   */
+  getDate(time) {
+    let t = null
+    if (!time) {
+      t = new Date()
+    } else {
+      t = new Date(time)
+    }
+    return `${t.getFullYear()}-${this.zerofill(t.getMonth() + 1)}-${this.zerofill(t.getDate())}`
+  }
 }
 
 module.exports = UtilsService

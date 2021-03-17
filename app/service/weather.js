@@ -512,7 +512,7 @@ class WeatherService extends Service {
   async fore15d(locationId) {
     const { service } = this
     const weekdayList = ['周日', '周一', '周二', '周三', '周四', '周五', '周六']
-    const list15d = await service.hefeng.fore15d(locationId)
+    const { daily: list15d } = await service.hefeng.fore15d(locationId)
 
     for (let i = 0; i < list15d.length; i++) {
       const item = list15d[i]
@@ -566,9 +566,8 @@ class WeatherService extends Service {
    * @param {string} longitude
    * @param {string} latitude
    */
-  async minutelyRain(longitude, latitude) {
+  async minutelyRain(location) {
     const { service } = this
-    const location = `${longitude},${latitude}`
     const { updateTime, summary, minutely } = await service.hefeng.minutelyRain(location)
     const updateTimeObj = new Date(updateTime)
     const formattedUpdateTime = updateTimeObj.getHours() + ':' + service.utils.zerofill(updateTimeObj.getMinutes())
@@ -584,6 +583,118 @@ class WeatherService extends Service {
       list.push(obj)
     }
     return { summary, list, updateTime: formattedUpdateTime }
+  }
+
+  /**
+   * 获取实时天气
+   * @since 2021-03-17
+   * @tag [和风天气]
+   * @param {string} location 地区的 LocationID 或以英文逗号分隔的经纬度坐标
+   * @description
+   * 1. 当前方法主要用于对 hefeng.weatherNow 方法的数据处理，用于控制器调用
+   * 2. 为了输出总结语句(summary)，额外调用了 hefeng.fore7d 方法
+   */
+  async weatherNow(location) {
+    const { service } = this
+    const promises = []
+    promises.push(service.hefeng.weatherNow(location))
+    promises.push(service.hefeng.fore7d(location))
+    const [weathernow, fore7d] = await Promise.all(promises)
+    const { now } = weathernow
+
+    const today = service.utils.getDate()
+    let todayItem = null
+    for (let i = 0; i < fore7d.daily.length; i++) {
+      if (today === fore7d.daily[i]['fxDate']) {
+        todayItem = fore7d.daily[i]
+        break
+      }
+    }
+    const summary = `现在${now.text}，温度 ${now.temp} 度，今天最高温度 ${todayItem.tempMax} 度，最低温度 ${todayItem.tempMin} 度。当前湿度 ${now.humidity}%，${now.windDir}${now.windScale}级，风速 ${now.windSpeed}km/h`
+
+    const skyElement = this.skyClass(now.icon)
+    const result = { skyElement, summary }
+    Object.assign(result, now)
+    return result
+  }
+
+  /**
+   * 根据和风天气的图标数字，输出展示的天空元素
+   * @since 2021-03-17
+   * @tag [和风天气]
+   * @param {string} icon 和风天气的icon id
+   *
+   * @description
+   * 背景类：
+   * - 普通 wbg-common
+   * - 夜晚 wbg-night
+   * - 小中雨 wbg-lightrain
+   * - 灰暗 wbg-grey
+   *
+   * 天空元素类：
+   * - 满月 fullmoon
+   * - 半月 halfmoon
+   * - 太阳 sun
+   * - 固定云 fixed-cloud
+   * - 浮动云 moving-cloud
+   * - 乌云 darkcloud
+   * - 雨点 rain
+   *
+   * 1-晴、2-云、3-阴、4-雨、5-雪、6-雾、7-尘
+   */
+  skyClass(icon) {
+    const { includeNum } = this.service.utils
+    icon = parseInt(icon, 10)
+
+    /** 最终输出的内容 */
+    let result = {}
+
+    if (includeNum([100, 103, 150, 153], icon)) {
+      result = {
+        bgClass: 'wbg-common',
+        sun: true,
+      }
+    } else if (includeNum([101, 102], icon)) {
+      result = {
+        bgClass: 'wbg-common',
+        sun: true,
+        fixedCloud: true,
+      }
+    } else if (includeNum([104, 154], icon)) {
+      result = {
+        bgClass: 'wbg-common',
+        sun: true,
+        fixedCloud: true,
+        movingCloud: true,
+      }
+    } else if (includeNum(['300-399'], icon)) {
+      result = {
+        bgClass: 'wbg-lightrain',
+        sun: true,
+        fixedCloud: true,
+        movingCloud: true,
+        darkCloud: true,
+        rain: true,
+      }
+    } else {
+      result = {
+        bgClass: 'wbg-grey',
+        sun: true,
+        fixedCloud: true,
+        movingCloud: true,
+        darkCloud: true,
+      }
+    }
+
+    /** 当前时间的 小时 */
+    const hour = new Date().getHours()
+
+    if (hour <= 6 || hour >= 18) {
+      delete result.sun
+      result.fullmoon = true
+      result.bgClass = 'wbg-night'
+    }
+    return result
   }
 }
 
