@@ -215,17 +215,8 @@ class WeatherController extends Controller {
    */
   async airnow() {
     const { ctx, service } = this
-    const { location } = ctx.query
-
-    if (location) {
-      const [longitude, latitude] = location.split(',')
-      if (longitude && latitude) {
-        ctx.body = await service.hefeng.airNow({ longitude, latitude })
-      }
-    } else {
-      const { longitude, latitude } = await service.location.getCoordByIp(ctx.ip)
-      ctx.body = await service.hefeng.airNow({ longitude, latitude })
-    }
+    const location = await service.hefeng.handleControllerParams('location')
+    ctx.body = await service.hefeng.airNow(location)
   }
 
   /**
@@ -240,24 +231,7 @@ class WeatherController extends Controller {
    */
   async fore15d() {
     const { ctx, service } = this
-    const { location } = ctx.query
-
-    let longitude = ''
-    let latitude = ''
-
-    if (location) {
-      const [lng, lat] = location.split(',')
-      if (lng && lat) {
-        longitude = lng
-        latitude = lat
-      }
-    } else {
-      const coord = await service.location.getCoordByIp(ctx.ip)
-      longitude = coord.longitude
-      latitude = coord.latitude
-    }
-
-    const locationId = await service.hefeng.getLocationId(longitude, latitude)
+    const locationId = await service.hefeng.handleControllerParams('id')
     const list15d = await service.weather.fore15d(locationId)
     ctx.body = {
       list: list15d,
@@ -282,24 +256,8 @@ class WeatherController extends Controller {
    */
   async minutelyRain() {
     const { ctx, service } = this
-    const { location } = ctx.query
-
-    let longitude = ''
-    let latitude = ''
-
-    if (location) {
-      const [lng, lat] = location.split(',')
-      if (lng && lat) {
-        longitude = lng
-        latitude = lat
-      }
-    } else {
-      const coord = await service.location.getCoordByIp(ctx.ip)
-      longitude = coord.longitude
-      latitude = coord.latitude
-    }
-
-    ctx.body = await service.weather.minutelyRain(longitude, latitude)
+    const location = await service.hefeng.handleControllerParams('location')
+    ctx.body = await service.weather.minutelyRain(location)
   }
 }
 

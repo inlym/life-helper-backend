@@ -51,30 +51,87 @@ class HefengService extends Service {
   }
 
   /**
-   * 处理和风天气中使用的 location 参数
+   * （待废除）处理和风天气中使用的 location 参数
    * @since 2021-03-15
    * @param {string|object} location 地区的 LocationID 或以英文逗号分隔的经度,纬度坐标，或为包含经纬度的对象
    * @returns {string}
+   *
+   * @example
+   * location 参数支持 3 种形式：
+   * 1. locationId，例如：'101270120'
+   * 2. 经纬度拼接，例如：'104.102,30.660'
+   * 3. 经纬度对象，例如： {longitude: '104.102', latitude: '30.660'}
    */
   handleLocationParams(location) {
     if (!location) {
       throw new Error('location 为空')
     }
 
+    /** 经纬度保留到小数点后的位数，，目前 2 位已经够了，误差 1.4km 内 */
+    const decimal = 2
+
     if (typeof location === 'string') {
       if (location.indexOf(',') === -1) {
         return location
       } else {
         const [longitude, latitude] = location.split(',')
-        const lng = parseFloat(longitude, 10).toFixed(3)
-        const lat = parseFloat(latitude, 10).toFixed(3)
+        const lng = parseFloat(longitude, 10).toFixed(decimal)
+        const lat = parseFloat(latitude, 10).toFixed(decimal)
         return `${lng},${lat}`
       }
     } else if (typeof location === 'object') {
       const { longitude, latitude } = location
-      const lng = parseFloat(longitude, 10).toFixed(3)
-      const lat = parseFloat(latitude, 10).toFixed(3)
+      const lng = parseFloat(longitude, 10).toFixed(decimal)
+      const lat = parseFloat(latitude, 10).toFixed(decimal)
       return `${lng},${lat}`
+    }
+  }
+
+  /**
+   * 用于在控制器中，处理和风天气相关接口，输出可供 service/weather 直接使用的参数
+   * @since 2021-03-17
+   *
+   * @tag [Controller]
+   *
+   * @description
+   * type = 'id' => 输出结果为 locationId
+   * type = 'location' => 输出结果为经纬度坐标拼接字符串
+   *
+   * 处理逻辑：
+   * 1. 处理了 query.location 参数为空则由 IP 换取经纬度的逻辑。
+   * 2. 使用经纬度调用和风天气 API 前，对经纬度做了取舍处理。
+   */
+  async handleControllerParams(type = 'id') {
+    const { ctx, service } = this
+    const { location } = ctx.query
+
+    let longitude = ''
+    let latitude = ''
+
+    /** 经纬度保留到小数点后的位数，，目前 2 位已经够了，误差 1.4km 内 */
+    const decimal = 2
+
+    if (location) {
+      const [lng, lat] = location.split(',')
+      if (lng && lat) {
+        longitude = lng
+        latitude = lat
+      }
+    } else {
+      const coord = await service.location.getCoordByIp(ctx.ip)
+      longitude = coord.longitude
+      latitude = coord.latitude
+    }
+
+    if (type === 'location') {
+      longitude = parseFloat(longitude, 10).toFixed(decimal)
+      latitude = parseFloat(latitude, 10).toFixed(decimal)
+      return `${longitude},${latitude}`
+    }
+
+    if (type === 'id') {
+      const id = await this.getLocationId(longitude, latitude)
+      return id
     }
   }
 

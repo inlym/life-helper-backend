@@ -569,7 +569,9 @@ class WeatherService extends Service {
   async minutelyRain(longitude, latitude) {
     const { service } = this
     const location = `${longitude},${latitude}`
-    const { summary, minutely } = await service.hefeng.minutelyRain(location)
+    const { updateTime, summary, minutely } = await service.hefeng.minutelyRain(location)
+    const updateTimeObj = new Date(updateTime)
+    const formattedUpdateTime = updateTimeObj.getHours() + ':' + service.utils.zerofill(updateTimeObj.getMinutes())
     const list = []
     for (let i = 0; i < minutely.length; i++) {
       const item = minutely[i]
@@ -581,7 +583,7 @@ class WeatherService extends Service {
       }
       list.push(obj)
     }
-    return { summary, list }
+    return { summary, list, updateTime: formattedUpdateTime }
   }
 }
 
