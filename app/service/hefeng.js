@@ -173,14 +173,11 @@ class HefengService extends Service {
    */
   async fore15d(location) {
     const { app, service, logger } = this
-
     const { key: redisKey, timeout } = service.keys.hefengFore15d(location)
-
     const cacheResult = await app.redis.get(redisKey)
     if (cacheResult) {
       return JSON.parse(cacheResult)
     }
-
     const { key, baseURL } = app.config.QWEATHER.pro
     const requestOptions = {
       baseURL,
@@ -207,14 +204,11 @@ class HefengService extends Service {
    */
   async fore24h(location) {
     const { app, service, logger } = this
-
     const { key: redisKey, timeout } = service.keys.hefengFore24h(location)
-
     const cacheResult = await app.redis.get(redisKey)
     if (cacheResult) {
       return JSON.parse(cacheResult)
     }
-
     const { key, baseURL } = app.config.QWEATHER.basic
     const requestOptions = {
       baseURL,

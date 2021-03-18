@@ -232,16 +232,29 @@ class WeatherController extends Controller {
    */
   async fore15d() {
     const { ctx, service } = this
-    const locationId = await service.hefeng.handleControllerParams('id')
-    const list15d = await service.weather.fore15d(locationId)
+    const location = await service.hefeng.handleControllerParams('id')
+    const list = await service.weather.dailyForecast(location, '15d')
     ctx.body = {
-      list: list15d,
+      list,
+    }
+  }
 
-      /** 线性图标地址前缀 */
-      baseURL1: 'https://img.lh.inlym.com/hefeng/s1/',
-
-      /** 拟物图标地址前缀 */
-      baseURL2: 'https://img.lh.inlym.com/hefeng/s2/',
+  /**
+   * @api {get} /weather/7d 获取未来 7 天预报
+   * @apiName fore7d
+   * @apiGroup 天气
+   * @apiVersion v1
+   *
+   * @description 使用 [和风天气] API
+   *
+   * @apiParam (Query) {String} [location] 经纬度坐标，格式：`location=${longitude},${latitude}`
+   */
+  async fore7d() {
+    const { ctx, service } = this
+    const location = await service.hefeng.handleControllerParams('id')
+    const list = await service.weather.dailyForecast(location, '7d')
+    ctx.body = {
+      list,
     }
   }
 

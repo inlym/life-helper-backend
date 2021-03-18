@@ -504,29 +504,41 @@ class WeatherService extends Service {
   }
 
   /**
-   * 使用和风天气获取未来 15 天预报
+   * 获取逐天天气预报（7天，15天）
+   * @param {string} days 天数，枚举值：'7d', '15d'
    * @tag 和风天气
-   * @since 2021-03-11
-   * @param {string} locationId 和风天气 API 使用的 LocationId
+   * @since 2021-03-18
    */
-  async fore15d(locationId) {
+  async dailyForecast(location, days) {
     const { service } = this
     const weekdayList = ['周日', '周一', '周二', '周三', '周四', '周五', '周六']
-    const { daily: list15d } = await service.hefeng.fore15d(locationId)
 
-    for (let i = 0; i < list15d.length; i++) {
-      const item = list15d[i]
+    const promises = []
+
+    if (days === '7d') {
+      promises.push(service.hefeng.fore7d(location))
+    } else if (days === '15d') {
+      promises.push(service.hefeng.fore15d(location))
+    }
+    promises.push(service.hefeng.air5d(location))
+    const [foreNd, aqi5d] = await Promise.all(promises)
+
+    const aqi5dObj = service.utils.convertArray2Object(aqi5d.daily, 'fxDate')
+
+    const { daily } = foreNd
+    for (let i = 0; i < daily.length; i++) {
+      const item = daily[i]
       const now = new Date()
       const itemDate = new Date(item.fxDate)
 
       if (now.getDate() === itemDate.getDate()) {
         item.weekday = '今天'
         if (i > 0) {
-          list15d[i - 1]['weekday'] = '昨天'
+          daily[i - 1]['weekday'] = '昨天'
         }
-      } else if (list15d[i - 1]['weekday'] === '今天') {
+      } else if (daily[i - 1]['weekday'] === '今天') {
         item.weekday = '明天'
-      } else if (list15d[i - 2]['weekday'] === '今天') {
+      } else if (daily[i - 2]['weekday'] === '今天') {
         item.weekday = '后天'
       } else {
         item.weekday = weekdayList[itemDate.getDay()]
@@ -546,17 +558,22 @@ class WeatherService extends Service {
       }
 
       /** 线性图标地址前缀 */
-      const url1 = 'https://img.lh.inlym.com/hefeng/s1/'
+      const iconUrl = 'https://img.lh.inlym.com/hefeng/c1/'
 
       /** 拟物图标地址前缀 */
-      const url2 = 'https://img.lh.inlym.com/hefeng/s2/'
+      const imageUrl = 'https://img.lh.inlym.com/hefeng/s2/'
 
-      item.iconUrl = `${url2}${item.iconDay}.png`
-      item.iconDayUrl = `${url1}${item.iconDay}.png`
-      item.iconNightUrl = `${url1}${item.iconNight}.png`
+      item.imageUrl = `${imageUrl}${item.iconDay}.png`
+      item.iconDayUrl = `${iconUrl}${item.iconDay}.svg`
+      item.iconNightUrl = `${iconUrl}${item.iconNight}.svg`
+
+      // 添加 aqi
+      if (aqi5dObj[item.date]) {
+        item.aqi = aqi5dObj[item.date]
+      }
     }
 
-    return list15d
+    return daily
   }
 
   /**
