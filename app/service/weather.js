@@ -577,6 +577,46 @@ class WeatherService extends Service {
   }
 
   /**
+   * 获取逐小时天气预报（24 小时）
+   * @param {string} hours 小时数，枚举值：'24h'
+   * @tag 和风天气
+   * @since 2021-03-19
+   * @description
+   * 1. 当前仅 '24h'，预留以后 '72h'， '168h' 情况
+   */
+  async hourlyForecast(location, hours) {
+    const { service } = this
+    let resData = {}
+    const iconUrlPrefix = 'https://img.lh.inlym.com/hefeng/c1/'
+    if (hours === '24h') {
+      resData = await service.hefeng.fore24h(location)
+    } else {
+      throw new Error('参数错误')
+    }
+    const { hourly } = resData
+
+    /** 当前时间的小时数 */
+    const nowHour = new Date().getHours()
+
+    /** 待输出的结果 */
+    const result = []
+
+    for (let i = 0; i < hourly.length; i++) {
+      const item = hourly[i]
+      const hour = parseInt(new Date(item.fxTime).getHours(), 10)
+      if (hour === nowHour && i < 4) {
+        item.hourText = '现在'
+      } else {
+        item.hourText = hour + '时'
+      }
+      item.iconUrl = iconUrlPrefix + item.icon + '.svg'
+      result.push(item)
+    }
+
+    return result
+  }
+
+  /**
    * 获取分钟级降水（未来 2 小时，间隔 5 分钟）
    * @since 2021-03-16
    * @tag [和风天气]

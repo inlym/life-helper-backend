@@ -259,6 +259,25 @@ class WeatherController extends Controller {
   }
 
   /**
+   * @api {get} /weather/24h 获取未来 24 小时预报
+   * @apiName fore24h
+   * @apiGroup 天气
+   * @apiVersion v1
+   *
+   * @description 使用 [和风天气] API
+   *
+   * @apiParam (Query) {String} [location] 经纬度坐标，格式：`location=${longitude},${latitude}`
+   */
+  async fore24h() {
+    const { ctx, service } = this
+    const location = await service.hefeng.handleControllerParams('id')
+    const list = await service.weather.hourlyForecast(location, '24h')
+    ctx.body = {
+      list,
+    }
+  }
+
+  /**
    * @api {get} /weather/rain 获取分钟级降水信息
    * @apiName minutelyRain
    * @apiGroup 天气
