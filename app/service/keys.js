@@ -32,6 +32,15 @@ class KeysService extends Service {
   }
 
   /**
+   * 存储请求详情
+   * @param {requestId} id 请求 ID
+   * @returns
+   */
+  requestLog(id) {
+    return { key: `request:${id}`, timeout: 600 }
+  }
+
+  /**
    * 通过 token 换取 userId
    */
   token2UserId(token) {

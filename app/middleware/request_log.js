@@ -12,10 +12,7 @@ module.exports = () => {
     await next()
     const { app } = ctx
 
-    const { url, method, path, querystring, host, ip } = app.only(
-      ctx.request,
-      'url method path querystring host ip'
-    )
+    const { url, method, path, querystring, host, ip } = app.only(ctx.request, 'url method path querystring host ip')
 
     const request_headers = ctx.request.headers
     const request_body = ctx.request.rawBody || ''
@@ -38,6 +35,17 @@ module.exports = () => {
       response_body,
       create_time,
     }
+
+    const { key: redisKey, timeout } = ctx.service.keys.requestLog(ctx.tracer.traceId)
+    app.redis.set(
+      redisKey,
+      JSON.stringify({
+        request: { method, url, headers: request_headers, body: request_body },
+        response: { status, headers: response_headers, body: response_body },
+      }),
+      'EX',
+      timeout
+    )
 
     const { TableStore, ots } = app
 
