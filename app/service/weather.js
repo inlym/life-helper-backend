@@ -536,9 +536,9 @@ class WeatherService extends Service {
         if (i > 0) {
           daily[i - 1]['weekday'] = '昨天'
         }
-      } else if (daily[i - 1]['weekday'] === '今天') {
+      } else if (i > 0 && daily[i - 1]['weekday'] === '今天') {
         item.weekday = '明天'
-      } else if (daily[i - 2]['weekday'] === '今天') {
+      } else if (i > 1 && daily[i - 2]['weekday'] === '今天') {
         item.weekday = '后天'
       } else {
         item.weekday = weekdayList[itemDate.getDay()]
