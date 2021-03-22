@@ -588,6 +588,8 @@ class WeatherService extends Service {
     const { service } = this
     let resData = {}
     const iconUrlPrefix = 'https://img.lh.inlym.com/hefeng/c1/'
+    const imageUrlPrefix = 'https://img.lh.inlym.com/hefeng/s2/'
+
     if (hours === '24h') {
       resData = await service.hefeng.fore24h(location)
     } else {
@@ -610,6 +612,7 @@ class WeatherService extends Service {
         item.hourText = hour + '时'
       }
       item.iconUrl = iconUrlPrefix + item.icon + '.svg'
+      item.imageUrl = imageUrlPrefix + item.icon + '.png'
       result.push(item)
     }
 
