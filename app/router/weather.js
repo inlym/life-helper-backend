@@ -41,4 +41,7 @@ module.exports = (app) => {
 
   /** [和风天气] 获取实时天气情况 */
   router.get('/weather/now2', controller.weather.now2)
+
+  /** [和风天气] 获取天气生活指数 */
+  router.get('/weather/index', controller.weather.index)
 }

@@ -308,6 +308,23 @@ class WeatherController extends Controller {
     const location = await service.hefeng.handleControllerParams('id')
     ctx.body = await service.weather.weatherNow(location)
   }
+
+  /**
+   * @api {get} /weather/index 获取天气生活指数
+   * @apiName index
+   * @apiGroup 天气
+   * @apiVersion v1
+   *
+   * @description 使用 [和风天气] API
+   *
+   * @apiParam (Query) {String} [location] 经纬度坐标，格式：`location=${longitude},${latitude}`
+   */
+  async index() {
+    const { ctx, service } = this
+    const location = await service.hefeng.handleControllerParams('id')
+    const list = await service.weather.index(location)
+    ctx.body = { list }
+  }
 }
 
 module.exports = WeatherController

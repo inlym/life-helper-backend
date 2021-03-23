@@ -760,6 +760,24 @@ class WeatherService extends Service {
     }
     return result
   }
+
+  /**
+   * 获取天气生活指数
+   * @since 2021-03-23
+   * @tag [和风天气]
+   * @param {string} location 地区的 LocationID 或以英文逗号分隔的经纬度坐标
+   * @description
+   */
+  async index(location) {
+    const { service } = this
+    const { daily } = await service.hefeng.indices(location)
+    const iconUrlPrefix = 'https://img.lh.inlym.com/hefeng/life/'
+    const result = daily.map((item) => {
+      item.iconUrl = iconUrlPrefix + item.type + '.svg'
+      return item
+    })
+    return result
+  }
 }
 
 module.exports = WeatherService

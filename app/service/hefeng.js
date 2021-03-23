@@ -278,6 +278,7 @@ class HefengService extends Service {
       params: {
         location,
         key,
+        type: 0,
       },
     }
     const { data: resData } = await app.axios(requestOptions)
