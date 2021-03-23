@@ -1,6 +1,7 @@
 'use strict'
 
 const { Service } = require('egg')
+const dayjs = require('dayjs')
 
 class WeatherService extends Service {
   /**
@@ -593,28 +594,31 @@ class WeatherService extends Service {
     if (hours === '24h') {
       resData = await service.hefeng.fore24h(location)
     } else {
-      throw new Error('参数错误')
+      throw new Error('参数错误，目前仅 24h')
     }
     const { hourly } = resData
-
-    /** 当前时间的小时数 */
-    const nowHour = new Date().getHours()
-
-    /** 待输出的结果 */
-    const result = []
-
-    for (let i = 0; i < hourly.length; i++) {
-      const item = hourly[i]
-      const hour = parseInt(new Date(item.fxTime).getHours(), 10)
-      if (hour === nowHour && i < 4) {
+    const now = dayjs()
+    const result = hourly.map((item) => {
+      const t = dayjs(item.fxTime)
+      if (t.isSame(now, 'hour')) {
         item.hourText = '现在'
       } else {
-        item.hourText = hour + '时'
+        item.hourText = t.hour() + '时'
       }
+
+      if (t.isBefore(now, 'day')) {
+        item.weekday = '昨天'
+      } else if (t.isSame(now, 'day')) {
+        item.weekday = '今天'
+      } else if (t.isAfter(now, 'day')) {
+        item.weekday = '明天'
+      }
+
       item.iconUrl = iconUrlPrefix + item.icon + '.svg'
       item.imageUrl = imageUrlPrefix + item.icon + '.png'
-      result.push(item)
-    }
+
+      return item
+    })
 
     return result
   }
