@@ -34,6 +34,9 @@ class OssController extends Controller {
       headers: ctx.request.headers,
       body: ctx.request.body,
     })
+    ctx.body = {
+      errCode: 0,
+    }
   }
 }
 
