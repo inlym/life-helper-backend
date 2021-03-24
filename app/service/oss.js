@@ -88,7 +88,7 @@ class OssService extends Service {
 
     const signature = crypto.createHmac('sha1', accessKeySecret).update(policy, 'utf8').digest('base64')
 
-    const result = { url, accessKeyId, policy, signature, basename, callback: Buffer.from(callback).toString('base64') }
+    const result = { url, accessKeyId, policy, signature, basename, callback: Buffer.from(JSON.stringify(callback)).toString('base64') }
     return result
   }
 
