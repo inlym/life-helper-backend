@@ -156,6 +156,8 @@ module.exports = {
       /** 专用于存储用户生成图片文件的 OSS */
       img: {
         bucket: 'xxxxxxxxxxxx',
+        accessKeyId: 'xxxxxxxxxxxx',
+        accessKeySecret: 'xxxxxxxxxxxx',
       },
     },
 
@@ -164,8 +166,6 @@ module.exports = {
       endpoint: 'oss-cn-hangzhou-internal.aliyuncs.com',
       region: 'oss-cn-hangzhou',
       internal: true,
-      accessKeyId: 'xxxxxxxxxxxx',
-      accessKeySecret: 'xxxxxxxxxxxx',
     },
   },
 
