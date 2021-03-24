@@ -14,7 +14,7 @@ class OssController extends Controller {
    * @apiVersion v1
    */
   async token() {
-    const { ctx, service, config } = this
+    const { ctx, service } = this
     const { n } = ctx.query
     const num = parseInt(n, 10) || 1
     if (num >= 1 && num <= 10) {
@@ -22,8 +22,18 @@ class OssController extends Controller {
       for (let i = 0; i < num; i++) {
         list.push(service.oss.generateClientToken())
       }
-      ctx.body = { list, url: config.domain.ossImageUgc }
+      ctx.body = { list }
     }
+  }
+
+  async callback() {
+    const { ctx, service } = this
+    service.oss.listenOssCallback({
+      method: ctx.method,
+      url: ctx.request.url,
+      headers: ctx.request.headers,
+      body: ctx.request.body,
+    })
   }
 }
 

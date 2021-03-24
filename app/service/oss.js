@@ -53,6 +53,14 @@ class OssService extends Service {
     const { config, app } = this
 
     const { bucket, accessKeyId, accessKeySecret } = config.oss.clients.img
+    const url = config.domain.ossImageUgc
+
+    const callback = {
+      callbackUrl: 'https://api.lh.inlym.com/oss/callback',
+      callbackHost: 'api.lh.inlym.com',
+      callbackBodyType: 'application/json',
+      callbackBody: 'filename=${object}',
+    }
 
     /** 有效时长：30 分钟 */
     const timeout = 30 * 60 * 1000
@@ -80,8 +88,15 @@ class OssService extends Service {
 
     const signature = crypto.createHmac('sha1', accessKeySecret).update(policy, 'utf8').digest('base64')
 
-    const result = { accessKeyId, policy, signature, basename }
+    const result = { url, accessKeyId, policy, signature, basename, callback: Buffer.from(callback).toString('base64') }
     return result
+  }
+
+  /**
+   * 处理 OSS 回调
+   */
+  listenOssCallback(data) {
+    this.app.redis.set('temp:oss', JSON.stringify(data))
   }
 }
 
