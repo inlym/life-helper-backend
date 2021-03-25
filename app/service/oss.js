@@ -55,12 +55,6 @@ class OssService extends Service {
     const { bucket, accessKeyId, accessKeySecret } = config.oss.clients.img
     const url = config.domain.ossImageUgc
 
-    const callback = {
-      callbackUrl: 'https://api.lh.inlym.com/oss/callback',
-      callbackHost: 'api.lh.inlym.com',
-      callbackBodyType: 'application/json',
-    }
-
     /** 有效时长：30 分钟 */
     const timeout = 30 * 60 * 1000
 
@@ -87,7 +81,7 @@ class OssService extends Service {
 
     const signature = crypto.createHmac('sha1', accessKeySecret).update(policy, 'utf8').digest('base64')
 
-    const result = { url, accessKeyId, policy, signature, basename, callback: Buffer.from(JSON.stringify(callback)).toString('base64') }
+    const result = { url, accessKeyId, policy, signature, basename }
     return result
   }
 
@@ -148,7 +142,7 @@ class OssService extends Service {
     }
 
     // 计算签名字符串
-    const stringToSign = ctx.path + ctx.search + '\n' + JSON.stringify(ctx.request.body)
+    const stringToSign = ctx.path + ctx.search + '\n' + ctx.request.rawBody
 
     this.logger.debug('stringToSign', stringToSign)
 
