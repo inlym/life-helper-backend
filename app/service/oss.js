@@ -59,7 +59,6 @@ class OssService extends Service {
       callbackUrl: 'https://api.lh.inlym.com/oss/callback',
       callbackHost: 'api.lh.inlym.com',
       callbackBodyType: 'application/json',
-      callbackBody: 'filename=${object}',
     }
 
     /** 有效时长：30 分钟 */
@@ -95,8 +94,80 @@ class OssService extends Service {
   /**
    * 处理 OSS 回调
    */
-  listenOssCallback(data) {
-    this.app.redis.set('temp:oss', JSON.stringify(data))
+  handleOssCallback(data) {
+    this.app.redis.set('temp:oss' + Date.now(), JSON.stringify(data), 'EX', 3600)
+  }
+
+  /**
+   * 通过检验签名验证回调请求由 OSS 发起
+   * @see https://help.aliyun.com/document_detail/31989.html#title-neu-ft5-rlp
+   * @tag [Controller]
+   * @description
+   * 1. 注意该函数直接操作了控制器
+   */
+  async verifyOssCallbackSignature() {
+    const { app, ctx, service } = this
+
+    /**
+     * 第 1 步：获取公钥
+     * 1. 获取后会放 Redis 存着，理论上猜测应该不常变。
+     * 2. 意外处理：如果出现异常则将公钥删除重新获取。
+     */
+    let pubKey = ''
+    const { key: redisKey, timeout } = service.keys.ossPublicKey()
+
+    /** 保存公钥 URL 地址的请求头 */
+    const HEADER_OSS_PUB_KEY_URL = 'x-oss-pub-key-url'
+
+    /** 保存签名的请求头 */
+    const HEADER_SIGNATURE = 'authorization'
+
+    const redisResult = await app.redis.get(redisKey)
+    if (redisResult) {
+      pubKey = redisResult
+    } else {
+      const headerOssPubKeyUrl = ctx.get(HEADER_OSS_PUB_KEY_URL)
+      if (!headerOssPubKeyUrl) {
+        throw new Error('OSS 回调异常：请求头 x-oss-pub-key-url 为空')
+      }
+      const ossPubKeyUrl = Buffer.from(headerOssPubKeyUrl, 'base64').toString()
+
+      // 校验获取公钥的地址的 host 为 gosspublic.alicdn.com
+      const validHost = 'gosspublic.alicdn.com'
+      if (new URL(ossPubKeyUrl).host !== validHost) {
+        throw new Error(`OSS 回调异常：获取公钥的地址 ${ossPubKeyUrl} 非指定地址，可能为假冒请求！`)
+      }
+
+      const { data: resData } = await app.axios(ossPubKeyUrl)
+      if (resData) {
+        pubKey = resData
+        app.redis.set(redisKey, resData, 'EX', timeout)
+      } else {
+        throw new Error('OSS 回调异常：未获取到公钥内容！')
+      }
+    }
+
+    // 计算签名字符串
+    const stringToSign = ctx.path + ctx.search + '\n' + JSON.stringify(ctx.request.body)
+
+    this.logger.debug('stringToSign', stringToSign)
+
+    /** 签名内容 */
+    const signature = Buffer.from(ctx.get(HEADER_SIGNATURE), 'base64')
+
+    // 进行校验
+    const verifyResult = crypto.createVerify('RSA-MD5').update(stringToSign).verify(pubKey, signature)
+
+    this.logger.debug('verifyResult', verifyResult)
+
+    if (verifyResult) {
+      return true
+    } else {
+      // 存储错误回调
+      const { key: redisKey2 } = service.keys.ossErrorCallbackRequest(ctx.tracer.traceId)
+      app.redis.set(redisKey2, JSON.stringify(ctx.request))
+      throw new Error('OSS 回调异常：签名校验未通过')
+    }
   }
 }
 

@@ -28,12 +28,10 @@ class OssController extends Controller {
 
   async callback() {
     const { ctx, service } = this
-    service.oss.listenOssCallback({
-      method: ctx.method,
-      url: ctx.request.url,
-      headers: ctx.request.headers,
-      body: ctx.request.body,
-    })
+    const verifySignatureResult = await service.oss.verifyOssCallbackSignature()
+    if (verifySignatureResult) {
+      service.oss.handleOssCallback(ctx.request.body)
+    }
     ctx.body = {
       errCode: 0,
     }

@@ -170,6 +170,23 @@ class KeysService extends Service {
       return { key: `hefeng:air5d:location:${location}`, timeout }
     }
   }
+
+  /**
+   * OSS 检验回调签名，获取公钥地址
+   */
+  ossPublicKey() {
+    const timeout = 3600 * 24 * 100
+    return { key: 'system:oss_public_key', timeout }
+  }
+
+  /**
+   * 存储 OSS 错误回调请求
+   * @param {string} id 请求ID
+   */
+  ossErrorCallbackRequest(id) {
+    const timeout = 3600 * 24 * 10
+    return { key: `oss:error_callback:requestid:${id}`, timeout }
+  }
 }
 
 module.exports = KeysService
