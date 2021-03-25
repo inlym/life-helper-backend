@@ -44,7 +44,7 @@ class KeysService extends Service {
    * 通过 token 换取 userId
    */
   token2UserId(token) {
-    return { key: `auth:userid:token:${token}`, timeout: 3600 * 24 }
+    return { key: `auth:userid:token:${token}`, timeout: 3600 * 24 * 2 }
   }
 
   /**

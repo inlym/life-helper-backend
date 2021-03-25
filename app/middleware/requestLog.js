@@ -10,7 +10,9 @@ const sp = require('spawn-object')
 module.exports = () => {
   return async function requestLog(ctx, next) {
     await next()
-    const { app } = ctx
+    const { app, service } = ctx
+
+    const requestId = ctx.tracer.traceId
 
     const { url, method, path, querystring, host, ip } = app.only(ctx.request, 'url method path querystring host ip')
 
@@ -36,12 +38,12 @@ module.exports = () => {
       create_time,
     }
 
-    const { key: redisKey, timeout } = ctx.service.keys.requestLog(ctx.tracer.traceId)
+    const { key: redisKey, timeout } = ctx.service.keys.requestLog(requestId)
     app.redis.set(
       redisKey,
       JSON.stringify({
-        request: { method, url, headers: request_headers, body: request_body },
-        response: { status, headers: response_headers, body: response_body },
+        request: service.debug.getRequestDetail(),
+        response: service.debug.getResponseDetail(),
       }),
       'EX',
       timeout
@@ -52,7 +54,7 @@ module.exports = () => {
     const params = {
       tableName: 'request_log',
       condition: new TableStore.Condition(TableStore.RowExistenceExpectation.IGNORE, null),
-      primaryKey: sp({ request_id: ctx.tracer.traceId }),
+      primaryKey: sp({ request_id: requestId }),
       attributeColumns: sp(obj),
       returnContent: { returnType: TableStore.ReturnType.Primarykey },
     }
