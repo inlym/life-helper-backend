@@ -12,7 +12,7 @@ const HEADER_CODE_FIELD = 'X-Lh-Code'
  */
 module.exports = () => {
   return async function getUserId(ctx, next) {
-    /** 从请求头中获取 token，为方便调试，兼容从 query 中获取 */
+    /** 从请求头中获取 token，兼容从 query 中获取 */
     const token = ctx.get(HEADER_TOKEN_FIELD) || ctx.query.token
 
     /** 从请求头中获取 wx.login 获取的 code */

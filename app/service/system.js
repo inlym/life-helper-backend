@@ -43,8 +43,8 @@ class SystemService extends Service {
     /** 监听端口 */
     const listenPort = this.app.config.cluster.listen.port
 
-    const launchTime = await this.app.redis.get('system:lastLaunchTime')
-    const launchCounter = await this.app.redis.get('system:launchCounter')
+    const launchTime = await this.app.redis.get('system:last_launch_time')
+    const launchCounter = await this.app.redis.get('system:launch_counter')
 
     /** 当前时间 */
     const currentTime = this.app.now()
@@ -52,8 +52,12 @@ class SystemService extends Service {
     /** 主机名 */
     const hostname = os.hostname()
 
+    /** ip地址 */
+    const ip = this.ctx.ip
+
     return {
       arch,
+      ip,
       debugPort,
       pid,
       ppid,
