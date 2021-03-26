@@ -1,7 +1,6 @@
 'use strict'
 
 const { Controller } = require('egg')
-const only = require('only')
 const sp = require('spawn-object')
 
 class DebugController extends Controller {
@@ -43,6 +42,17 @@ class DebugController extends Controller {
       response[list[i]['columnName']] = list[i]['columnValue']
     }
     ctx.body = response
+  }
+
+  async temp() {
+    const { ctx, service } = this
+
+    const query = {
+      name: 'are',
+      age: 33,
+    }
+    const res = await service.mp.getUnlimitedQRCode({ query })
+    ctx.body = res
   }
 }
 
