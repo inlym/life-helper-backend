@@ -26,8 +26,6 @@ class RecordService extends Service {
 
     const row = { user_id: userId, code, openid, token, ip, nation, province, city, district, adcode, longitude: lng, latitude: lat }
 
-    logger.debug(`登录信息日志 => ${JSON.stringify(row)}`)
-
     app.model.LoginLog.create(row)
   }
 }

@@ -38,7 +38,6 @@ class AuthService extends Service {
       logger.debug(`[Redis] token=${token} 无效`)
       return NOT_EXIST_USER_ID
     } else {
-      logger.debug(`[Redis] token=${token} -> userId=${result}`)
       return parseInt(result, 10)
     }
   }

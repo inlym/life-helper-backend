@@ -10,21 +10,19 @@ class UserService extends Service {
    * 通过 openid 从用户（user）表中查找用户 ID，如果未找到则返回 0
    * @param {string} openid
    * @returns {Promise<number>} userId
+   * @description
+   * 1. 去掉的日志
    */
   async getUserIdByOpenid(openid) {
-    const { app, logger } = this
-
+    const { app } = this
     const result = await app.model.User.findOne({
       where: {
         openid,
       },
     })
-
     if (!result) {
-      logger.debug(`[Mysql][user] -> openid => ${openid} 对应用户不存在`)
       return NOT_EXIST_USER_ID
     } else {
-      logger.debug(`[Mysql][user] -> openid => ${openid} / userId => ${result.id}`)
       return result.id
     }
   }
@@ -38,15 +36,12 @@ class UserService extends Service {
     if (!openid || typeof openid !== 'string') {
       throw new Error('参数错误: openid为空或非字符串')
     }
-
     const { app, logger } = this
-
     const row = {
       openid,
     }
-
     const result = await app.model.User.create(row)
-    logger.info(`[Mysql][user] 创建新用户 -> userId => ${result.id}`)
+    logger.info(`[Mysql] 创建新用户: openid=${openid}, userId=${result.id}`)
     return result.id
   }
 
@@ -58,14 +53,11 @@ class UserService extends Service {
    */
   async getUserIdByCode(code) {
     const { service } = this
-
     const openid = await service.mp.code2Openid(code)
     let userId = await this.getUserIdByOpenid(openid)
-
     if (userId === NOT_EXIST_USER_ID) {
       userId = await this.createNewUser(openid)
     }
-
     return userId
   }
 }

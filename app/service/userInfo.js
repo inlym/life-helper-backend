@@ -21,14 +21,7 @@ class UserinfoService extends Service {
     const { avatarUrl, city, country, gender, nickName: nickname, province } = userInfo
 
     const result = await app.model.User.update(
-      {
-        avatarUrl,
-        city,
-        country,
-        gender,
-        nickname,
-        province,
-      },
+      { avatarUrl, city, country, gender, nickname, province },
       {
         where: {
           id: userId,
