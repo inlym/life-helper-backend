@@ -1,26 +1,16 @@
-# 日志文件
-log/
 logs/
-*.log
-
-# 依赖文件
 node_modules/
-
-# 运行时文件
 run/
+test/
 typings/
-
-config/.git
-
-# 内部测试用例
-local-test/
-test/temp
-temp.js
-
-
-# 临时屏蔽
-.travis.yml
-appveyor.yml
-.github/workflows/nodejs.yml
+.editorconfig
+.eslintignore
+.eslintrc
+.gitignore
+.prettierrc
 jsconfig.json
+nginx.local.conf
+README.md
 .github/
+appveyor.yml
+.travis.yml
