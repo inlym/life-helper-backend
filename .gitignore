@@ -10,14 +10,6 @@ node_modules/
 run/
 typings/
 
-# 私密配置文件
-config/config.local.js
-config/config.unittest.js
-config/config.test.js
-config/config.prepub.js
-config/config.prod.js
-
-config/.git
 
 # 内部测试用例
 local-test/
