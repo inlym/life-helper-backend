@@ -11,6 +11,7 @@
   },
   "scripts": {
     "start": "egg-scripts start --daemon --env=prod --title=lh-prod",
+    "start-in-docker": "egg-scripts start --env=prod --title=lh-prod",
     "stop": "egg-scripts stop --title=lh-prod",
     "reload": "npm run stop && npm run start",
     "dev": "egg-bin dev",
