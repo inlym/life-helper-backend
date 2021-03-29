@@ -4,7 +4,7 @@ ENV TZ="Asia/Shanghai"
 RUN mkdir -p /data/code
 WORKDIR /data/code
 COPY package.json /data/code
-RUN npm i --registry=https://registry.npm.taobao.org
+RUN npm i
 COPY . /data/code
 EXPOSE 3030
 CMD npm run start-in-docker
