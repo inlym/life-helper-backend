@@ -187,7 +187,7 @@ module.exports = {
     ossImageOfficial: 'https://img.lh.inlym.com',
 
     /** 用户上传图片用途的 OSS 地址 */
-    ossImageUgc: 'https://img3rd.lh.inlym.com',
+    ossImageUgc: 'https://image.lh.inlym.com',
   },
 
   /**
