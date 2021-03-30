@@ -153,13 +153,6 @@
     "lines-between-class-members": ["error", "always"],
     "max-lines": ["error", 2000],
     "multiline-comment-style": ["error", "starred-block"],
-    "new-cap": [
-      "error",
-      {
-        "newIsCap": true,
-        "properties": false
-      }
-    ],
     "newline-per-chained-call": "off",
     "no-array-constructor": "error",
     "no-bitwise": "error",
