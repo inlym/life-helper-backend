@@ -90,7 +90,7 @@ module.exports = {
   },
 
   /** 免鉴权路径，访问接口无需 token */
-  noAuthPath: ['/debug', '/debug/ip', '/debug/now', '/login', '/ping', '/status', '/wxserver/message', '/oss/callback', '/callback'],
+  noAuthPath: ['/debug', '/login', '/ping', '/status', '/wxserver/message', '/oss/callback', '/callback'],
 
   /**
    * --------------------------------------------------------------------------
