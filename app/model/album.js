@@ -45,7 +45,7 @@ module.exports = (app) => {
         type: STRING(80),
         allowNull: false,
         defaultValue: '',
-        comment: '相册封面图 url 地址',
+        comment: '相册封面图文件名',
       },
     },
 

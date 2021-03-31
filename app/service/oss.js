@@ -17,7 +17,7 @@ class OssService extends Service {
    */
   async dumpImage(url, dirname) {
     const { app } = this
-    const oss = app.oss.get('img')
+    const oss = app.oss.get('image')
 
     // 首先获取图片的字节流
     const requestOptions = {
@@ -52,7 +52,7 @@ class OssService extends Service {
   generateClientToken() {
     const { config, app } = this
 
-    const { bucket, accessKeyId, accessKeySecret } = config.oss.clients.img
+    const { bucket, accessKeyId, accessKeySecret } = config.oss.clients.image
     const url = config.domain.ossImageUgc
 
     /** 有效时长：30 分钟 */

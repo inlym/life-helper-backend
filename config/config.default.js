@@ -153,8 +153,14 @@ module.exports = {
    */
   oss: {
     clients: {
-      /** 专用于存储用户生成图片文件的 OSS */
-      img: {
+      /**
+       * 专用于存储由用户侧上传的图片的 Bucket
+       * 1. baseURL => https://image.lh.inlym.com
+       * 2. 当前 Bucket 不分文件夹，所有文件均放置于根目录下
+       * 3. 文件名为去掉短横线的 32 位字符 UUID
+       * 4. 在存储图片地址时，只存储文件名，不存储 baseURL
+       */
+      image: {
         bucket: 'xxxxxxxxxxxx',
         accessKeyId: 'xxxxxxxxxxxx',
         accessKeySecret: 'xxxxxxxxxxxx',
