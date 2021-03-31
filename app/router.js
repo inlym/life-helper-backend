@@ -10,4 +10,5 @@ module.exports = (app) => {
   require('./router/image.js')(app)
   require('./router/wxserver.js')(app)
   require('./router/oss.js')(app)
+  require('./router/album.js')(app)
 }
