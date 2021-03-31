@@ -1,10 +1,10 @@
 'use strict'
 
 module.exports = (app) => {
-  const { STRING, INTEGER } = app.Sequelize
+  const { STRING, INTEGER, DATE } = app.Sequelize
 
   /** 相册照片表 */
-  const Model = app.model.define(
+  const Photo = app.model.define(
     'Photo',
 
     {
@@ -19,13 +19,41 @@ module.exports = (app) => {
         type: INTEGER,
         allowNull: false,
         comment: '照片所属相册 ID',
+        validate: {
+          min: 1,
+        },
       },
 
       filename: {
         type: STRING(40),
         allowNull: false,
         defaultValue: '',
-        comment: '照片的文件名，一般为去掉短横线的 UUID + 后缀名',
+        comment: '照片的文件名，一般为去掉短横线的 UUID',
+      },
+
+      uploadUserId: {
+        type: INTEGER,
+        allowNull: false,
+        comment: '上传操作的用户 ID',
+        validate: {
+          min: 1,
+        },
+      },
+
+      uploadTime: {
+        type: DATE,
+        allowNull: false,
+        comment: '图片上传成功的时间',
+      },
+
+      ip: {
+        type: STRING(20),
+        allowNull: false,
+        defaultValue: '',
+        comment: '创建操作时请求的 IP 地址',
+        validate: {
+          isIPv4: true,
+        },
       },
     },
 
@@ -53,5 +81,10 @@ module.exports = (app) => {
     }
   )
 
-  return Model
+  Photo.associate = function associate() {
+    app.model.Photo.belongsTo(app.model.Album, { foreignKey: 'albumId' })
+    app.model.Photo.belongsTo(app.model.User, { foreignKey: 'uploadUserId' })
+  }
+
+  return Photo
 }

@@ -4,7 +4,7 @@ module.exports = (app) => {
   const { STRING, INTEGER } = app.Sequelize
 
   /** 相册表 */
-  const Model = app.model.define(
+  const Album = app.model.define(
     'Album',
 
     {
@@ -32,13 +32,19 @@ module.exports = (app) => {
       createUserId: {
         type: INTEGER,
         allowNull: false,
-        comment: '相册创建人用户 ID',
+        comment: '相册创建人用户 ID，目前仅记录，无实际用途',
+        validate: {
+          min: 1,
+        },
       },
 
       ownUserId: {
         type: INTEGER,
         allowNull: false,
         comment: '相册当前所有人用户 ID（相册可以转移到其他用户账户下）',
+        validate: {
+          min: 1,
+        },
       },
 
       coverImage: {
@@ -46,6 +52,16 @@ module.exports = (app) => {
         allowNull: false,
         defaultValue: '',
         comment: '相册封面图文件名',
+      },
+
+      ip: {
+        type: STRING(20),
+        allowNull: false,
+        defaultValue: '',
+        comment: '创建操作时请求的 IP 地址',
+        validate: {
+          isIPv4: true,
+        },
       },
     },
 
@@ -73,5 +89,5 @@ module.exports = (app) => {
     }
   )
 
-  return Model
+  return Album
 }
