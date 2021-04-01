@@ -7,7 +7,7 @@ class AlbumController extends Controller {
    * @api {post} /album 创建相册
    * @apiName create
    * @apiGroup album
-   * @apiVersion v1
+   * @apiVersion 0.9.5
    * @apiDescription 用于创建相册
    *
    * @apiParam (Body) {String} name 相册名称

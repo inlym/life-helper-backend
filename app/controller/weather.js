@@ -224,7 +224,7 @@ class WeatherController extends Controller {
    * @api {get} /weather/15d 获取未来 15 天预报
    * @apiName fore15d
    * @apiGroup 天气
-   * @apiVersion v1
+   * @apiVersion 0.9.0
    *
    * @description 使用 [和风天气] API
    *
@@ -243,7 +243,7 @@ class WeatherController extends Controller {
    * @api {get} /weather/7d 获取未来 7 天预报
    * @apiName fore7d
    * @apiGroup 天气
-   * @apiVersion v1
+   * @apiVersion 0.9.0
    *
    * @description 使用 [和风天气] API
    *
@@ -262,7 +262,7 @@ class WeatherController extends Controller {
    * @api {get} /weather/24h 获取未来 24 小时预报
    * @apiName fore24h
    * @apiGroup 天气
-   * @apiVersion v1
+   * @apiVersion 0.9.0
    *
    * @description 使用 [和风天气] API
    *
@@ -281,7 +281,7 @@ class WeatherController extends Controller {
    * @api {get} /weather/rain 获取分钟级降水信息
    * @apiName minutelyRain
    * @apiGroup 天气
-   * @apiVersion v1
+   * @apiVersion 0.9.0
    *
    * @description 使用 [和风天气] API
    *
@@ -297,7 +297,7 @@ class WeatherController extends Controller {
    * @api {get} /weather/now2 获取实时天气情况
    * @apiName now2
    * @apiGroup 天气
-   * @apiVersion v1
+   * @apiVersion 0.9.0
    *
    * @description 使用 [和风天气] API
    *
@@ -313,7 +313,7 @@ class WeatherController extends Controller {
    * @api {get} /weather/index 获取天气生活指数
    * @apiName index
    * @apiGroup 天气
-   * @apiVersion v1
+   * @apiVersion 0.9.0
    *
    * @description 使用 [和风天气] API
    *

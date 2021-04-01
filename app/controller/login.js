@@ -10,7 +10,7 @@ class LoginController extends Controller {
    * @api {get} /login 小程序登录
    * @apiName wxLogin
    * @apiGroup 登录
-   * @apiVersion 0.0.3
+   * @apiVersion 0.9.0
    *
    * @apiParam (Query) {String} code 小程序下发的 code
    *

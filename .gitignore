@@ -28,6 +28,7 @@ database/config.json
 
 # apidoc 输出文档
 output/
+api/
 
 # 临时屏蔽
 .travis.yml

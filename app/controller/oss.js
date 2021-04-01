@@ -11,7 +11,7 @@ class OssController extends Controller {
    * @api {get} /oss/token 获取 OSS 直传凭证
    * @apiName token
    * @apiGroup oss
-   * @apiVersion v1
+   * @apiVersion 0.9.0
    */
   async token() {
     const { ctx, service } = this

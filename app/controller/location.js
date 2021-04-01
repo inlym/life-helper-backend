@@ -7,7 +7,7 @@ class LocationController extends Controller {
    * @api {get} /location/address 获取所在位置地址描述
    * @apiName address
    * @apiGroup location
-   * @apiVersion 0.0.3
+   * @apiVersion 0.9.0
    *
    * @apiParam (Query) {Number} [longitude] 经度
    * @apiParam (Query) {Number} [latitude] 经度
@@ -35,7 +35,7 @@ class LocationController extends Controller {
    * @api {post} /location/choose 提交本次重新选择定位的数据
    * @apiName choose
    * @apiGroup location
-   * @apiVersion v1
+   * @apiVersion 0.9.0
    *
    * @apiParam (Body) {Number} name 位置名称
    * @apiParam (Body) {Number} address 详细地址
