@@ -34,7 +34,13 @@ class PingController extends Controller {
     }
   }
 
-  /** 检测 MySQL 服务是否正常运行，如果正常运行则响应返回 'ok'，运行异常则响应返回 'error' */
+  /**
+   * @api {get} /ping/mysql GET /ping/mysql
+   * @apiName mysql
+   * @apiGroup ping
+   * @apiVersion 0.0.1
+   * @apiDescription 检测 mysql 服务是否正常运行，如果正常运行则响应返回 'ok'，运行异常则响应返回 'error'
+   */
   async mysql() {
     const [results] = await this.app.model.query('SELECT 1+1 as sum;')
 
