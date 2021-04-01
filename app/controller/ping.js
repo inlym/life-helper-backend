@@ -18,7 +18,13 @@ class PingController extends Controller {
     this.ctx.body = 'ok'
   }
 
-  /** 检测 Redis 服务是否正常运行，如果正常运行则响应返回 'ok'，运行异常则响应返回 'error' */
+  /**
+   * @api {get} /ping/redis GET /ping/redis
+   * @apiName redis
+   * @apiGroup ping
+   * @apiVersion 0.0.1
+   * @apiDescription 检测 Redis 服务是否正常运行，如果正常运行则响应返回 'ok'，运行异常则响应返回 'error'
+   */
   async redis() {
     const result = await this.app.redis.ping()
     if (result === 'PONG') {
