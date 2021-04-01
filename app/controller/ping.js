@@ -7,7 +7,13 @@ const { Controller } = require('egg')
  */
 
 class PingController extends Controller {
-  /** 检测应用是否已启动，如果已启动则响应返回 'ok'，未启动则请求超时无响应 */
+  /**
+   * @api {get} /ping GET /ping
+   * @apiName index
+   * @apiGroup ping
+   * @apiVersion 0.0.1
+   * @apiDescription 用于检测应用是否已启动，如果已启动则响应返回 'ok'，未启动则请求超时无响应
+   */
   async index() {
     this.ctx.body = 'ok'
   }
