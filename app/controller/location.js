@@ -4,17 +4,13 @@ const { Controller } = require('egg')
 
 class LocationController extends Controller {
   /**
-   * @api {get} /location/address 获取所在位置地址描述
+   * @api {get} /location/address GET /location/address
    * @apiName address
    * @apiGroup location
    * @apiVersion 0.9.0
+   * @apiDescription 获取所在位置地址描述
    *
-   * @apiParam (Query) {Number} [longitude] 经度
-   * @apiParam (Query) {Number} [latitude] 经度
    * @apiParam (Query) {String} [location] 经纬度坐标，格式：`location=${longitude},${latitude}`
-   *
-   * @apiDescription
-   * location 参数是 longitude, latitude 2个参数的缩略形式，不要同时传递。
    */
   async address() {
     const { ctx, service } = this
@@ -32,18 +28,17 @@ class LocationController extends Controller {
   }
 
   /**
-   * @api {post} /location/choose 提交本次重新选择定位的数据
+   * @api {post} /location/choose POST /location/choose
    * @apiName choose
    * @apiGroup location
    * @apiVersion 0.9.0
+   * @apiDescription
+   * 提交本次重新选择定位的数据（小程序端直接将从 wx.chooseLocation 方法获取的数据提交，无需做任何处理）
    *
    * @apiParam (Body) {Number} name 位置名称
    * @apiParam (Body) {Number} address 详细地址
    * @apiParam (Body) {Number} longitude 经度
    * @apiParam (Body) {Number} latitude 经度
-   *
-   * @apiDescription
-   * 小程序端直接将从 wx.chooseLocation 方法获取的数据提交，无需做任何处理
    */
   async choose() {
     const { ctx, service } = this

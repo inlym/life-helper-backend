@@ -5,9 +5,9 @@ const path = require('path')
 
 class ImageController extends Controller {
   /**
-   * @api {post} /img 上传单张图片
-   * @apiName uploadImage
-   * @apiGroup 图片
+   * @api {post} /img POST /img
+   * @apiName upload
+   * @apiGroup image
    * @apiVersion 0.1.0
    * @apiDescription 用于客户端上传图片，本接口仅支持上传单张图片
    *

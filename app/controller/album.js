@@ -4,11 +4,11 @@ const { Controller } = require('egg')
 
 class AlbumController extends Controller {
   /**
-   * @api {post} /album 创建相册
+   * @api {post} /album POST /album
    * @apiName create
    * @apiGroup album
    * @apiVersion 0.9.5
-   * @apiDescription 用于创建相册
+   * @apiDescription 创建相册
    *
    * @apiParam (Body) {String} name 相册名称
    *

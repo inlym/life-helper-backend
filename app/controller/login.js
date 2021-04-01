@@ -7,10 +7,11 @@ const HEADER_CODE_FIELD = 'X-Lh-Code'
 
 class LoginController extends Controller {
   /**
-   * @api {get} /login 小程序登录
+   * @api {get} /login GET /login
    * @apiName wxLogin
-   * @apiGroup 登录
+   * @apiGroup login
    * @apiVersion 0.9.0
+   * @apiDescription 小程序端登录
    *
    * @apiParam (Query) {String} code 小程序下发的 code
    *
@@ -18,7 +19,7 @@ class LoginController extends Controller {
    *
    * @apiSuccessExample {json} 返回值示例
    *   {
-   *     "token": "QvRNCjAovQTvLnBAphKkrjG2Bf5hV5Lb1rxZcxyVWpQyOhfOddaSUozIkbEYZS8N"
+   *     "token": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
    *   }
    */
   async wxLogin() {

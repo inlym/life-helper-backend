@@ -4,11 +4,11 @@ const { Controller } = require('egg')
 
 class UserInfoController extends Controller {
   /**
-   * @api {get} /user/info 获取
+   * @api {get} /user/info GET /user/info
    * @apiName getUserInfo
-   * @apiGroup 用户资料
-   * @apiDescription 用于获取用户的个人资料
+   * @apiGroup userinfo
    * @apiVersion 0.0.3
+   * @apiDescription 获取用户的个人资料
    *
    * @apiSuccess (Response) {String} nickname 用户昵称
    * @apiSuccess (Response) {String} avatarUrl 头像URL地址
@@ -19,11 +19,11 @@ class UserInfoController extends Controller {
   }
 
   /**
-   * @api {post} /user/info 更新
+   * @api {post} /user/info POST /user/info
    * @apiName updateUserInfo
-   * @apiGroup 用户资料
-   * @apiDescription 用于更新用户个人信息
+   * @apiGroup userinfo
    * @apiVersion 0.0.3
+   * @apiDescription 更新用户个人信息
    *
    * @apiParam (Body) {String} nickName 用户昵称
    * @apiParam (Body) {String} avatarUrl 用户头像图片的 URL

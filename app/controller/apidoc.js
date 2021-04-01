@@ -5,11 +5,11 @@
  */
 
 /**
- * @apiDefine Query Query
+ * @apiDefine Query 请求参数
  */
 
 /**
- * @apiDefine Body Body
+ * @apiDefine Body 请求体
  */
 
 /**
