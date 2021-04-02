@@ -39,7 +39,7 @@ class WeatherController extends Controller {
    * @apiName fore15d
    * @apiGroup weather
    * @apiVersion 0.9.0
-   * @apiDescription 获取未来 15 天预报
+   * @apiDescription 获取未来 15 天逐天天气预报
    *
    * @apiParam (Query) {String} [location] 经纬度坐标，格式：`location=${longitude},${latitude}`
    */
