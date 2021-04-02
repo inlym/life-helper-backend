@@ -80,6 +80,13 @@ module.exports = {
     module: ['axios', 'dayjs', 'only', 'only2'],
   },
 
+  /** 第三方插件 egg-parameter 配置 */
+  validate1: {
+    statusCode: 400,
+    errorMode: 'field',
+    errorName: 'errFields',
+  },
+
   /** 启用的中间件 */
   middleware: ['requestLog', 'auth'],
 

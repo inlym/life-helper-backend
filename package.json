@@ -74,6 +74,7 @@
     "egg-load": "^1.1.0",
     "egg-mysql": "^3.0.0",
     "egg-oss": "^2.0.0",
+    "egg-parameter": "^0.1.0",
     "egg-redis": "^2.4.0",
     "egg-scripts": "^2.11.0",
     "egg-sequelize": "^6.0.0",
