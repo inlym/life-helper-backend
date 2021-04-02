@@ -51,7 +51,13 @@ class PingController extends Controller {
     }
   }
 
-  /** 检测 TableStore 服务是否正常运行，如果正常运行则响应返回 'ok'，运行异常则响应返回 'error' */
+  /**
+   * @api {get} /ping/ots GET /ping/ots
+   * @apiName ots
+   * @apiGroup ping
+   * @apiVersion 0.0.1
+   * @apiDescription 检测 TableStore 服务是否正常运行，如果正常运行则响应返回 'ok'，运行异常则响应返回 'error'
+   */
   async ots() {
     try {
       const result = await this.app.ots.listTable()
