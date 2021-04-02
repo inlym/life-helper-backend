@@ -18,7 +18,7 @@ module.exports = (app) => {
       albumId: {
         type: INTEGER,
         allowNull: false,
-        comment: '照片所属相册 ID',
+        comment: '照片所属的相册 ID',
         validate: {
           min: 1,
         },
@@ -29,6 +29,13 @@ module.exports = (app) => {
         allowNull: false,
         defaultValue: '',
         comment: '照片的文件名，一般为去掉短横线的 UUID',
+      },
+
+      originalName: {
+        type: STRING(80),
+        allowNull: false,
+        defaultValue: '',
+        comment: '照片的原始文件名',
       },
 
       uploadUserId: {
