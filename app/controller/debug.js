@@ -8,7 +8,7 @@ class DebugController extends Controller {
    * @api {all} /debug ALL /debug
    * @apiName index
    * @apiGroup debug
-   * @apiVersion 0.9.5
+   * @apiVersion 0.0.1
    * @apiDescription 原样返回请求信息，用于调试请求
    */
   async index() {
