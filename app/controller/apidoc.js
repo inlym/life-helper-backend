@@ -9,7 +9,7 @@
  */
 
 /**
- * @apiDefine Body 请求体
+ * @apiDefine Body 请求数据
  */
 
 /**

@@ -11,9 +11,18 @@ class AlbumController extends Controller {
    * @apiDescription 创建相册
    *
    * @apiParam (Body) {String} name 相册名称
+   * @apiParamExample {json} 请求数据示例
+   * {
+   *   name: "Good Album"
+   * }
    *
    * @apiSuccess (Response) {Number} id 创建成功的相册 ID
    * @apiSuccess (Response) {String} name 创建成功的相册名称
+   * @apiSuccessExample {json} 返回值示例
+   * {
+   *   id: 1,
+   *   name: "Good Album"
+   * }
    */
   async create() {
     const { ctx, service } = this
