@@ -44,6 +44,23 @@ class DebugController extends Controller {
     ctx.body = response
   }
 
+  async throwError() {
+    const { ctx } = this
+    const queryRule = {
+      t: { required: true, type: 'enum', values: ['one', 'two', 'three'] },
+    }
+    ctx.validate(queryRule, ctx.query)
+    const { t } = ctx.query
+    if (t === 'one') {
+      ctx.throw(401, 'i am message')
+    } else if (t === 'two') {
+      ctx.throw(402, 'abcasdf', {
+        name: 'mark',
+        age: 19,
+      })
+    }
+  }
+
   /**
    * @api {all} /debug/temp ALL /debug/temp
    * @apiName temp

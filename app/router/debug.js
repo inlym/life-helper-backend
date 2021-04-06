@@ -12,6 +12,9 @@ module.exports = (app) => {
   /** 查看请求日志 */
   router.get('/request/:id', controller.debug.request)
 
+  /** 查看报错信息 */
+  router.get('/debug/throw', controller.debug.throwError)
+
   /** 临时测试使用 */
   router.all('/debug/temp', controller.debug.temp)
 }
