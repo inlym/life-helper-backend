@@ -172,6 +172,13 @@ module.exports = {
         accessKeyId: 'xxxxxxxxxxxx',
         accessKeySecret: 'xxxxxxxxxxxx',
       },
+
+      /** 将一些非结构化数据以 JSON 文本的形式存储在 OSS 中 */
+      dataflow: {
+        bucket: 'xxxxxxxxxxxx',
+        accessKeyId: 'xxxxxxxxxxxx',
+        accessKeySecret: 'xxxxxxxxxxxx',
+      },
     },
 
     /** 所有 OSS 实例共享的配置项 */

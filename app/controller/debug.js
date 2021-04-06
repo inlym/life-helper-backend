@@ -25,23 +25,14 @@ class DebugController extends Controller {
    */
   async request() {
     const { app, ctx } = this
-    const { ots } = app
     const { id } = ctx.params
     if (!id) {
       ctx.body = {}
       return
     }
-    const params = {
-      tableName: 'request_log',
-      primaryKey: sp({ request_id: id }),
-    }
-    const res = await ots.getRow(params)
-    const list = res.row.attributes
-    const response = {}
-    for (let i = 0; i < list.length; i++) {
-      response[list[i]['columnName']] = list[i]['columnValue']
-    }
-    ctx.body = response
+    const oss = app.oss.get('dataflow')
+    const data = await oss.get('/request-log/' + id + '.json')
+    ctx.body = data.content.toString()
   }
 
   async throwError() {
