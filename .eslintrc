@@ -131,12 +131,6 @@
       }
     ],
     "keyword-spacing": "error",
-    "line-comment-position": [
-      "error",
-      {
-        "position": "above"
-      }
-    ],
     "linebreak-style": "off",
     "lines-around-comment": [
       "error",
@@ -156,7 +150,6 @@
     "newline-per-chained-call": "off",
     "no-array-constructor": "error",
     "no-bitwise": "error",
-    "no-inline-comments": "error",
     "no-lonely-if": "error",
     "no-mixed-spaces-and-tabs": "error",
     "no-multi-assign": "error",
