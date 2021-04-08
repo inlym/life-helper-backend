@@ -35,7 +35,8 @@ class AuthService extends Service {
     const { key } = service.keys.token2UserId(token)
     const result = await app.redis.get(key)
     if (!result) {
-      logger.debug(`[Redis] token=${token} 无效`)
+      // token 有效期 2 天，理论上不会到这一步
+      logger.warn(`[Redis] token=${token} 无效`)
       return NOT_EXIST_USER_ID
     } else {
       return parseInt(result, 10)
@@ -43,19 +44,17 @@ class AuthService extends Service {
   }
 
   /**
-   * 微信登录，用 code 换取 token
-   * @param {string} code
-   * @returns {Promise<string>}
+   * 账户登录，发放 token
+   * @param {number} userId 用户 ID
+   * @return {Promise<string>} 登录凭证
    */
-  async wxLogin(code) {
-    const { service } = this
-    const openid = await service.mp.code2Openid(code)
-    let userId = await service.user.getUserIdByOpenid(openid)
-    if (!userId) {
-      userId = await service.user.createNewUser(openid)
-    }
+  async login(userId) {
+    const { app } = this
+    const user = await app.model.User.findByPk(userId)
+    user.lastLoginTime = Date.now()
+    user.save()
+    user.increment('loginCounter')
     const token = await this.createToken(userId)
-    service.record.loginInfo({ code, openid, userId, token })
     return token
   }
 }

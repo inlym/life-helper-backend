@@ -6,6 +6,9 @@ module.exports = (app) => {
   /** 接口调试，原样返回请求信息 */
   router.all('/debug', controller.debug.index)
 
+  /** 内部调试接口，用于查看登录鉴权信息 */
+  router.all('/debug/auth', controller.debug.auth)
+
   /** 查看系统运行状态 */
   router.get('/status', controller.system.status)
 

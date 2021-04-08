@@ -90,14 +90,20 @@ module.exports = {
   /** 启用的中间件 */
   middleware: ['requestLog', 'auth'],
 
+  /** 鉴权中间件（auth）配置 */
+  auth: {
+    /** 登录 */
+    login: ['/login'],
+
+    /** 免鉴权 */
+    authless: ['/debug', '/debug/temp', '/login', '/ping', '/status', '/wxserver/message', '/oss/callback', '/callback'],
+  },
+
   /** 请求响应记录日志中间件 */
   requestLog: {
     enable: true,
     ignore: '/ping',
   },
-
-  /** 免鉴权路径，访问接口无需 token */
-  noAuthPath: ['/debug', '/debug/temp', '/login', '/ping', '/status', '/wxserver/message', '/oss/callback', '/callback'],
 
   /**
    * --------------------------------------------------------------------------

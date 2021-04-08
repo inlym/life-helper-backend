@@ -3,26 +3,29 @@
 const { Service } = require('egg')
 const querystring = require('querystring')
 
-const code2SessionUrl = 'https://api.weixin.qq.com/sns/jscode2session'
-
 class MpService extends Service {
   /**
    * 通过 code 换取 session 信息
    * @see https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/login/auth.code2Session.html
-   * @param {!string} code 微信小程序端获取的临时登录凭证
-   * @returns {Promise<{session_key:string;openid:string}>} 微信请求返回的数据
+   * @param {string} code 微信小程序端获取的临时登录凭证
+   * @return {Promise<{session_key:string;openid:string}>} 微信请求返回的数据
    * @example 返回内容样例:
    * {session_key:"xxxxxx",openid:"xxxxxx"}
-   * @update 2021-02-06
+   * @update 2021-02-06, 2021-04-08
    */
   async code2Session(code) {
-    const { appid, secret } = this.app.config.miniprogram
-    const url = `${code2SessionUrl}?appid=${appid}&secret=${secret}&js_code=${code}&grant_type=authorization_code`
-    const res = await this.ctx.curl(url, {
-      dataType: 'json',
-    })
-    this.logger.info(`[WEIXIN API] 从微信服务器使用 code 换取 session -> code => ${code} / session => ${JSON.stringify(res.data)}`)
-    return res.data
+    const { app, config } = this
+    const { appid, secret } = config.miniprogram
+    const reqOptions = {
+      url: 'https://api.weixin.qq.com/sns/jscode2session',
+      params: { appid, secret, js_code: code, grant_type: 'authorization_code' },
+    }
+    const { data: resData } = await app.axios(reqOptions)
+    if (resData.errcode) {
+      throw new Error(`微信请求获取 openid 失败，错误码：${resData.errcode}，错误原因：${resData.errmsg}`)
+    } else {
+      return resData
+    }
   }
 
   /**
@@ -40,15 +43,15 @@ class MpService extends Service {
    * @returns {Promise<{access_token:string;expires_in:number}>}
    */
   async fetchAccessToken() {
-    const { app } = this
-    const { appid, secret } = this.app.config.miniprogram
-    const requestOptions = {
+    const { app, config } = this
+    const { appid, secret } = config.miniprogram
+    const reqOptions = {
       url: 'https://api.weixin.qq.com/cgi-bin/token',
       params: { grant_type: 'client_credential', appid, secret },
     }
-    const { data: resData } = await app.axios(requestOptions)
+    const { data: resData } = await app.axios(reqOptions)
     if (resData.errcode) {
-      throw new Error(`调用微信获取接口调用凭据接口出错，错误码 ${resData.errcode}, 错误信息 ${resData.errmsg}`)
+      throw new Error(`调用微信获取接口调用凭据接口出错，错误码：${resData.errcode}，错误原因：${resData.errmsg}`)
     } else {
       return resData
     }

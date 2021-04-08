@@ -2,9 +2,6 @@
 
 const { Controller } = require('egg')
 
-/** 用于传递微信小程序 wx.login 获取的 code 的请求头字段 */
-const HEADER_CODE_FIELD = 'X-Lh-Code'
-
 class LoginController extends Controller {
   /**
    * @api {get} /login GET /login
@@ -23,34 +20,18 @@ class LoginController extends Controller {
    *   }
    */
   async wxLogin() {
-    const { ctx, logger } = this
+    const { ctx, service } = this
 
-    /** query 参数校验规则 */
     const rule = {
-      code: {
-        required: true,
-        type: 'string',
-      },
+      code: 'string',
+      authType: 'string',
     }
 
-    // 对 query 参数进行校验
-    try {
-      ctx.validate(rule, ctx.query)
-    } catch (err) {
-      logger.debug(err)
-      ctx.body = {
-        errcode: 40001,
-        errmsg: 'code为空',
-      }
-      return
-    }
+    ctx.validate(rule, ctx.authParam)
 
-    // 获取参数
-    const { code } = ctx.query || ctx.get(HEADER_CODE_FIELD)
-
-    const token = await this.service.auth.wxLogin(code)
-    this.ctx.body = {
-      token,
+    if (ctx.authParam.authType === 'code') {
+      const token = await service.auth.login(ctx.userId)
+      ctx.body = { token }
     }
   }
 }

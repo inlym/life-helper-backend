@@ -1,7 +1,6 @@
 'use strict'
 
 const { Controller } = require('egg')
-const sp = require('spawn-object')
 
 class DebugController extends Controller {
   /**
@@ -14,6 +13,18 @@ class DebugController extends Controller {
   async index() {
     const { ctx, service } = this
     ctx.body = service.debug.getRequestDetail()
+  }
+
+  /**
+   * @api {all} /debug/auth ALL /debug/auth
+   * @apiName auth
+   * @apiGroup debug
+   * @apiVersion 0.9.8
+   * @apiDescription 内部调试接口，用于调试获取 code, token, userId 等参数
+   */
+  async auth() {
+    const { ctx } = this
+    ctx.body = ctx.authParam
   }
 
   /**
@@ -60,13 +71,9 @@ class DebugController extends Controller {
    * @apiDescription 用于临时测试
    */
   async temp() {
-    const { ctx, service } = this
-    const query = {
-      name: 'are',
-      age: 33,
-    }
-    const res = await service.mp.getUnlimitedQRCode({ query })
-    ctx.body = res
+    const { ctx } = this
+
+    ctx.body = 'hello'
   }
 }
 

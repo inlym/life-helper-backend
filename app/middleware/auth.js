@@ -1,22 +1,47 @@
 'use strict'
 
-/** 用于传递 token 的请求头字段 */
-const HEADER_TOKEN_FIELD = 'X-Lh-Token'
+/**
+ * 辅助函数，用于获取权限相关的参数
+ * @this ctx
+ * @param {string} name 参数名，'code' 或 'token'
+ * @description
+ * 获取参数的优先级：
+ * 1. 请求头 `Authorization` 字段，格式范例：`Authorization: TOKEN xxxxxxxxxxxx`
+ * 2. 指定请求头字段：`X-Lh-Code` 或 `X-Lh-Token`
+ * 3. 请求参数：`code` 或 `token`
+ */
+function getAuthParam(name) {
+  const HEADERS_FIELD = {
+    code: 'X-Lh-Code',
+    token: 'X-Lh-Token',
+  }
 
-/** 用于传递微信小程序 wx.login 获取的 code 的请求头字段 */
-const HEADER_CODE_FIELD = 'X-Lh-Code'
+  if (this.get('Authorization')) {
+    const [type, value] = this.get('Authorization').split(' ')
+    if (type && value && type.toUpperCase() === name.toUpperCase()) {
+      return value
+    }
+  }
+
+  if (this.get(HEADERS_FIELD[name])) {
+    return this.get(HEADERS_FIELD[name])
+  }
+
+  if (this.query[name]) {
+    return this.query[name]
+  }
+
+  return ''
+}
 
 /**
  * 鉴权中间件
- * 1. 存在 token 则直接从 token 中获取 userId（快），否则从 code 中换取 userId（慢）。
  */
-module.exports = () => {
-  return async function getUserId(ctx, next) {
-    /** 从请求头中获取 token，兼容从 query 中获取 */
-    const token = ctx.get(HEADER_TOKEN_FIELD) || ctx.query.token
-
-    /** 从请求头中获取 wx.login 获取的 code */
-    const code = ctx.get(HEADER_CODE_FIELD)
+module.exports = (options) => {
+  return async function auth(ctx, next) {
+    const code = getAuthParam.call(ctx, 'code')
+    const token = getAuthParam.call(ctx, 'token')
+    ctx.authParam = { code, token }
 
     // token 存在，则直接从 token 中获取 userId
     if (token) {
@@ -25,6 +50,9 @@ module.exports = () => {
       // userId 为 0 表示 token 异常，非 0 则表示 token 正常（下同）
       if (ctx.userId) {
         // 存在有效 token（即可以获取 userId），鉴权通过
+        ctx.authParam.authType = 'token'
+        ctx.authParam.userId = ctx.userId
+        ctx.logger.debug(`[鉴权中间件] token=${token} -> userId=${ctx.userId}`)
         await next()
         return
       }
@@ -36,22 +64,20 @@ module.exports = () => {
 
       if (ctx.userId) {
         // 从 code 中能够转换出有效 userId，鉴权通过
+        ctx.authParam.authType = 'code'
+        ctx.authParam.userId = ctx.userId
+        ctx.logger.debug(`[鉴权中间件] code=${code} -> userId=${ctx.userId}`)
         await next()
         return
       }
     }
 
-    /** 无需鉴权即可访问的接口列表 */
-    const { noAuthPath } = ctx.app.config
-
-    // 一般到不了这一步，除非提供了 token 但是是无效的，因此无法获取 userId 时，有下述处理
-    if (!noAuthPath.includes(ctx.path)) {
-      // 当前接口需要鉴权，则返回 401 错误码，客户端再次执行登录
+    // 免鉴权路径直接放行
+    if (options.authless.includes(ctx.path)) {
+      await next()
+    } else {
       ctx.status = 401
       ctx.body = 'Need Auth'
-    } else {
-      // 当前接口无需鉴权，则直接到下一步
-      await next()
     }
   }
 }
