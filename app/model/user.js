@@ -1,9 +1,12 @@
 'use strict'
 
 module.exports = (app) => {
-  const { STRING, TINYINT, INTEGER } = app.Sequelize
+  const { STRING, INTEGER, DATE, NOW } = app.Sequelize
 
-  /** 用户账户模型 */
+  /**
+   * 用户账户表
+   * 1. 放置跟登录相关信息
+   */
   const User = app.model.define(
     'User',
 
@@ -16,52 +19,33 @@ module.exports = (app) => {
       },
 
       openid: {
-        type: STRING,
+        type: STRING(32),
         allowNull: false,
         unique: true,
         comment: '微信小程序openid，用于唯一区分小程序用户',
       },
 
-      nickname: {
-        type: STRING,
-        allowNull: true,
-        comment: '微信用户昵称，从微信授权获取',
+      lastLoginTime: {
+        type: DATE,
+        allowNull: false,
+        defaultValue: NOW,
+        comment: '最近一次登录时间',
       },
 
-      avatarUrl: {
-        type: STRING,
-        allowNull: true,
-        comment: '微信头像的URL，从微信授权获取',
-      },
-
-      gender: {
-        type: TINYINT,
-        allowNull: true,
-        comment: '性别，0-未知，1-男性，2-女性，从微信授权获取',
-      },
-
-      country: {
-        type: STRING,
-        allowNull: true,
-        comment: '用户所在国家，从微信授权获取',
-      },
-
-      province: {
-        type: STRING,
-        allowNull: true,
-        comment: '用户所在省份，从微信授权获取',
-      },
-
-      city: {
-        type: STRING,
-        allowNull: true,
-        comment: '用户所在城市，从微信授权获取',
+      loginCounter: {
+        type: INTEGER,
+        allowNull: false,
+        defaultValue: 0,
+        comment: '登录次数',
       },
     },
 
     {
       /** 数据表的表名 */
       tableName: 'user',
+
+      /** 数据表的备注 */
+      comment: '用户账户表',
 
       /** 驼峰形式命名的属性名称转化为下划线形式的数据库列名称 */
       underscored: true,

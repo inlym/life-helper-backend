@@ -69,6 +69,9 @@ module.exports = (app) => {
       /** 数据表的表名 */
       tableName: 'album',
 
+      /** 数据表的备注 */
+      comment: '相册表',
+
       /** 驼峰形式命名的属性名称转化为下划线形式的数据库列名称 */
       underscored: true,
 

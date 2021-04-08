@@ -52,6 +52,9 @@ module.exports = (app) => {
       /** 数据表的表名 */
       tableName: 'page_view',
 
+      /** 数据表的备注 */
+      comment: '页面访问记录表',
+
       /** 驼峰形式命名的属性名称转化为下划线形式的数据库列名称 */
       underscored: true,
 

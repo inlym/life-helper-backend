@@ -68,6 +68,9 @@ module.exports = (app) => {
       /** 数据表的表名 */
       tableName: 'photo',
 
+      /** 数据表的备注 */
+      comment: '照片表',
+
       /** 驼峰形式命名的属性名称转化为下划线形式的数据库列名称 */
       underscored: true,
 
@@ -89,8 +92,8 @@ module.exports = (app) => {
   )
 
   Photo.associate = function associate() {
-    app.model.Photo.belongsTo(app.model.Album, { foreignKey: 'albumId' })
-    app.model.Photo.belongsTo(app.model.User, { foreignKey: 'uploadUserId' })
+    app.model.Photo.belongsTo(app.model.Album, { foreignKey: 'albumId', constraints: false })
+    app.model.Photo.belongsTo(app.model.User, { foreignKey: 'uploadUserId', constraints: false })
   }
 
   return Photo

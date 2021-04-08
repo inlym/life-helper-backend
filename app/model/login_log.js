@@ -21,13 +21,13 @@ module.exports = (app) => {
         comment: '主键 id',
       },
 
-      user_id: {
+      userId: {
         type: INTEGER,
         allowNull: false,
-        comment: '登录用户的 user_id',
+        comment: '登录用户的 userId',
       },
 
-      login_time: {
+      loginTime: {
         type: DATE,
         allowNull: false,
         defaultValue: NOW,
@@ -44,6 +44,18 @@ module.exports = (app) => {
         type: STRING,
         allowNull: false,
         comment: '通过 code 从微信服务器换取的 openid',
+      },
+
+      unionid: {
+        type: STRING,
+        allowNull: false,
+        comment: '通过 code 从微信服务器换取的 unionid',
+      },
+
+      sessionKey: {
+        type: STRING,
+        allowNull: false,
+        comment: '通过 code 从微信服务器换取的会话密钥',
       },
 
       token: {
@@ -113,6 +125,12 @@ module.exports = (app) => {
       /** 数据表的表名 */
       tableName: 'login_log',
 
+      /** 数据表的备注 */
+      comment: '登录日志表',
+
+      /** 驼峰形式命名的属性名称转化为下划线形式的数据库列名称 */
+      underscored: true,
+
       /** 启用时间戳 */
       timestamps: true,
 
@@ -120,13 +138,13 @@ module.exports = (app) => {
       paranoid: true,
 
       /** 软删时间字段名 */
-      deletedAt: 'delete_time',
+      deletedAt: 'deleteTime',
 
       /** 创建时间字段名 */
-      createdAt: 'create_time',
+      createdAt: 'createTime',
 
       /** 更新时间字段名 */
-      updatedAt: 'update_time',
+      updatedAt: 'updateTime',
     }
   )
 
