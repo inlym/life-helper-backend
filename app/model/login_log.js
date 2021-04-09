@@ -1,7 +1,7 @@
 'use strict'
 
 module.exports = (app) => {
-  const { STRING, INTEGER, DATE, NOW } = app.Sequelize
+  const { STRING, CHAR, INTEGER, DATE, NOW } = app.Sequelize
 
   /** 用户登录日志模型 */
   const LoginLog = app.model.define(
@@ -19,6 +19,9 @@ module.exports = (app) => {
         type: INTEGER,
         allowNull: false,
         comment: '登录用户的 userId',
+        validate: {
+          min: 1,
+        },
       },
 
       loginTime: {
@@ -29,71 +32,74 @@ module.exports = (app) => {
       },
 
       code: {
-        type: STRING,
+        type: STRING(64),
         allowNull: false,
         comment: '小程序端拿到的 code',
       },
 
       openid: {
-        type: STRING,
+        type: STRING(32),
         allowNull: false,
         comment: '通过 code 从微信服务器换取的 openid',
       },
 
       unionid: {
-        type: STRING,
+        type: STRING(32),
         allowNull: false,
         comment: '通过 code 从微信服务器换取的 unionid',
       },
 
       sessionKey: {
-        type: STRING,
+        type: STRING(32),
         allowNull: false,
         comment: '通过 code 从微信服务器换取的会话密钥',
       },
 
       token: {
-        type: STRING,
+        type: CHAR(32),
         allowNull: false,
         comment: '服务端返回的 token',
       },
 
       ip: {
-        type: STRING,
+        type: STRING(16),
         allowNull: false,
         comment: '用户的 IP 地址',
+        validate: {
+          isIPv4: true,
+        },
       },
 
       nation: {
-        type: STRING,
+        type: STRING(32),
         allowNull: false,
         defaultValue: '',
         comment: '国家',
       },
 
       province: {
-        type: STRING,
+        type: STRING(32),
         allowNull: false,
         defaultValue: '',
         comment: '省份',
       },
 
       city: {
-        type: STRING,
+        type: STRING(32),
         allowNull: false,
         defaultValue: '',
         comment: '城市',
       },
 
       district: {
-        type: STRING,
+        type: STRING(32),
         allowNull: false,
         defaultValue: '',
         comment: '区县',
       },
 
       adcode: {
-        type: STRING,
+        type: STRING(8),
         allowNull: false,
         defaultValue: '',
         comment: '邮政编码',
@@ -101,14 +107,14 @@ module.exports = (app) => {
 
       // 考虑到后期兼容性，使用字符串存储经纬度，使用时转换成浮点数
       longitude: {
-        type: STRING,
+        type: STRING(16),
         allowNull: false,
         defaultValue: '',
         comment: '经度',
       },
 
       latitude: {
-        type: STRING,
+        type: STRING(16),
         allowNull: false,
         defaultValue: '',
         comment: '纬度',

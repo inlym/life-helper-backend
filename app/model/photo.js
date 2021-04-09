@@ -58,7 +58,7 @@ module.exports = (app) => {
       },
 
       ip: {
-        type: STRING(20),
+        type: STRING(16),
         allowNull: false,
         defaultValue: '',
         comment: '创建操作时请求的 IP 地址',

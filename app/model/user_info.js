@@ -40,14 +40,14 @@ module.exports = (app) => {
       },
 
       country: {
-        type: STRING(16),
+        type: STRING(32),
         allowNull: false,
         defaultValue: '',
         comment: '用户所在国家，从微信授权获取',
       },
 
       province: {
-        type: STRING(16),
+        type: STRING(32),
         allowNull: false,
         defaultValue: '',
         comment: '用户所在省份，从微信授权获取',
