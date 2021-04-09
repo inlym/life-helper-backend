@@ -18,10 +18,10 @@ class UserinfoService extends Service {
    */
   async updateUserInfo(userId, userInfo) {
     const { app } = this
-    const { avatarUrl, city, country, gender, nickName: nickname, province } = userInfo
+    const { avatarUrl, city, country, gender, nickName, province } = userInfo
 
-    const result = await app.model.User.update(
-      { avatarUrl, city, country, gender, nickname, province },
+    const result = await app.model.UserInfo.update(
+      { avatarUrl, city, country, gender, nickName, province },
       {
         where: {
           id: userId,
@@ -40,7 +40,7 @@ class UserinfoService extends Service {
   async getUserInfo(userId) {
     const { app } = this
 
-    const result = await app.model.User.findByPk(userId, {
+    const result = await app.model.UserInfo.findByPk(userId, {
       attributes: ['nickname', 'avatarUrl'],
     })
 

@@ -20,8 +20,6 @@ temp.js
 .DS_Store
 app/.DS_Store
 
-# 其他文件
-package-lock.json
 
 # sequelize 的数据库配置信息
 database/config.json

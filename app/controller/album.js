@@ -45,6 +45,18 @@ class AlbumController extends Controller {
       name: res.name,
     }
   }
+
+  /**
+   * @api {get} /album GET /album
+   * @apiName list
+   * @apiGroup album
+   * @apiVersion 0.9.9
+   * @apiDescription 获取相册列表
+   */
+  async list() {
+    const { ctx, service } = this
+    ctx.body = await service.album.getAlbumList(ctx.userId)
+  }
 }
 
 module.exports = AlbumController

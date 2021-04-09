@@ -33,6 +33,22 @@ class AlbumService extends Service {
     })
     return await app.model.Album.update(values, { where: { albumId } })
   }
+
+  /**
+   * 获取指定用户的相册列表
+   * @param {number} userId
+   */
+  async getAlbumList(userId) {
+    const { app } = this
+    const { count, rows } = await app.model.Album.findAndCountAll({
+      where: {
+        ownUserId: userId,
+      },
+      attributes: ['id', 'name', 'coverImage'],
+      order: [['id', 'DESC']],
+    })
+    return { count, list: rows }
+  }
 }
 
 module.exports = AlbumService
