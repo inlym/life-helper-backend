@@ -19,14 +19,14 @@ module.exports = (app) => {
       },
 
       nickName: {
-        type: STRING,
+        type: STRING(32),
         allowNull: false,
         defaultValue: '',
         comment: '微信用户昵称，从微信授权获取',
       },
 
       avatarUrl: {
-        type: STRING,
+        type: STRING(128),
         allowNull: false,
         defaultValue: '',
         comment: '微信头像的URL，从微信授权获取',
@@ -40,21 +40,21 @@ module.exports = (app) => {
       },
 
       country: {
-        type: STRING,
+        type: STRING(16),
         allowNull: false,
         defaultValue: '',
         comment: '用户所在国家，从微信授权获取',
       },
 
       province: {
-        type: STRING,
+        type: STRING(16),
         allowNull: false,
         defaultValue: '',
         comment: '用户所在省份，从微信授权获取',
       },
 
       city: {
-        type: STRING,
+        type: STRING(32),
         allowNull: false,
         defaultValue: '',
         comment: '用户所在城市，从微信授权获取',

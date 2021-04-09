@@ -1,7 +1,7 @@
 'use strict'
 
 module.exports = (app) => {
-  const { STRING, INTEGER, DATE } = app.Sequelize
+  const { STRING, INTEGER, DATE, CHAR, NOW } = app.Sequelize
 
   /** 相册照片表 */
   const Photo = app.model.define(
@@ -24,15 +24,18 @@ module.exports = (app) => {
         },
       },
 
-      filename: {
-        type: STRING(40),
+      photoId: {
+        type: CHAR(32),
         allowNull: false,
         defaultValue: '',
-        comment: '照片的文件名，一般为去掉短横线的 UUID',
+        comment: '照片的文件名，设定为去掉4个短横线的 UUID',
+        validate: {
+          isLowercase: true,
+        },
       },
 
       originalName: {
-        type: STRING(80),
+        type: STRING(64),
         allowNull: false,
         defaultValue: '',
         comment: '照片的原始文件名',
@@ -50,6 +53,7 @@ module.exports = (app) => {
       uploadTime: {
         type: DATE,
         allowNull: false,
+        defaultValue: NOW,
         comment: '图片上传成功的时间',
       },
 

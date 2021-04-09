@@ -1,7 +1,7 @@
 'use strict'
 
 module.exports = (app) => {
-  const { STRING, INTEGER, DATE, NOW } = app.Sequelize
+  const { STRING, INTEGER, CHAR } = app.Sequelize
 
   /**
    * 用户账户表
@@ -15,7 +15,7 @@ module.exports = (app) => {
         type: INTEGER,
         primaryKey: true,
         autoIncrement: true,
-        comment: '主键 id，其他地方出现的 user_id 和 userId 均表示该值',
+        comment: '主键 id，即 userId',
       },
 
       openid: {
@@ -25,18 +25,23 @@ module.exports = (app) => {
         comment: '微信小程序openid，用于唯一区分小程序用户',
       },
 
-      lastLoginTime: {
-        type: DATE,
+      unionid: {
+        type: STRING(32),
         allowNull: false,
-        defaultValue: NOW,
-        comment: '最近一次登录时间',
+        defaultValue: '',
+        unique: true,
+        comment: '用户在开放平台的唯一标识符',
       },
 
-      loginCounter: {
-        type: INTEGER,
+      phone: {
+        type: CHAR(11),
         allowNull: false,
-        defaultValue: 0,
-        comment: '登录次数',
+        defaultValue: '',
+        unique: true,
+        comment: '账户手机号，可用于其他客户端登录',
+        validate: {
+          isNumeric: true,
+        },
       },
     },
 

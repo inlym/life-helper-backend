@@ -3,12 +3,6 @@
 module.exports = (app) => {
   const { STRING, INTEGER, DATE, NOW } = app.Sequelize
 
-  /**
-   * 本模型的登录指：
-   * 小程序端通过 code 换取服务端下发的 token 的行为
-   * - 当前数据表仅用于后续统计用途，无业务关联
-   */
-
   /** 用户登录日志模型 */
   const LoginLog = app.model.define(
     'LoginLog',

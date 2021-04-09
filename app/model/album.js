@@ -1,7 +1,7 @@
 'use strict'
 
 module.exports = (app) => {
-  const { STRING, INTEGER } = app.Sequelize
+  const { STRING, INTEGER, CHAR } = app.Sequelize
 
   /** 相册表 */
   const Album = app.model.define(
@@ -16,17 +16,10 @@ module.exports = (app) => {
       },
 
       name: {
-        type: STRING(30),
+        type: STRING(32),
         allowNull: false,
         defaultValue: '',
         comment: '相册名称',
-      },
-
-      description: {
-        type: STRING(300),
-        allowNull: false,
-        defaultValue: '',
-        comment: '相册描述',
       },
 
       createUserId: {
@@ -48,14 +41,14 @@ module.exports = (app) => {
       },
 
       coverImage: {
-        type: STRING(80),
+        type: CHAR(32),
         allowNull: false,
         defaultValue: '',
-        comment: '相册封面图文件名',
+        comment: '相册封面图的 photoId',
       },
 
       ip: {
-        type: STRING(20),
+        type: STRING(16),
         allowNull: false,
         defaultValue: '',
         comment: '创建操作时请求的 IP 地址',
