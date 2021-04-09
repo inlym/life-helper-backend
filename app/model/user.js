@@ -39,9 +39,6 @@ module.exports = (app) => {
         defaultValue: '',
         unique: true,
         comment: '账户手机号，可用于其他客户端登录',
-        validate: {
-          isNumeric: true,
-        },
       },
     },
 

@@ -34,36 +34,42 @@ module.exports = (app) => {
       code: {
         type: STRING(64),
         allowNull: false,
+        defaultValue: '',
         comment: '小程序端拿到的 code',
       },
 
       openid: {
         type: STRING(32),
         allowNull: false,
+        defaultValue: '',
         comment: '通过 code 从微信服务器换取的 openid',
       },
 
       unionid: {
         type: STRING(32),
         allowNull: false,
+        defaultValue: '',
         comment: '通过 code 从微信服务器换取的 unionid',
       },
 
       sessionKey: {
         type: STRING(32),
         allowNull: false,
+        defaultValue: '',
         comment: '通过 code 从微信服务器换取的会话密钥',
       },
 
       token: {
         type: CHAR(32),
         allowNull: false,
+        defaultValue: '',
         comment: '服务端返回的 token',
       },
 
       ip: {
         type: STRING(16),
         allowNull: false,
+        defaultValue: '',
         comment: '用户的 IP 地址',
         validate: {
           isIPv4: true,

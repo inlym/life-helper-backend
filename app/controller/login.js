@@ -24,13 +24,14 @@ class LoginController extends Controller {
 
     const rule = {
       code: 'string',
-      authType: 'string',
+      type: 'string',
     }
 
-    ctx.validate(rule, ctx.authParam)
+    ctx.validate(rule, ctx.state.auth)
 
-    if (ctx.authParam.authType === 'code') {
+    if (ctx.state.auth.type === 'code') {
       const token = await service.auth.login(ctx.userId)
+      service.record.wxLogin({ token })
       ctx.body = { token }
     }
   }

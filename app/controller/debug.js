@@ -24,7 +24,7 @@ class DebugController extends Controller {
    */
   async auth() {
     const { ctx } = this
-    ctx.body = ctx.authParam
+    ctx.body = ctx.state.auth
   }
 
   /**

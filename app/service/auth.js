@@ -49,11 +49,6 @@ class AuthService extends Service {
    * @return {Promise<string>} 登录凭证
    */
   async login(userId) {
-    const { app } = this
-    const user = await app.model.User.findByPk(userId)
-    user.lastLoginTime = Date.now()
-    user.save()
-    user.increment('loginCounter')
     const token = await this.createToken(userId)
     return token
   }

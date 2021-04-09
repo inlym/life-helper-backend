@@ -41,7 +41,7 @@ module.exports = (options) => {
   return async function auth(ctx, next) {
     const code = getAuthParam.call(ctx, 'code')
     const token = getAuthParam.call(ctx, 'token')
-    ctx.authParam = { code, token }
+    ctx.state.auth = { code, token }
 
     // token 存在，则直接从 token 中获取 userId
     if (token) {
@@ -50,8 +50,8 @@ module.exports = (options) => {
       // userId 为 0 表示 token 异常，非 0 则表示 token 正常（下同）
       if (ctx.userId) {
         // 存在有效 token（即可以获取 userId），鉴权通过
-        ctx.authParam.authType = 'token'
-        ctx.authParam.userId = ctx.userId
+        ctx.state.auth.type = 'token'
+        ctx.state.auth.userId = ctx.userId
         ctx.logger.debug(`[鉴权中间件] token=${token} -> userId=${ctx.userId}`)
         await next()
         return
@@ -64,8 +64,8 @@ module.exports = (options) => {
 
       if (ctx.userId) {
         // 从 code 中能够转换出有效 userId，鉴权通过
-        ctx.authParam.authType = 'code'
-        ctx.authParam.userId = ctx.userId
+        ctx.state.auth.type = 'code'
+        ctx.state.auth.userId = ctx.userId
         ctx.logger.debug(`[鉴权中间件] code=${code} -> userId=${ctx.userId}`)
         await next()
         return

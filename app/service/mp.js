@@ -15,7 +15,7 @@ class MpService extends Service {
    * @update 2021-02-06, 2021-04-08
    */
   async code2Session(code) {
-    const { config } = this
+    const { ctx, config } = this
     const { appid, secret } = config.miniprogram
     const reqOptions = {
       url: 'https://api.weixin.qq.com/sns/jscode2session',
@@ -25,6 +25,7 @@ class MpService extends Service {
     if (resData.errcode) {
       throw new Error(`微信请求获取 openid 失败，错误码：${resData.errcode}，错误原因：${resData.errmsg}`)
     } else {
+      ctx.state.wxSession = resData
       return resData
     }
   }
