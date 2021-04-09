@@ -2,6 +2,7 @@
 
 const { Service } = require('egg')
 const querystring = require('querystring')
+const axios = require('axios')
 
 class MpService extends Service {
   /**
@@ -14,13 +15,13 @@ class MpService extends Service {
    * @update 2021-02-06, 2021-04-08
    */
   async code2Session(code) {
-    const { app, config } = this
+    const { config } = this
     const { appid, secret } = config.miniprogram
     const reqOptions = {
       url: 'https://api.weixin.qq.com/sns/jscode2session',
       params: { appid, secret, js_code: code, grant_type: 'authorization_code' },
     }
-    const { data: resData } = await app.axios(reqOptions)
+    const { data: resData } = await axios(reqOptions)
     if (resData.errcode) {
       throw new Error(`微信请求获取 openid 失败，错误码：${resData.errcode}，错误原因：${resData.errmsg}`)
     } else {
@@ -29,9 +30,37 @@ class MpService extends Service {
   }
 
   /**
+   * 封装向微信服务器的请求，自动处理 access_token 逻辑
+   * @param {object} options 请求参数
+   * @since 2021-04-09
+   */
+  async wxRequest(options) {
+    const { logger } = this
+    const token = await this.getAccessToken()
+    options.params = options.params || {}
+    options.params.access_token = token
+    const { data: resData } = await axios(options)
+    if (!resData.errcode) {
+      return resData
+    } else if (resData.errmsg && resData.errmsg.indexOf('access_token') !== -1) {
+      logger.debug('微信 access_token 无效，准备再次发起请求！')
+      const tokenNew = await this.updateAccessToken()
+      options.params.access_token = tokenNew
+      const { data: resData2 } = await axios(options)
+      if (!resData2.errcode) {
+        return resData2
+      } else {
+        throw new Error(`微信请求失败，错误码：${resData2.errcode}，错误原因：${resData2.errmsg}`)
+      }
+    } else {
+      throw new Error(`微信请求失败，错误码：${resData.errcode}，错误原因：${resData.errmsg}`)
+    }
+  }
+
+  /**
    * 通过 code 换取 openid
    * @param {!string} code - 微信小程序端获取的临时登录凭证
-   * @returns {Promise<string>}
+   * @return {Promise<string>}
    */
   async code2Openid(code) {
     const { openid } = await this.code2Session(code)
@@ -40,18 +69,19 @@ class MpService extends Service {
 
   /**
    * 向微信服务端请求获取小程序全局唯一后台接口调用凭据（access_token）
-   * @returns {Promise<{access_token:string;expires_in:number}>}
+   * @see https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/access-token/auth.getAccessToken.html
+   * @return {Promise<{access_token:string;expires_in:number}>}
    */
   async fetchAccessToken() {
-    const { app, config } = this
+    const { config } = this
     const { appid, secret } = config.miniprogram
     const reqOptions = {
       url: 'https://api.weixin.qq.com/cgi-bin/token',
       params: { grant_type: 'client_credential', appid, secret },
     }
-    const { data: resData } = await app.axios(reqOptions)
+    const { data: resData } = await axios(reqOptions)
     if (resData.errcode) {
-      throw new Error(`调用微信获取接口调用凭据接口出错，错误码：${resData.errcode}，错误原因：${resData.errmsg}`)
+      throw new Error(`调用微信获取 AccessToken 接口出错，错误码：${resData.errcode}，错误原因：${resData.errmsg}`)
     } else {
       return resData
     }
@@ -75,13 +105,13 @@ class MpService extends Service {
 
   /**
    * 更新 Redis 中的微信调用凭证（access_token）
-   * [schedule]
    */
   async updateAccessToken() {
     const { app, service } = this
     const { access_token } = await this.fetchAccessToken()
     const { key, timeout } = service.keys.wxAccessToken()
-    app.redis.set(key, access_token, 'EX', timeout)
+    await app.redis.set(key, access_token, 'EX', timeout)
+    return access_token
   }
 
   /**
@@ -90,7 +120,6 @@ class MpService extends Service {
    * @param {object} opt 配置项
    */
   async getUnlimitedQRCode(opt) {
-    const { app } = this
     const page = opt.path || 'pages/index/index'
     const query = opt.query || opt.params || {}
     const scene = querystring.encode(query)
@@ -104,7 +133,7 @@ class MpService extends Service {
       data: { scene, page, auto_color: true },
       responseType: 'arraybuffer',
     }
-    const response = await app.axios(requestOptions)
+    const response = await axios(requestOptions)
     if (parseInt(response.headers['content-length'], 10) < 1000) {
       // 响应体太小说明出错了，没有传回图片
       const resData = JSON.parse(response.data.toString())
