@@ -1,6 +1,7 @@
 'use strict'
 
 const { Controller } = require('egg')
+const crypto = require('crypto')
 
 /**
  * Ping 控制器用于检测各外部依赖服务是否正常运行
@@ -16,6 +17,37 @@ class PingController extends Controller {
    */
   async index() {
     this.ctx.body = 'ok'
+  }
+
+  /**
+   * @api {get} /ping/string GET /ping/string
+   * @apiName string
+   * @apiGroup ping
+   * @apiVersion 0.9.9
+   * @apiDescription 生成指定位数的随机字符串
+   *
+   * @apiParam (Query) {Number} n 生成的随机字符串位数
+   */
+  async string() {
+    const { ctx } = this
+
+    const queryRule = {
+      n: {
+        required: false,
+        convertType: 'int',
+        type: 'int',
+        default: 16,
+        min: 4,
+        max: 128,
+      },
+    }
+
+    ctx.validate(queryRule, ctx.query)
+    const { n: length } = ctx.query
+
+    const buf = crypto.randomBytes(length * 2)
+    const str = buf.toString('base64').replace(/\+/gu, '').replace(/\//gu, '').replace(/[=]/gu, '')
+    ctx.body = str.slice(0, length)
   }
 
   /**

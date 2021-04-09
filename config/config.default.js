@@ -81,7 +81,7 @@ module.exports = {
   },
 
   /** 第三方插件 egg-parameter 配置 */
-  validate1: {
+  validate: {
     statusCode: 400,
     errorMode: 'field',
     errorName: 'errFields',
@@ -96,7 +96,7 @@ module.exports = {
     login: ['/login'],
 
     /** 免鉴权 */
-    authless: ['/debug', '/debug/temp', '/login', '/ping', '/status', '/wxserver/message', '/oss/callback', '/callback'],
+    authless: ['/debug', '/debug/temp', '/login', '/ping', '/ping/string', '/status', '/wxserver/message', '/oss/callback', '/callback'],
   },
 
   /** 请求响应记录日志中间件 */
