@@ -150,7 +150,7 @@ class MpService extends Service {
     const { app, config } = this
     const buf = await this.getUnlimitedQRCode(opt)
     const oss = app.oss.get('img')
-    const name = app.clearuuid4()
+    const name = app.str32()
     const baseURL = config.domain.ossImageUgc
     const result = await oss.put(name + '.png', buf)
     console.log(result)

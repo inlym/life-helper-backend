@@ -36,7 +36,7 @@ class OssService extends Service {
     }
 
     /** 文件名 */
-    const name = app.clearuuid4()
+    const name = app.str32()
 
     const result = await oss.put(`${dirname}/${name}.${imageType}`, data)
     return result.name
@@ -62,7 +62,7 @@ class OssService extends Service {
     const maxSize = 30 * 1024 * 1024
 
     /** 文件名不包含后缀部分 */
-    const basename = app.clearuuid4()
+    const basename = app.str32()
 
     const keyPre = `${basename}.`
 

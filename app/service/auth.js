@@ -18,7 +18,7 @@ class AuthService extends Service {
    */
   async createToken(userId) {
     const { app, service } = this
-    const token = app.clearuuid4()
+    const token = app.str32()
     const { key, timeout } = service.keys.token2UserId(token)
     app.redis.set(key, userId, 'EX', timeout)
     return token

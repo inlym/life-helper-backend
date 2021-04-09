@@ -25,7 +25,7 @@ class ImageController extends Controller {
     const oss = app.oss.get('img')
     const stream = await ctx.getFileStream()
     const extname = path.extname(stream.filename)
-    const filename = `${app.clearuuid4()}${extname}`
+    const filename = `${app.str32()}${extname}`
     const doamin = app.config.domain.ossImageUgc
 
     const result = await oss.put(filename, stream)
