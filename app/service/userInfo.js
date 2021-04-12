@@ -41,7 +41,7 @@ class UserinfoService extends Service {
     const { app } = this
 
     const result = await app.model.UserInfo.findByPk(userId, {
-      attributes: ['nickname', 'avatarUrl'],
+      attributes: ['nickName', 'avatarUrl'],
     })
 
     return result
