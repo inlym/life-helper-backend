@@ -24,7 +24,7 @@ class AlbumService extends Service {
    */
   async updateAlbumInfo(albumId, options) {
     const { app } = this
-    const props = ['name', 'description', 'coverImage']
+    const props = ['name', 'coverImage']
     const values = {}
     props.forEach((element) => {
       if (options[element]) {
@@ -45,6 +45,22 @@ class AlbumService extends Service {
         ownUserId: userId,
       },
       attributes: ['id', 'name', 'coverImage'],
+      order: [['id', 'DESC']],
+    })
+    return { count, list: rows }
+  }
+
+  /**
+   * 获取指定相册的照片列表
+   * @param {number} albumId 相册 ID
+   */
+  async getAlbumPhotos(albumId) {
+    const { app } = this
+    const { count, rows } = await app.model.Photo.findAndCountAll({
+      where: {
+        albumId,
+      },
+      attributes: ['id', 'photoId'],
       order: [['id', 'DESC']],
     })
     return { count, list: rows }

@@ -64,24 +64,6 @@ module.exports = (app) => {
 
       /** 数据表的备注 */
       comment: '相册表',
-
-      /** 驼峰形式命名的属性名称转化为下划线形式的数据库列名称 */
-      underscored: true,
-
-      /** 启用时间戳 */
-      timestamps: true,
-
-      /** 使用软删字段标记删除 */
-      paranoid: true,
-
-      /** 软删时间字段名 */
-      deletedAt: 'deleteTime',
-
-      /** 创建时间字段名 */
-      createdAt: 'createTime',
-
-      /** 更新时间字段名 */
-      updatedAt: 'updateTime',
     }
   )
 

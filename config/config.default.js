@@ -122,6 +122,25 @@ module.exports = {
     password: 'xxxxxxxxxxxx',
     database: 'xxxxxxxxxxxx',
     timezone: '+08:00',
+    define: {
+      /** 驼峰形式命名的属性名称转化为下划线形式的数据库列名称 */
+      underscored: true,
+
+      /** 启用时间戳 */
+      timestamps: true,
+
+      /** 使用软删字段标记删除 */
+      paranoid: true,
+
+      /** 软删时间字段名 */
+      deletedAt: 'deleteTime',
+
+      /** 创建时间字段名 */
+      createdAt: 'createTime',
+
+      /** 更新时间字段名 */
+      updatedAt: 'updateTime',
+    },
   },
 
   /**
@@ -215,24 +234,6 @@ module.exports = {
     /** 用户上传图片用途的 OSS 地址 */
     ossImageUgc: 'https://image.lh.inlym.com',
   },
-
-  /**
-   * 阿里云市场 - IP归属地查询 - APPCODE
-   * @see https://market.aliyun.com/products/57002002/cmapi00035184.html
-   */
-  APPCODE_IPLOCATION: 'xxxxxxxxxxxx',
-
-  /**
-   * 阿里云市场 - 墨迹天气（专业版经纬度） - APPCODE
-   * @see https://market.aliyun.com/products/57096001/cmapi012364.html
-   */
-  APPCODE_MOJI: 'xxxxxxxxxxxx',
-
-  /**
-   * 阿里云市场 - 墨迹天气（专业版CityID） - APPCODE
-   * @see https://market.aliyun.com/products/57096001/cmapi013828.html
-   */
-  APPCODE_MOJI2: 'xxxxxxxxxxxx',
 
   /**
    * 腾讯位置服务 WebService API 开发者密钥（Key）

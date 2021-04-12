@@ -1,4 +1,3 @@
 'use strict'
 
-const getConfig = require('life-helper-config')
-module.exports = getConfig('local')
+module.exports = require('life-helper-config')('local')
