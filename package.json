@@ -79,6 +79,7 @@
     "egg-sequelize": "^6.0.0",
     "egg-validate": "^2.0.2",
     "egg-view-nunjucks": "^2.2.0",
+    "jshttp": "^0.0.1",
     "life-helper-config": "^1.4.0",
     "mysql2": "^2.2.5",
     "only": "0.0.2",
