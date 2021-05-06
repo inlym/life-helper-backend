@@ -2,7 +2,7 @@
 
 const { Service } = require('egg')
 const querystring = require('querystring')
-const axios = require('axios')
+const jshttp = require('jshttp')
 
 class MpService extends Service {
   /**
@@ -21,7 +21,7 @@ class MpService extends Service {
       url: 'https://api.weixin.qq.com/sns/jscode2session',
       params: { appid, secret, js_code: code, grant_type: 'authorization_code' },
     }
-    const { data: resData } = await axios(reqOptions)
+    const { data: resData } = await jshttp(reqOptions)
     if (resData.errcode) {
       throw new Error(`微信请求获取 openid 失败，错误码：${resData.errcode}，错误原因：${resData.errmsg}`)
     } else {
@@ -40,14 +40,14 @@ class MpService extends Service {
     const token = await this.getAccessToken()
     options.params = options.params || {}
     options.params.access_token = token
-    const { data: resData } = await axios(options)
+    const { data: resData } = await jshttp(options)
     if (!resData.errcode) {
       return resData
     } else if (resData.errmsg && resData.errmsg.indexOf('access_token') !== -1) {
       logger.debug('微信 access_token 无效，准备再次发起请求！')
       const tokenNew = await this.updateAccessToken()
       options.params.access_token = tokenNew
-      const { data: resData2 } = await axios(options)
+      const { data: resData2 } = await jshttp(options)
       if (!resData2.errcode) {
         return resData2
       } else {
@@ -80,7 +80,7 @@ class MpService extends Service {
       url: 'https://api.weixin.qq.com/cgi-bin/token',
       params: { grant_type: 'client_credential', appid, secret },
     }
-    const { data: resData } = await axios(reqOptions)
+    const { data: resData } = await jshttp(reqOptions)
     if (resData.errcode) {
       throw new Error(`调用微信获取 AccessToken 接口出错，错误码：${resData.errcode}，错误原因：${resData.errmsg}`)
     } else {
@@ -134,28 +134,13 @@ class MpService extends Service {
       data: { scene, page, auto_color: true },
       responseType: 'arraybuffer',
     }
-    const response = await axios(requestOptions)
+    const response = await jshttp(requestOptions)
     if (parseInt(response.headers['content-length'], 10) < 1000) {
       // 响应体太小说明出错了，没有传回图片
       const resData = JSON.parse(response.data.toString())
       throw new Error(`调用微信获取小程序码接口出错，错误码 ${resData.errcode}, 错误信息 ${resData.errmsg}`)
     }
     return response.data
-  }
-
-  /**
-   * 获取小程序码后转储到 OSS，返回 url 地址
-   * @since 2021-03-26
-   */
-  async getUnlimitedQRCodeUrl(opt) {
-    const { app, config } = this
-    const buf = await this.getUnlimitedQRCode(opt)
-    const oss = app.oss.get('img')
-    const name = app.str32()
-    const baseURL = config.domain.ossImageUgc
-    const result = await oss.put(name + '.png', buf)
-    console.log(result)
-    return baseURL + '/' + result.name
   }
 }
 

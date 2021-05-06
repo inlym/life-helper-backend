@@ -1,9 +1,8 @@
 'use strict'
 
 const dayjs = require('dayjs')
-const axios = require('axios')
-const querystring = require('querystring')
 const { v4: uuidv4 } = require('uuid')
+const jshttp = require('jshttp')
 
 module.exports = {
   /**
@@ -19,4 +18,9 @@ module.exports = {
   str32() {
     return uuidv4().replace(/[-]/gu, '').toLowerCase()
   },
+
+  /**
+   * `jshttp`
+   */
+  jshttp: jshttp,
 }

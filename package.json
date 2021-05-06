@@ -3,9 +3,6 @@
   "version": "0.9.11",
   "description": "「我的个人助手」小程序服务端部分代码",
   "main": "index.js",
-  "directories": {
-    "doc": "doc"
-  },
   "egg": {
     "declarations": true
   },
@@ -14,6 +11,8 @@
     "start-in-docker": "egg-scripts start --env=prod --title=lh-prod",
     "stop": "egg-scripts stop --title=lh-prod",
     "reload": "npm run stop && npm run start",
+    "start:local": "egg-scripts start --daemon --env=local --title=lh-local",
+    "stop:local": "egg-scripts stop --title=lh-local",
     "dev": "egg-bin dev",
     "prodev": "EGG_SERVER_ENV=prod egg-bin dev",
     "debug": "egg-bin debug",
@@ -65,7 +64,7 @@
   "dependencies": {
     "axios": "^0.21.1",
     "dayjs": "^1.10.4",
-    "egg": "^2.29.3",
+    "egg": "^2.29.4",
     "egg-alinode": "^2.0.1",
     "egg-aliyun-tablestore": "^1.1.0",
     "egg-apigw-tracer": "^1.2.1",
@@ -79,7 +78,7 @@
     "egg-sequelize": "^6.0.0",
     "egg-validate": "^2.0.2",
     "egg-view-nunjucks": "^2.2.0",
-    "jshttp": "^0.0.1",
+    "jshttp": "^0.2.0",
     "life-helper-config": "^1.4.0",
     "mysql2": "^2.2.5",
     "only": "0.0.2",
