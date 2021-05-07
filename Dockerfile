@@ -4,6 +4,6 @@ ENV TZ="Asia/Shanghai"
 RUN mkdir -p /data/code
 WORKDIR /data/code
 COPY . /data/code
-RUN npm install --production
+RUN npm ci
 EXPOSE 3030
 CMD npm run start-in-docker
