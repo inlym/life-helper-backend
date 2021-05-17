@@ -6,14 +6,13 @@
 
 这是一个线上正式运营中的小程序项目，主要用于为用户提供一些日常使用的小工具，为生活提供便利。
 
-
 ### 客户端
+
 目前客户端仅包含**小程序**，以下是小程序码：
 
 ![](https://img.inlym.com/ed5676d20f6243328c2e89a1403e4ff0.jpg)
 
 小程序部分源码地址：https://github.com/inlym/life-helper-miniprogram
-
 
 ### 服务端
 
@@ -24,15 +23,14 @@
 服务端部分用到的工具主要包含：
 
 1. 服务器架构：阿里云 API 网关 + 负载均衡 SLB + 云服务器 ECS
-2. 框架：Node.js + Egg.js
+2. 框架：Node.js + Nest.js
 3. 数据库：Mysql + Redis
-4. ORM框架：Sequelize
+4. ORM 框架：Sequelize
 5. API 文档生成：apidoc
 
 ### API 文档
 
 API 文档地址：https://doc.lh.inlym.com/api/index.html
-
 
 #### 阿里云服务
 
