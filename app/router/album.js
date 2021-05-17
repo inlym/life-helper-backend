@@ -7,5 +7,5 @@ module.exports = (app) => {
   router.post('/album', controller.album.create)
 
   /** 获取相册列表 */
-  router.get('/album', controller.album.list)
+  router.get('/albums', controller.album.list)
 }

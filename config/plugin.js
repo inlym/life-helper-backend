@@ -25,7 +25,7 @@ module.exports = {
 
   validate: {
     enable: true,
-    package: 'egg-parameter',
+    package: 'egg-validate',
   },
 
   tablestore: {

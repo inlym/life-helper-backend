@@ -29,7 +29,13 @@ class AlbumController extends Controller {
 
     /** body 校验规则 */
     const bodyRule = {
-      name: 'string',
+      name: {
+        required: true,
+        type: 'string',
+        allowEmpty: false,
+        min: 1,
+        max: 30,
+      },
     }
 
     ctx.validate(bodyRule, ctx.request.body)
@@ -47,7 +53,7 @@ class AlbumController extends Controller {
   }
 
   /**
-   * @api {get} /album GET /album
+   * @api {get} /albums GET /albums
    * @apiName list
    * @apiGroup album
    * @apiVersion 0.9.9
