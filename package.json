@@ -4,25 +4,6 @@
   "description": "「我的个人助手」小程序服务端部分代码",
   "main": "index.js",
   "private": true,
-  "egg": {
-    "declarations": true
-  },
-  "scripts": {
-    "start": "egg-scripts start --daemon --env=prod --title=lh-prod",
-    "start-in-docker": "egg-scripts start --env=prod --title=lh-prod",
-    "stop": "egg-scripts stop --title=lh-prod",
-    "reload": "npm run stop && npm run start",
-    "start:local": "egg-scripts start --daemon --env=local --title=lh-local",
-    "stop:local": "egg-scripts stop --title=lh-local",
-    "dev": "egg-bin dev",
-    "debug": "egg-bin debug",
-    "test": "npm run lint -- --fix && npm run test-local",
-    "test-local": "egg-bin test",
-    "test-temp": "egg-bin test test/temp",
-    "lint": "eslint .",
-    "autod": "autod",
-    "apidoc": "apidoc -i app/controller/ -o api/"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/inlym/life-helper-backend.git"
@@ -33,54 +14,66 @@
     "url": "https://github.com/inlym/life-helper-backend/issues"
   },
   "homepage": "https://github.com/inlym/life-helper-backend#readme",
-  "apidoc": {
-    "name": "我的个人助手",
-    "title": "我的个人助手服务端 API 接口文档",
-    "description": "服务端 API 接口文档",
-    "url": "https://api.lh.inlym.com",
-    "sampleUrl": null,
-    "template": {
-      "forceLanguage": "zh_cn",
-      "withCompare": false,
-      "withGenerator": false
-    }
-  },
-  "devDependencies": {
-    "apidoc": "^0.26.0",
-    "autod": "^3.0.1",
-    "autod-egg": "^1.1.0",
-    "cross-env": "^7.0.2",
-    "egg-bin": "^4.11.0",
-    "egg-ci": "^1.11.0",
-    "egg-mock": "^3.21.0",
-    "eslint": "^5.13.0",
-    "eslint-config-egg": "^7.1.0",
-    "eslint-config-prettier": "^6.15.0",
-    "eslint-plugin-prettier": "^3.1.4",
-    "prettier": "^2.1.2"
+  "scripts": {
+    "prebuild": "rimraf dist",
+    "build": "nest build",
+    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "start": "nest start",
+    "start:dev": "nest start --watch",
+    "start:debug": "nest start --debug --watch",
+    "start:prod": "node dist/main",
+    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:cov": "jest --coverage",
+    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
+    "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
-    "axios": "^0.21.1",
-    "dayjs": "^1.10.4",
-    "egg": "^2.29.4",
-    "egg-alinode": "^2.0.1",
-    "egg-aliyun-tablestore": "^1.1.0",
-    "egg-apigw-tracer": "^1.2.1",
-    "egg-kit": "0.0.4",
-    "egg-load": "^1.1.0",
-    "egg-mysql": "^3.0.0",
-    "egg-oss": "^2.0.0",
-    "egg-parameter": "^0.1.0",
-    "egg-redis": "^2.4.0",
-    "egg-scripts": "^2.11.0",
-    "egg-sequelize": "^6.0.0",
-    "egg-validate": "^2.0.2",
-    "egg-view-nunjucks": "^2.2.0",
-    "jshttp": "^0.2.0",
-    "life-helper-config": "^1.4.0",
-    "mysql2": "^2.2.5",
-    "only": "0.0.2",
-    "only2": "^1.0.0",
-    "spawn-object": "^1.1.0"
+    "@nestjs/common": "^7.6.15",
+    "@nestjs/core": "^7.6.15",
+    "@nestjs/platform-express": "^7.6.15",
+    "reflect-metadata": "^0.1.13",
+    "rimraf": "^3.0.2",
+    "rxjs": "^6.6.6"
+  },
+  "devDependencies": {
+    "@nestjs/cli": "^7.6.0",
+    "@nestjs/schematics": "^7.3.0",
+    "@nestjs/testing": "^7.6.15",
+    "@types/express": "^4.17.11",
+    "@types/jest": "^26.0.22",
+    "@types/node": "^14.14.36",
+    "@types/supertest": "^2.0.10",
+    "@typescript-eslint/eslint-plugin": "^4.19.0",
+    "@typescript-eslint/parser": "^4.19.0",
+    "eslint": "^7.22.0",
+    "eslint-config-prettier": "^8.1.0",
+    "eslint-plugin-prettier": "^3.3.1",
+    "jest": "^26.6.3",
+    "prettier": "^2.3.0",
+    "supertest": "^6.1.3",
+    "ts-jest": "^26.5.4",
+    "ts-loader": "^8.0.18",
+    "ts-node": "^9.1.1",
+    "tsconfig-paths": "^3.9.0",
+    "typescript": "^4.2.3"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "ts"
+    ],
+    "rootDir": "src",
+    "testRegex": ".*\\.spec\\.ts$",
+    "transform": {
+      "^.+\\.(t|j)s$": "ts-jest"
+    },
+    "collectCoverageFrom": [
+      "**/*.(t|j)s"
+    ],
+    "coverageDirectory": "../coverage",
+    "testEnvironment": "node"
   }
 }
