@@ -1,37 +1,16 @@
-# 日志文件
-log/
-logs/
-*.log
+# 编译输出文件夹
+/dist
 
-# 依赖文件
-node_modules/
+# 依赖文件夹
+/node_modules
 
-# 运行时文件
-run/
-typings/
+# 依赖锁定版本文件
+package-lock.json
+yarn.lock
 
-
-# 内部测试用例
-local-test/
-test/temp
-temp.js
-**/*.temp.js
-temp/
-
-# macOS 附加的文件
+# 系统自带文件
 .DS_Store
-app/.DS_Store
 
-
-# sequelize 的数据库配置信息
-database/config.json
-
-# apidoc 输出文档
-output/
-api/
-
-# 临时屏蔽
-.travis.yml
-appveyor.yml
-.github/workflows/nodejs.yml
-.github/
+# 临时测试文件
+temp/
+**/*.temp.js
