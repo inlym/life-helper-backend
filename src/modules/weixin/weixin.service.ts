@@ -19,7 +19,7 @@ export class WeixinService {
    * @example 返回内容样例:
    * {session_key:"xxxxxx",openid:"xxxxxx"}
    */
-  async code2Session(code): code2SessionInterface {
+  async code2Session(code): Promise<code2SessionInterface> {
     const reqOptions = {
       url: 'https://api.weixin.qq.com/sns/jscode2session',
       params: { appid, secret, js_code: code, grant_type: 'authorization_code' },
@@ -37,7 +37,7 @@ export class WeixinService {
    * @see https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/access-token/auth.getAccessToken.html
    * @return {Promise<{access_token:string;expires_in:number}>}
    */
-  private fetchAccessToken(): fetchAccessTokenInterface {
+  private async fetchAccessToken() {
     const reqOptions = {
       url: 'https://api.weixin.qq.com/cgi-bin/token',
       params: { grant_type: 'client_credential', appid, secret },

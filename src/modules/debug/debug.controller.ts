@@ -1,11 +1,13 @@
 import { Controller, Req, Get } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
 import { Request } from 'express'
+import { RedisService } from 'nestjs-redis'
 import { GetEnvResponseDto } from './debug.dto'
 
 @ApiTags('debug')
 @Controller('debug')
 export class DebugController {
+  constructor(private redisService: RedisService) {}
   /**
    * 原样返回请求内容
    */
@@ -36,6 +38,12 @@ export class DebugController {
     return keys.reduce((result, key) => {
       return Object.assign(result, { [key]: process[key] })
     }, {})
+  }
+
+  @Get('redis')
+  async pingRedis() {
+    const redis = await this.redisService.getClient()
+    return redis.ping()
   }
 
   @Get('temp')
