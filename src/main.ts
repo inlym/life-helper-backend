@@ -2,7 +2,7 @@ import { NestFactory } from '@nestjs/core'
 import { AppModule } from './app.module'
 import { setupSwagger } from './plugins/swagger.plugin'
 
-const port: number = process.env.PORT || 3000
+const port: number = (process.env.PORT && parseInt(process.env.PORT, 10)) || 3000
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
