@@ -1,16 +1,11 @@
-logs/
-node_modules/
+# 目录
 run/
 test/
+logs/
 typings/
-.editorconfig
-.eslintignore
-.eslintrc
-.gitignore
-.prettierrc
-jsconfig.json
-nginx.local.conf
-README.md
+node_modules/
 .github/
-appveyor.yml
-.travis.yml
+.vscode/
+
+# 大文件
+README.md
