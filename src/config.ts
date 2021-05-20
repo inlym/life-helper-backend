@@ -1,5 +1,6 @@
 import getConfig from 'life-helper-config'
 import { MysqlConfig, RedisConfig, WeixinConfig } from './common/interfaces/config.interface'
+import { TypeOrmModuleOptions } from '@nestjs/typeorm'
 
 /**
  * 配置文件说明：
@@ -19,7 +20,7 @@ const redis: RedisConfig = config.redis
 const weixin: WeixinConfig = config.weixin
 
 /** TypeORM 配置 */
-export const TypeOrmOptions = {
+export const TypeOrmOptions: TypeOrmModuleOptions = {
   host: mysql.host,
   port: mysql.port,
   username: mysql.username,
@@ -35,6 +36,7 @@ export const TypeOrmOptions = {
 
   /** 日志记录器 */
   logger: stage === 'production' ? 'simple-console' : 'advanced-console',
+  synchronize: true,
 }
 
 /** Redis 配置 */

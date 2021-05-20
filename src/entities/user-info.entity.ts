@@ -26,7 +26,7 @@ export class UserInfo extends BaseEntity {
 
   @Column({
     type: 'tinyint',
-    default: -1,
+    default: 0,
     comment: '性别，0-未知，1-男性，2-女性',
   })
   gender: string

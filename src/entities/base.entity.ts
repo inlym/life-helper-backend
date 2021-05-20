@@ -1,4 +1,4 @@
-import { CreateDateColumn, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from 'typeorm'
+import { CreateDateColumn, PrimaryGeneratedColumn, UpdateDateColumn, DeleteDateColumn, VersionColumn } from 'typeorm'
 import { Min } from 'class-validator'
 
 /**
@@ -23,9 +23,14 @@ export abstract class BaseEntity {
   })
   updateTime: Date
 
+  @DeleteDateColumn({
+    name: 'delete_time',
+    comment: '删除时间（软删标记）',
+  })
+  deleteTime: Date
+
   @VersionColumn({
-    name: 'update_counter',
     comment: '自动存储计数',
   })
-  updateCounter: number
+  version: number
 }
