@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common'
 import jshttp from 'jshttp'
-import config from 'life-helper-config'
 import { code2SessionInterface } from './weixin.interface'
+import { WeixinOptions } from 'src/config'
 
-/** 小程序密钥 */
-const { appid, secret } = config['Weixin']
+/** 小程序开发者 ID 和密钥 */
+const { appid, secret } = WeixinOptions
 
 /**
  * 封装请求微信服务端相关方法

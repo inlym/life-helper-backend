@@ -5,10 +5,11 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 import { RedisModule } from 'nestjs-redis'
 import { WeixinModule } from './modules/weixin/weixin.module'
 import { LoggerService } from './common/services/logger/logger.service'
-import config from 'life-helper-config'
+import { AuthModule } from './modules/auth/auth.module'
+import { TypeOrmOptions, RedisOtions } from './config'
 
 @Module({
-  imports: [TypeOrmModule.forRoot(config['TypeOrm']), RedisModule.register(config['Redis']), DebugModule, WeixinModule],
+  imports: [TypeOrmModule.forRoot(TypeOrmOptions), RedisModule.register(RedisOtions), DebugModule, WeixinModule, AuthModule],
   controllers: [AppController],
   providers: [LoggerService],
 })
