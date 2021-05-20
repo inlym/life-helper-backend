@@ -14,3 +14,6 @@ yarn.lock
 # 临时测试文件
 temp/
 **/*.temp.js
+
+# 本地私密文件
+.npmrc
