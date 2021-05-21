@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import jshttp from 'jshttp'
-import { code2SessionInterface } from './weixin.interface'
+import { code2SessionInterface, fetchAccessTokenInterface } from './weixin.interface'
 import { WeixinOptions } from '../../config'
 
 /** 小程序开发者 ID 和密钥 */
