@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import jshttp from 'jshttp'
 import { code2SessionInterface } from './weixin.interface'
-import { WeixinOptions } from 'src/config'
+import { WeixinOptions } from '../../config'
 
 /** 小程序开发者 ID 和密钥 */
 const { appid, secret } = WeixinOptions
@@ -35,9 +35,8 @@ export class WeixinService {
   /**
    * 向微信服务端请求获取小程序全局唯一后台接口调用凭据（access_token）
    * @see https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/access-token/auth.getAccessToken.html
-   * @return {Promise<{access_token:string;expires_in:number}>}
    */
-  private async fetchAccessToken() {
+  async fetchAccessToken(): Promise<fetchAccessTokenInterface> {
     const reqOptions = {
       url: 'https://api.weixin.qq.com/cgi-bin/token',
       params: { grant_type: 'client_credential', appid, secret },

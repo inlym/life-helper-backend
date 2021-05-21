@@ -14,10 +14,13 @@ async function bootstrap() {
       /** 负载对象自动转换 */
       transform: true,
       transformOptions: { enableImplicitConversion: true },
+
+      /** 自动过滤未知参数 */
+      whitelist: true,
     })
   )
 
-  /** 挂载 Swagger 插件 */
+  // 挂载 Swagger 插件
   setupSwagger(app)
 
   await app.listen(port, '0.0.0.0')
