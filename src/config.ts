@@ -1,5 +1,5 @@
 import getConfig from 'life-helper-config'
-import { MysqlConfig, RedisConfig, WeixinConfig } from './common/interfaces/config.interface'
+import { MysqlConfig, RedisConfig, WeixinConfig, OssConfig } from './common/interfaces/config.interface'
 import { TypeOrmModuleOptions } from '@nestjs/typeorm'
 
 /**
@@ -18,6 +18,7 @@ const config = getConfig(stage)
 const mysql: MysqlConfig = config.mysql
 const redis: RedisConfig = config.redis
 const weixin: WeixinConfig = config.weixin
+const oss: OssConfig = config.oss
 
 /** TypeORM 配置 */
 export const TypeOrmOptions: TypeOrmModuleOptions = {
@@ -51,4 +52,15 @@ export const RedisOtions = {
 export const WeixinOptions = {
   appid: weixin.appid,
   secret: weixin.secret,
+}
+
+export const OssOptions = {
+  /** 用于管理员手动上传资源 */
+  admin: oss.admin,
+
+  /** 用户创建上传的内容 */
+  ugc: oss.ugc,
+
+  /** 系统自动生成的内容 */
+  system: oss.system,
 }
