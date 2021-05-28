@@ -53,7 +53,7 @@ export class DebugController {
   }
 
   @Get('user')
-  getUser(@User() user){
+  getUser(@User() user) {
     return user
   }
 

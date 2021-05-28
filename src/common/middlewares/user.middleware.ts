@@ -45,21 +45,23 @@ export class UserMiddleware implements NestMiddleware {
    * 解析参数，获取 `code` 或 `token`
    */
   parseAuthParams(req: NewRequest): parsedAuthParams {
-    if (req.query.token) {
-      return { token: req.query.token.toString() }
+    if (req.query.token && typeof req.query.token === 'string') {
+      return { token: req.query.token }
     }
 
-    if (req.query.code) {
-      return { code: req.query.code.toString() }
+    if (req.query.code && typeof req.query.code === 'string') {
+      return { code: req.query.code }
     }
 
     const authValue: string = req.get('authorization')
-    const [type, value]: string[] = authValue.split(' ')
-    if (type.toLowerCase() === 'token') {
-      return { token: value }
-    }
-    if (type.toLowerCase() === 'code') {
-      return { code: value }
+    if (authValue) {
+      const [type, value]: string[] = authValue.split(' ')
+      if (type.toLowerCase() === 'token') {
+        return { token: value }
+      }
+      if (type.toLowerCase() === 'code') {
+        return { code: value }
+      }
     }
 
     return {}
