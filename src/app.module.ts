@@ -18,7 +18,7 @@ import { UserService } from './modules/user/user.service'
 import { WeixinService } from './modules/weixin/weixin.service'
 
 // Middleware
-import { UseridMiddleware } from './common/middlewares/userid.middleware'
+import { UserMiddleware } from './common/middlewares/user.middleware'
 
 @Module({
   imports: [TypeOrmModule.forRoot(TypeOrmOptions), RedisModule.register(RedisOtions), DebugModule, WeixinModule, AuthModule, OssModule, UserModule],
@@ -27,6 +27,6 @@ import { UseridMiddleware } from './common/middlewares/userid.middleware'
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(UseridMiddleware).forRoutes('*')
+    consumer.apply(UserMiddleware).forRoutes('*')
   }
 }
