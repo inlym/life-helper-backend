@@ -10,6 +10,8 @@ import { WeixinModule } from './modules/weixin/weixin.module'
 import { AuthModule } from './modules/auth/auth.module'
 import { OssModule } from './modules/oss/oss.module'
 import { UserModule } from './modules/user/user.module'
+import { WeatherModule } from './modules/weather/weather.module'
+import { LocationModule } from './modules/location/location.module'
 
 // `Service`
 import { LoggerService } from './common/services/logger/logger.service'
@@ -19,7 +21,6 @@ import { WeixinService } from './modules/weixin/weixin.service'
 
 // Middleware
 import { UserMiddleware } from './common/middlewares/user.middleware'
-import { WeatherModule } from './modules/weather/weather.module'
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { WeatherModule } from './modules/weather/weather.module'
     OssModule,
     UserModule,
     WeatherModule,
+    LocationModule,
   ],
   controllers: [AppController],
   providers: [LoggerService, AuthService, UserService, WeixinService],
