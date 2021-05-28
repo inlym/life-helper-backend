@@ -3,6 +3,7 @@ import { ApiTags } from '@nestjs/swagger'
 import { Request } from 'express'
 import { RedisService } from 'nestjs-redis'
 import { GetEnvResponseDto } from './debug.dto'
+import { Userid } from 'src/common/decorators/userid.decorator'
 
 @ApiTags('debug')
 @Controller('debug')
@@ -49,5 +50,10 @@ export class DebugController {
   @Get('temp')
   temp() {
     return 'hello'
+  }
+
+  @Get('userid')
+  getUserId(@Userid() userId: number) {
+    return userId
   }
 }

@@ -29,7 +29,7 @@ export const TypeOrmOptions: TypeOrmModuleOptions = {
   type: 'mysql',
   charset: 'utf8mb4',
   timezone: '+08:00',
-  entities: ['dist/**/*.entity{.ts,.js}', 'src/**/*.entity.ts'],
+  entities: stage === 'test' ? ['src/**/*.entity.ts'] : ['dist/**/*.entity{.ts,.js}'],
 
   /** 是否启用日志记录 */
   logging: stage === 'test' ? false : true,
