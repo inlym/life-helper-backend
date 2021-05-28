@@ -19,9 +19,19 @@ import { WeixinService } from './modules/weixin/weixin.service'
 
 // Middleware
 import { UserMiddleware } from './common/middlewares/user.middleware'
+import { WeatherModule } from './modules/weather/weather.module'
 
 @Module({
-  imports: [TypeOrmModule.forRoot(TypeOrmOptions), RedisModule.register(RedisOtions), DebugModule, WeixinModule, AuthModule, OssModule, UserModule],
+  imports: [
+    TypeOrmModule.forRoot(TypeOrmOptions),
+    RedisModule.register(RedisOtions),
+    DebugModule,
+    WeixinModule,
+    AuthModule,
+    OssModule,
+    UserModule,
+    WeatherModule,
+  ],
   controllers: [AppController],
   providers: [LoggerService, AuthService, UserService, WeixinService],
 })
