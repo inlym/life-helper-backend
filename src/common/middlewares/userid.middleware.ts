@@ -2,6 +2,7 @@ import { Injectable, NestMiddleware } from '@nestjs/common'
 import { Request, Response, NextFunction } from 'express'
 import { AuthService } from 'src/modules/auth/auth.service'
 import { UserService } from 'src/modules/user/user.service'
+import { WeixinService } from 'src/modules/weixin/weixin.service'
 
 interface NewRequest extends Request {
   userId: number
@@ -14,7 +15,7 @@ interface parsedParams {
 
 @Injectable()
 export class UseridMiddleware implements NestMiddleware {
-  constructor(private authService: AuthService, private userService: UserService) {}
+  constructor(private authService: AuthService, private userService: UserService, private weixinService: WeixinService) {}
 
   async use(req: NewRequest, res: Response, next: NextFunction) {
     const { token, code } = this.parseParams(req)
@@ -22,7 +23,8 @@ export class UseridMiddleware implements NestMiddleware {
     if (token) {
       req.userId = await this.authService.getUserIdByToken(token)
     } else if (code) {
-      // ...
+      const { openid, unionid } = await this.weixinService.code2Session(code)
+      req.userId = await this.userService.findOrCreateUserByOpenid(openid, unionid)
     } else {
       req.userId = 0
     }
