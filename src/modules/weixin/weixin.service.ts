@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import jshttp from 'jshttp'
 import { code2SessionInterface, fetchAccessTokenInterface } from './weixin.interface'
-import { WeixinOptions } from '../../config'
+import { WeixinOptions } from 'src/config'
 
 /** 小程序开发者 ID 和密钥 */
 const { appid, secret } = WeixinOptions
@@ -15,11 +15,11 @@ export class WeixinService {
    * 通过 code 换取 session 信息
    * @see https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/login/auth.code2Session.html
    * @param {string} code 微信小程序端获取的临时登录凭证
-   * @return {Promise<{session_key:string;openid:string}>} 微信请求返回的数据
+   * @return {Promise<code2SessionInterface>} 微信请求返回的数据
    * @example 返回内容样例:
    * {session_key:"xxxxxx",openid:"xxxxxx"}
    */
-  async code2Session(code): Promise<code2SessionInterface> {
+  async code2Session(code: string): Promise<code2SessionInterface> {
     const reqOptions = {
       url: 'https://api.weixin.qq.com/sns/jscode2session',
       params: { appid, secret, js_code: code, grant_type: 'authorization_code' },

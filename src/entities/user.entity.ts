@@ -31,7 +31,6 @@ export class User extends BaseEntity {
   @Column({
     type: 'char',
     length: 11,
-    unique: true,
     default: '',
     comment: '账户手机号，可用于其他客户端登录',
   })
