@@ -18,15 +18,9 @@ export interface WeixinConfig {
   secret: string
 }
 
-interface OssItemConfig {
+export interface BucketInfo {
   bucket: string
   url: string
   accessKeyId: string
   accessKeySecret: string
-}
-
-export interface OssConfig {
-  admin: OssItemConfig
-  ugc: OssItemConfig
-  system: OssItemConfig
 }

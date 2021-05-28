@@ -8,9 +8,10 @@ import { LoggerService } from './common/services/logger/logger.service'
 import { AuthModule } from './modules/auth/auth.module'
 import { TypeOrmOptions, RedisOtions } from './config'
 import { OssModule } from './modules/oss/oss.module'
+import { UserModule } from './modules/user/user.module'
 
 @Module({
-  imports: [TypeOrmModule.forRoot(TypeOrmOptions), RedisModule.register(RedisOtions), DebugModule, WeixinModule, AuthModule, OssModule],
+  imports: [TypeOrmModule.forRoot(TypeOrmOptions), RedisModule.register(RedisOtions), DebugModule, WeixinModule, AuthModule, OssModule, UserModule],
   controllers: [AppController],
   providers: [LoggerService],
 })

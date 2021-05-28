@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import * as crypto from 'crypto'
 import { v4 as uuidv4 } from 'uuid'
-import { OssOptions } from '../../config'
+import { ossConfig } from 'src/config'
 
 @Injectable()
 export class OssService {
@@ -10,7 +10,7 @@ export class OssService {
    * @param dirname {string} 目录名称
    */
   generateClientToken(dirname) {
-    const ugcBucket = OssOptions.ugc
+    const ugcBucket = ossConfig('ugc')
 
     /** 有效时长：30 分钟 */
     const timeout = 30 * 60 * 1000

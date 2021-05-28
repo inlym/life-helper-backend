@@ -1,5 +1,5 @@
 import getConfig from 'life-helper-config'
-import { MysqlConfig, RedisConfig, WeixinConfig, OssConfig } from './common/interfaces/config.interface'
+import { MysqlConfig, RedisConfig, WeixinConfig, BucketInfo } from './common/interfaces/config.interface'
 import { TypeOrmModuleOptions } from '@nestjs/typeorm'
 
 /**
@@ -18,7 +18,6 @@ const config = getConfig(stage)
 const mysql: MysqlConfig = config.mysql
 const redis: RedisConfig = config.redis
 const weixin: WeixinConfig = config.weixin
-const oss: OssConfig = config.oss
 
 /** TypeORM 配置 */
 export const TypeOrmOptions: TypeOrmModuleOptions = {
@@ -30,7 +29,7 @@ export const TypeOrmOptions: TypeOrmModuleOptions = {
   type: 'mysql',
   charset: 'utf8mb4',
   timezone: '+08:00',
-  entities: ['dist/**/*.entity{.ts,.js}'],
+  entities: ['dist/**/*.entity{.ts,.js}', 'src/**/*.entity.ts'],
 
   /** 是否启用日志记录 */
   logging: stage === 'test' ? false : true,
@@ -54,13 +53,12 @@ export const WeixinOptions = {
   secret: weixin.secret,
 }
 
-export const OssOptions = {
-  /** 用于管理员手动上传资源 */
-  admin: oss.admin,
-
-  /** 用户创建上传的内容 */
-  ugc: oss.ugc,
-
-  /** 系统自动生成的内容 */
-  system: oss.system,
+/**
+ * `name` - `description`
+ * 1. `admin` - 用于管理员手动上传资源
+ * 1. `ugc` - 用户创建上传的内容
+ * 1. `system` - 系统自动生成的内容
+ */
+export function ossConfig(name): BucketInfo {
+  return config.oss[name]
 }
