@@ -1,5 +1,5 @@
 import getConfig from 'life-helper-config'
-import { MysqlConfig, RedisConfig, WeixinConfig, BucketInfo } from './common/interfaces/config.interface'
+import { MysqlConfig, RedisConfig, WeixinConfig, BucketInfo, LbsqqConfig, HefengConfig } from './common/interfaces/config.interface'
 import { TypeOrmModuleOptions } from '@nestjs/typeorm'
 
 /**
@@ -18,6 +18,8 @@ const config = getConfig(stage)
 const mysql: MysqlConfig = config.mysql
 const redis: RedisConfig = config.redis
 const weixin: WeixinConfig = config.weixin
+export const lbsqq: LbsqqConfig = config.lbsqq
+export const hefeng: HefengConfig = config.hefeng
 
 /** TypeORM 配置 */
 export const TypeOrmOptions: TypeOrmModuleOptions = {

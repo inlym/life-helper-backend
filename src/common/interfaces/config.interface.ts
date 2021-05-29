@@ -24,3 +24,17 @@ export interface BucketInfo {
   accessKeyId: string
   accessKeySecret: string
 }
+
+export interface LbsqqConfig {
+  keys: string[]
+}
+
+interface HfItem {
+  baseURL: string
+  key: string
+}
+
+export interface HefengConfig {
+  basic: HfItem
+  pro: HfItem
+}
