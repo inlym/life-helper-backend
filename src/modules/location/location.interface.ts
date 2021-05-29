@@ -1,3 +1,5 @@
+// lbsqq.service
+
 interface Location {
   lat: number
   lng: number
@@ -26,4 +28,15 @@ interface FormattedAddresses {
 export interface GeoLocationCoderResult {
   address: string
   formatted_addresses: FormattedAddresses
+}
+
+// location.service
+export interface LocationInfo {
+  longitude: number
+  latitude: number
+  nation: string
+  province: string
+  city?: string
+  district?: string
+  adcode: string
 }

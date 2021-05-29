@@ -15,7 +15,22 @@ export class DebugController {
   @Get()
   getRequestDetail(@Req() req: Request) {
     /** 从 `req` 获取并返回的属性 */
-    const validKeys: string[] = ['method', 'url', 'headers', 'params', 'query', 'body', 'ip']
+    const validKeys: string[] = [
+      'method',
+      'url',
+      'path',
+      'baseUrl',
+      'originalUrl',
+      'headers',
+      'params',
+      'query',
+      'body',
+      'ip',
+      'ips',
+      'cookies',
+      'hostname',
+      'subdomains',
+    ]
 
     return validKeys.reduce((result, key) => {
       return Object.assign(result, { [key]: req[key] })

@@ -55,7 +55,7 @@ export class LbsqqService {
       await redis.set(redisKey, JSON.stringify(result), 'EX', expiration)
       return result
     } else {
-      throw new Error(`[腾讯位置服务] [IP 定位] 接口请求失败，错误原因 => ${resData.message}`)
+      throw new Error(`[腾讯位置服务] [IP 定位] 接口请求失败，ip => \`${ip}\`，错误原因 => ${resData.message}`)
     }
   }
 
