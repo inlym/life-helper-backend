@@ -3,7 +3,7 @@ import { RedisService } from 'nestjs-redis'
 import { LbsqqService } from './lbsqq.service'
 import { AppModule } from '../../app.module'
 import { lbsqq } from 'src/config'
-import { IpLocationResult } from './location.interface'
+import { IpLocationResult, GeoLocationCoderResult } from './location.interface'
 
 describe('LbsqqService', () => {
   let service: LbsqqService
@@ -61,6 +61,30 @@ describe('LbsqqService', () => {
 
     test('返回结果已存入 Redis', async () => {
       const redisKey = `lbsqq:location:ip:${ip}`
+      const redisResult = await redis.get(redisKey)
+      expect(JSON.stringify(result)).toBe(redisResult)
+    })
+  })
+
+  describe('geoLocationCoder', () => {
+    // 随机生成 1 个国内的经纬度
+    const longitude = Math.floor(Math.random() * 10000) / 10000 + 120
+    const latitude = Math.floor(Math.random() * 10000) / 10000 + 30
+
+    let result: GeoLocationCoderResult
+
+    test('函数调用成功', async () => {
+      result = await service.geoLocationCoder(longitude, latitude)
+      expect(result).toBeDefined()
+    })
+
+    test('返回结果格式正确', () => {
+      expect(result.address).toBeDefined()
+      expect(result.formatted_addresses).toBeDefined()
+    })
+
+    test('返回结果已存入 Redis', async () => {
+      const redisKey = `lbsqq:address:location:${longitude},${latitude}`
       const redisResult = await redis.get(redisKey)
       expect(JSON.stringify(result)).toBe(redisResult)
     })

@@ -16,3 +16,14 @@ export interface IpLocationResult {
   location: Location
   ad_info: AdInfo
 }
+
+interface FormattedAddresses {
+  recommend: string
+  rough: string
+}
+
+// 字段很多，目前仅记录用到的字段
+export interface GeoLocationCoderResult {
+  address: string
+  formatted_addresses: FormattedAddresses
+}
