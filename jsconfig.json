@@ -1,8 +1,0 @@
-{
-  "compilerOptions": {
-    "module": "commonJS",
-    "moduleResolution": "node",
-    "target": "es6"
-  },
-  "include": ["app/**/*.js", "config/**/*.js", "test/**/*.js", "app.js"]
-}
