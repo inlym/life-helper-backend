@@ -1,6 +1,7 @@
 import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { RedisModule } from 'nestjs-redis'
+import { ScheduleModule } from '@nestjs/schedule'
 import { TypeOrmOptions, RedisOtions } from './config'
 
 // Module
@@ -25,6 +26,7 @@ import { UserMiddleware } from './common/middlewares/user.middleware'
   imports: [
     TypeOrmModule.forRoot(TypeOrmOptions),
     RedisModule.register(RedisOtions),
+    ScheduleModule.forRoot(),
     DebugModule,
     WeixinModule,
     AuthModule,

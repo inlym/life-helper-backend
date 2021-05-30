@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common'
 import jshttp from 'jshttp'
 import { code2SessionInterface, fetchAccessTokenInterface } from './weixin.interface'
 import { WeixinOptions } from 'src/config'
+import { RedisService } from 'nestjs-redis'
+import { Cron, CronExpression } from '@nestjs/schedule'
 
 /** 小程序开发者 ID 和密钥 */
 const { appid, secret } = WeixinOptions
@@ -11,6 +13,8 @@ const { appid, secret } = WeixinOptions
  */
 @Injectable()
 export class WeixinService {
+  constructor(private redisService: RedisService) {}
+
   /**
    * 通过 code 换取 session 信息
    * @see https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/login/auth.code2Session.html
@@ -47,5 +51,16 @@ export class WeixinService {
     } else {
       return resData
     }
+  }
+
+  /**
+   * 更新在 Redis 中的微信 access_token
+   */
+  @Cron(CronExpression.EVERY_30_MINUTES)
+  async updateAccessTokenInRedis() {
+    const redisKey = 'weixin:token'
+    const redis = this.redisService.getClient()
+    const { access_token: token, expires_in: expiration } = await this.fetchAccessToken()
+    await redis.set(redisKey, token, 'EX', expiration)
   }
 }
