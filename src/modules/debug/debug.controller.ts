@@ -2,7 +2,6 @@ import { Controller, Req, Get } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
 import { Request } from 'express'
 import { RedisService } from 'nestjs-redis'
-import { GetEnvResponseDto } from './debug.dto'
 import { User } from 'src/common/decorators/user.decorator'
 
 @ApiTags('debug')
@@ -59,25 +58,6 @@ export class DebugController {
         versions: process.versions,
       },
     }
-  }
-
-  /**
-   * 查看环境变量
-   */
-  @Get('env')
-  getEnv(): GetEnvResponseDto {
-    return { NODE_ENV: process.env.NODE_ENV || '' }
-  }
-
-  /**
-   * 查看系统信息
-   */
-  @Get('system')
-  getSystemInfo() {
-    const keys: string[] = ['arch', 'pid', 'ppid', 'platform', 'version']
-    return keys.reduce((result, key) => {
-      return Object.assign(result, { [key]: process[key] })
-    }, {})
   }
 
   @Get('redis')

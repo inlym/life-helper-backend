@@ -1,5 +1,4 @@
 import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common'
-import { AppController } from './app.controller'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { RedisModule } from 'nestjs-redis'
 import { TypeOrmOptions, RedisOtions } from './config'
@@ -34,7 +33,6 @@ import { UserMiddleware } from './common/middlewares/user.middleware'
     WeatherModule,
     LocationModule,
   ],
-  controllers: [AppController],
   providers: [LoggerService, AuthService, UserService, WeixinService],
 })
 export class AppModule implements NestModule {
