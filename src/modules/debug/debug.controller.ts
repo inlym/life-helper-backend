@@ -37,6 +37,30 @@ export class DebugController {
     }, {})
   }
 
+  @Get('status')
+  status() {
+    return {
+      env: {
+        NODE_ENV: process.env.NODE_ENV,
+        PORT: process.env.PORT,
+      },
+      process: {
+        arch: process.arch,
+        argv: process.argv,
+        cwd: process.cwd(),
+        execArgv: process.execArgv,
+        execPath: process.execPath,
+        release: process.release,
+        pid: process.pid,
+        ppid: process.ppid,
+        platform: process.platform,
+        version: process.version,
+        uptime: process.uptime(),
+        versions: process.versions,
+      },
+    }
+  }
+
   /**
    * 查看环境变量
    */

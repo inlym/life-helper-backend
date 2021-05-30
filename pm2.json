@@ -6,11 +6,13 @@
   "watch": true,
   "env": {
     "NODE_ENV": "development",
-    "PORT": 3000
+    "PORT": "3000",
+    "PROXY_NUMBER": "0"
   },
   "env_production": {
     "NODE_ENV": "production",
-    "PORT": 3050
+    "PORT": "3050",
+    "PROXY_NUMBER": "2"
   },
   "combine_logs": true,
   "error_file": "/data/logs/error.log",
