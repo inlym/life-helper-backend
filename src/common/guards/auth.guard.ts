@@ -1,7 +1,7 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common'
 
 /**
- * 用于需要登录的控制器（即需要 `userId` 参数的）
+ * 用于需要登录的接口（即需要 `userId` 参数的控制器方法）
  *
  * 校验条件：
  * 1. `request` 对象挂载 `user` 对象
