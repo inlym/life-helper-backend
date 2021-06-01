@@ -27,7 +27,7 @@ export class UserInfoController {
    */
   @Post()
   @UseGuards(AuthGuard)
-  update(@User('id') userId: number, @Body() body: updateReqDto) {
+  async update(@User('id') userId: number, @Body() body: updateReqDto) {
     const result = await this.userInfoService.updateInfo(userId, body)
     return {
       id: result.id,
