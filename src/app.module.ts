@@ -12,6 +12,7 @@ import { OssModule } from './modules/oss/oss.module'
 import { UserModule } from './modules/user/user.module'
 import { WeatherModule } from './modules/weather/weather.module'
 import { LocationModule } from './modules/location/location.module'
+import { UserInfoModule } from './modules/user-info/user-info.module'
 
 // `Service`
 import { LoggerService } from './common/services/logger/logger.service'
@@ -36,6 +37,7 @@ import { UserMiddleware } from './common/middlewares/user.middleware'
     UserModule,
     WeatherModule,
     LocationModule,
+    UserInfoModule,
   ],
   providers: [LoggerService, AuthService, UserService, WeixinService, LocationService, LbsqqService],
 })

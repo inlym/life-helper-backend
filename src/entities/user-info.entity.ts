@@ -7,6 +7,14 @@ import { BaseEntity } from './base.entity'
 @Entity()
 export class UserInfo extends BaseEntity {
   @Column({
+    name: 'user_id',
+    type: 'int',
+    unique: true,
+    comment: '所属人用户 ID',
+  })
+  userId: number
+
+  @Column({
     name: 'nick_name',
     type: 'varchar',
     length: 32,
