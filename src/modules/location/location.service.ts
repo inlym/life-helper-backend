@@ -29,6 +29,9 @@ export class LocationService {
 
   /**
    * 添加一条定位记录
+   *
+   * `type`
+   * 1. 天气预报模块选择位置
    */
   async addChooseLocationRecord(userId: number, type: number, options: WxChooseLocationResult) {
     const { name, address, longitude, latitude } = options
@@ -39,10 +42,14 @@ export class LocationService {
   }
 
   /**
-   * 获取天气类定位记录列表
+   * 获取天气预报模块选择位置记录列表
    */
-  async getWeatherChooseLocationRecords(userId: number, type: number) {
+  async getWeatherChooseLocationRecords(userId: number): Promise<Location[]> {
     const locationRepository = this.connection.getRepository(Location)
-    return locationRepository.find({ userId, type })
+    return locationRepository.find({
+      select: ['id', 'name', 'city', 'district'],
+      where: { userId, type: 1 },
+      order: { id: 'DESC' },
+    })
   }
 }

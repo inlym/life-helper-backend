@@ -80,4 +80,13 @@ export class DebugController {
   getUserId(@User('id') userId: number) {
     return userId
   }
+
+  /**
+   * 用于调试时清空终端显示内容，无对应线上用途
+   */
+  @Get('clear')
+  clearScreen() {
+    console.clear()
+    return 'OK'
+  }
 }

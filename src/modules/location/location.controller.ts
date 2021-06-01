@@ -20,8 +20,12 @@ export class LocationController {
   @UseGuards(AuthGuard)
   @Post('weather')
   async addChosenLocation4Weather(@Body() body: WxChooseLocationResult, @User('id') userId: number) {
-    console.log('userId: ', userId)
-    console.log('body: ', body)
     return this.locationService.addChooseLocationRecord(userId, 1, body)
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('weather')
+  async getAllWeatherLocations(@User('id') userId: number) {
+    return this.locationService.getWeatherChooseLocationRecords(userId)
   }
 }
