@@ -41,7 +41,7 @@ export class LocationService {
   /**
    * 获取天气类定位记录列表
    */
-  async getWeatherChooseLocationRecords(userId: number, type: number): Location[] {
+  async getWeatherChooseLocationRecords(userId: number, type: number) {
     const locationRepository = this.connection.getRepository(Location)
     return locationRepository.find({ userId, type })
   }
