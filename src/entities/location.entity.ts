@@ -11,6 +11,13 @@ import { BaseEntity } from './base.entity'
 @Entity()
 export class Location extends BaseEntity {
   @Column({
+    name: 'user_id',
+    type: 'int',
+    comment: '所属人用户 ID',
+  })
+  userId: number
+
+  @Column({
     type: 'tinyint',
     comment: '定位类型，1-天气',
   })

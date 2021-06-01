@@ -18,6 +18,8 @@ import { LoggerService } from './common/services/logger/logger.service'
 import { AuthService } from './modules/auth/auth.service'
 import { UserService } from './modules/user/user.service'
 import { WeixinService } from './modules/weixin/weixin.service'
+import { LbsqqService } from './modules/location/lbsqq.service'
+import { LocationService } from './modules/location/location.service'
 
 // Middleware
 import { UserMiddleware } from './common/middlewares/user.middleware'
@@ -35,7 +37,7 @@ import { UserMiddleware } from './common/middlewares/user.middleware'
     WeatherModule,
     LocationModule,
   ],
-  providers: [LoggerService, AuthService, UserService, WeixinService],
+  providers: [LoggerService, AuthService, UserService, WeixinService, LocationService, LbsqqService],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

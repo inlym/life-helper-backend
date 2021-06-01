@@ -28,6 +28,7 @@ interface FormattedAddresses {
 export interface GeoLocationCoderResult {
   address: string
   formatted_addresses: FormattedAddresses
+  ad_info: AdInfo
 }
 
 // location.service
