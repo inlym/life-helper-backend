@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common'
 import { hefeng } from 'src/config'
 import { RedisService } from 'nestjs-redis'
-import { HfOptions } from './weather.interface'
-import axios from 'axios'
+import { GetDataOptions } from './weather.interface'
+import request from 'axios'
 
 @Injectable()
 export class HefengService {
@@ -149,7 +149,7 @@ export class HefengService {
     const { mode, url } = this.profile[type]
     const { baseURL, key } = hefeng[mode]
     const requestOptions = { baseURL, url, params: { key, location } }
-    const { data: resData } = await axios(requestOptions)
+    const { data: resData } = await request(requestOptions)
 
     if (resData.code === '200') {
       return resData
@@ -161,7 +161,7 @@ export class HefengService {
   /**
    * 加入了缓存判断的获取数据（封装了转化 location）
    */
-  async getData(options: HfOptions) {
+  async getData(options: GetDataOptions) {
     const { type, locationId, longitude, latitude } = options
 
     let location: string

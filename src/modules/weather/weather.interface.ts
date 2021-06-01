@@ -1,4 +1,4 @@
-export interface HfOptions {
+export interface GetDataOptions {
   type: string
   locationId?: string
   longitude?: number
