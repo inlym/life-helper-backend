@@ -3,17 +3,12 @@ import { BaseEntity } from './base.entity'
 
 /**
  * 用户信息表
+ *
+ * 说明：
+ * 1. 直接使用主键 ID 作为 `userId`
  */
 @Entity()
 export class UserInfo extends BaseEntity {
-  @Column({
-    name: 'user_id',
-    type: 'int',
-    unique: true,
-    comment: '所属人用户 ID',
-  })
-  userId: number
-
   @Column({
     name: 'nick_name',
     type: 'varchar',
