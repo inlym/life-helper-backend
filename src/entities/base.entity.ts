@@ -13,23 +13,27 @@ export abstract class BaseEntity {
 
   @CreateDateColumn({
     name: 'create_time',
+    select: false,
     comment: '创建时间',
   })
   createTime: Date
 
   @UpdateDateColumn({
     name: 'update_time',
+    select: false,
     comment: '更新时间',
   })
   updateTime: Date
 
   @DeleteDateColumn({
     name: 'delete_time',
+    select: false,
     comment: '删除时间（软删标记）',
   })
   deleteTime: Date
 
   @VersionColumn({
+    select: false,
     comment: '自动存储计数',
   })
   version: number
