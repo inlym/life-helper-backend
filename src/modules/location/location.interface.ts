@@ -41,3 +41,11 @@ export interface LocationInfo {
   district?: string
   adcode: string
 }
+
+export interface AddressInfo {
+  nation: string
+  province: string
+  city: string
+  district?: string
+  adcode: string
+}

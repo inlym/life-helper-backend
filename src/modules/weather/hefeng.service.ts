@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { hefeng } from 'src/config'
 import { RedisService } from 'nestjs-redis'
-import { GetDataOptions } from './weather.interface'
 import request from 'axios'
 
 @Injectable()
@@ -31,7 +30,7 @@ export class HefengService {
       },
 
       /**
-       * 逐天天气预报 - 7 天
+       * 逐天天气预报 - 15 天
        * @see https://dev.qweather.com/docs/api/weather/weather-daily-forecast/
        */
       'weather-15d': {
@@ -144,6 +143,9 @@ export class HefengService {
 
   /**
    * 发送 HTTP 请求获取数据
+   * @param type `profile` 中的键名
+   * @param location 可能是 `${locationId}` 或 `${lng},${lat}`
+   * @returns
    */
   async fetchData(type: string, location: string) {
     const { mode, url } = this.profile[type]
@@ -161,18 +163,7 @@ export class HefengService {
   /**
    * 加入了缓存判断的获取数据（封装了转化 location）
    */
-  async getData(options: GetDataOptions) {
-    const { type, locationId, longitude, latitude } = options
-
-    let location: string
-    if (locationId) {
-      location = locationId
-    } else if (longitude && latitude) {
-      const lng = longitude.toFixed(2)
-      const lat = latitude.toFixed(2)
-      location = `${lng},${lat}`
-    }
-
+  async getData(type: string, location: string) {
     const redisKey = `hefeng:${type}:location:${location}`
     const redis = this.redisService.getClient()
     const redisResult = await redis.get(redisKey)
@@ -184,5 +175,28 @@ export class HefengService {
     const { expiration } = this.profile[type]
     await redis.set(redisKey, JSON.stringify(resData), 'EX', expiration)
     return resData
+  }
+
+  /**
+   * 获取和风天气体系中的 `LocationID`
+   * @param longitude 经度
+   * @param latitude 纬度
+   */
+  async getLocationId(longitude: number, latitude: number): Promise<string> {
+    const requestOptions = {
+      url: 'https://geoapi.qweather.com/v2/city/lookup',
+      params: {
+        location: `${longitude},${latitude}`,
+        key: hefeng.basic.key,
+      },
+    }
+
+    const { data: resData } = await request(requestOptions)
+    console.log('resData: ', resData)
+    if (resData.code === '200') {
+      return resData.location[0].id
+    } else {
+      throw new Error(`[接口请求错误] 和风天气 - 城市信息查询, 响应 code => \`${resData.code}\`，参数 params => ${JSON.stringify(requestOptions.params)}`)
+    }
   }
 }

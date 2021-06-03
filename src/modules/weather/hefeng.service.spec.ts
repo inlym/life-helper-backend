@@ -9,9 +9,9 @@ describe('HefengService', () => {
   let redis
 
   // 用于测试校验数据
-  const longitude = 120.17276
-  const latitude = 30.276271
-  const locationId = '101210110'
+  const longitude = 120.12345
+  const latitude = 30.12345
+  const locationId = '101210113'
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -28,14 +28,16 @@ describe('HefengService', () => {
     expect(service).toBeDefined()
   })
 
-  describe('getData', () => {
+  describe('getLocationId', () => {
+    let result: string
+
     test('函数正常调用', async () => {
-      const options = {
-        type: 'weather-now',
-        locationId,
-      }
-      const result = await service.getData(options)
+      result = await service.getLocationId(longitude, latitude)
       expect(result).toBeDefined()
+    })
+
+    test('返回结果与预期值相同', () => {
+      expect(result).toBe(locationId)
     })
   })
 })

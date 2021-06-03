@@ -1,13 +1,11 @@
 import { Injectable } from '@nestjs/common'
 import { LbsqqService } from './lbsqq.service'
 import { Connection } from 'typeorm'
-import { Location } from 'src/entities/location.entity'
-import { LocationInfo, IpLocationResult } from './location.interface'
-import { WxChooseLocationResult } from './location.dto'
+import { LocationInfo, IpLocationResult, AddressInfo } from './location.interface'
 
 @Injectable()
 export class LocationService {
-  constructor(private readonly lbsqqService: LbsqqService, private readonly connection: Connection) {}
+  constructor(private lbsqqService: LbsqqService, private connection: Connection) {}
 
   /**
    * 根据 IP 地址获取经纬度以及省市区信息
@@ -28,28 +26,13 @@ export class LocationService {
   }
 
   /**
-   * 添加一条定位记录
-   *
-   * `type`
-   * 1. 天气预报模块选择位置
+   * 通过经纬度获取省市区信息
+   * @param longitude 经度
+   * @param latitude 纬度
    */
-  async addChooseLocationRecord(userId: number, type: number, options: WxChooseLocationResult) {
-    const { name, address, longitude, latitude } = options
+  async getAddressInfoByCoord(longitude: number, latitude: number): Promise<AddressInfo> {
     const result = await this.lbsqqService.geoLocationCoder(longitude, latitude)
-    const { adcode, nation, province, city, district } = result.ad_info
-    const locationRepository = this.connection.getRepository(Location)
-    return locationRepository.save({ userId, type, name, address, longitude, latitude, adcode, nation, province, city, district })
-  }
-
-  /**
-   * 获取天气预报模块选择位置记录列表
-   */
-  async getWeatherChooseLocationRecords(userId: number): Promise<Location[]> {
-    const locationRepository = this.connection.getRepository(Location)
-    return locationRepository.find({
-      select: ['id', 'name', 'city', 'district'],
-      where: { userId, type: 1 },
-      order: { id: 'DESC' },
-    })
+    const { nation, province, city, district = '', adcode } = result.ad_info
+    return { nation, province, city, district, adcode }
   }
 }
