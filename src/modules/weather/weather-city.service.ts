@@ -16,7 +16,7 @@ export class WeatherCityService {
 
   async getAll(userId: number): Promise<WeatherCity[]> {
     return await this.weatherCityRepository.find({
-      select: ['id', 'locationId', 'name', 'city', 'district'],
+      select: ['id', 'locationId', 'name', 'city', 'district', 'longitude', 'latitude'],
       where: { userId },
       order: { id: 'DESC' },
     })
