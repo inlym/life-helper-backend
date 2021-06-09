@@ -1,12 +1,16 @@
 import { Injectable } from '@nestjs/common'
 import { plainToClass } from 'class-transformer'
+import * as dayjs from 'dayjs'
 import { HefengService } from './hefeng.service'
 import { WeatherCityService } from './weather-city.service'
 import { LocationService } from '../location/location.service'
-import { WeatherNow, MinutelyRain } from './weather.dto'
+import { WeatherNow, WeatherHourlyForecastItem, WeatherDailyForecastItem, WeatherRainItem, WeatherMinutely, WeatherLiveIndexItem } from './weather.class'
 
 @Injectable()
 export class WeatherService {
+  public iconPath = 'https://img.lh.inlym.com/hefeng/c1/'
+  public weekText = ['周日', '周一', '周二', '周三', '周四', '周五', '周六']
+
   constructor(private hefengService: HefengService, private weatherCityService: WeatherCityService, private locationService: LocationService) {}
 
   async getWeather(userId: number, ip: string, cityId?: number) {
@@ -39,8 +43,10 @@ export class WeatherService {
     promises.push(this.getAirNow(locationId))
     promises.push(this.getAir5d(locationId))
     promises.push(this.getRain(longitude, latitude))
-    const [now, f15d, f24h, airnow, air5d, rain] = await Promise.all(promises)
-    return { now, f15d, f24h, airnow, air5d, rain }
+    promises.push(this.getLiveIndex(locationId))
+
+    const [now, f15d, f24h, airnow, air5d, rain, liveIndex] = await Promise.all(promises)
+    return { now, f15d, f24h, airnow, air5d, rain, liveIndex }
   }
 
   async getWeatherNow(locationId: string): Promise<WeatherNow> {
@@ -48,14 +54,41 @@ export class WeatherService {
     return plainToClass(WeatherNow, result.now, { excludeExtraneousValues: true })
   }
 
-  async getWeather15d(locationId: string) {
+  async getWeather15d(locationId: string): Promise<WeatherDailyForecastItem[]> {
     const result = await this.hefengService.getData('weather-15d', locationId)
-    return result.daily
+
+    return result.daily.map((item) => {
+      item.iconDayUrl = this.iconPath + item.iconDay + '.svg'
+      item.iconNightUrl = this.iconPath + item.iconNight + '.svg'
+
+      const d = dayjs(item.fxDate)
+
+      // 处理 `dayText`
+      if (dayjs().get('date') === d.get('date')) {
+        item.dayText = '今天'
+      } else if (dayjs().add(1, 'day').get('date') === d.get('date')) {
+        item.dayText = '明天'
+      } else if (dayjs().add(2, 'day').get('date') === d.get('date')) {
+        item.dayText = '后天'
+      } else if (dayjs().subtract(1, 'day').get('date') === d.get('date')) {
+        item.dayText = '昨天'
+      } else {
+        item.dayText = this.weekText[d.get('day')]
+      }
+
+      // 处理 `dateText`
+      item.dateText = `${d.get('month') + 1}/${d.get('date')}`
+
+      return plainToClass(WeatherDailyForecastItem, item, { excludeExtraneousValues: true })
+    })
   }
 
-  async getWeather24h(locationId: string) {
+  async getWeather24h(locationId: string): Promise<WeatherHourlyForecastItem[]> {
     const result = await this.hefengService.getData('weather-24h', locationId)
-    return result.hourly
+    return result.hourly.map((item) => {
+      item.iconUrl = this.iconPath + item.icon + '.svg'
+      return plainToClass(WeatherHourlyForecastItem, item, { excludeExtraneousValues: true })
+    })
   }
 
   async getAirNow(locationId: string) {
@@ -68,11 +101,94 @@ export class WeatherService {
     return result.daily
   }
 
-  async getRain(longitude: number, latitude: number): Promise<MinutelyRain> {
+  async getRain(longitude: number, latitude: number): Promise<WeatherMinutely> {
     const lng = longitude.toFixed(2)
     const lat = latitude.toFixed(2)
     const location = `${lng},${lat}`
     const result = await this.hefengService.getData('minutely-5m', location)
-    return plainToClass(MinutelyRain, result, { excludeExtraneousValues: true })
+    const list = result.minutely.map((item) => {
+      item.time = item.fxTime.substring(11, 16)
+      item.height = (parseFloat(item.precip) * 200 + 10).toFixed(0)
+      return plainToClass(WeatherRainItem, item, { excludeExtraneousValues: true })
+    })
+    const updateTime = result.updateTime.substring(11, 16)
+    const output = {
+      updateTime,
+      summary: result.summary,
+      list,
+    }
+    return plainToClass(WeatherMinutely, output, { excludeExtraneousValues: true })
+  }
+
+  async getLiveIndex(locationId: string): Promise<WeatherLiveIndexItem[]> {
+    const result = await this.hefengService.getData('indices-1d', locationId)
+    const iconUrlPrefix = 'https://img.lh.inlym.com/hefeng/life/'
+    return result.daily.map((item) => {
+      item.iconUrl = iconUrlPrefix + item.type + '.svg'
+      return plainToClass(WeatherLiveIndexItem, item, { excludeExtraneousValues: true })
+    })
+  }
+
+  /**
+   * 根据和风天气的图标数字，输出展示的天空元素
+   * @since 2021-03-17
+   * @tag [和风天气]
+   * @param {string} icon 和风天气的icon id
+   *
+   * 背景类：
+   * - 普通 wbg-common
+   * - 夜晚 wbg-night
+   * - 小中雨 wbg-lightrain
+   * - 灰暗 wbg-grey
+   *
+   * 天空元素类：
+   * - 满月 fullmoon
+   * - 半月 halfmoon
+   * - 太阳 sun
+   * - 固定云 fixed-cloud
+   * - 浮动云 moving-cloud
+   * - 乌云 darkcloud
+   * - 雨点 rain
+   *
+   * 1-晴、2-云、3-阴、4-雨、5-雪、6-雾、7-尘
+   */
+  skyClass(icon: string) {
+    const iconId = parseInt(icon, 10)
+
+    /** 最终输出的内容 */
+    const result = {
+      bgClass: 'wbg-grey',
+      sun: true,
+      fixedCloud: true,
+      movingCloud: true,
+      darkCloud: true,
+      fullmoon: false,
+    }
+
+    if ([100, 103, 150, 153].includes(iconId)) {
+      result.bgClass = 'wbg-common'
+      result.fixedCloud = false
+      result.movingCloud = false
+      result.darkCloud = false
+    } else if ([101, 102].includes(iconId)) {
+      result.bgClass = 'wbg-common'
+      result.movingCloud = false
+      result.darkCloud = false
+    } else if ([104, 154].includes(iconId)) {
+      result.bgClass = 'wbg-common'
+      result.darkCloud = false
+    } else if (iconId >= 300 && iconId < 400) {
+      result.bgClass = 'wbg-lightrain'
+    }
+
+    /** 当前时间的 小时 */
+    const hour = new Date().getHours()
+
+    if (hour <= 6 || hour >= 18) {
+      result.sun = false
+      result.fullmoon = true
+      result.bgClass = 'wbg-night'
+    }
+    return result
   }
 }

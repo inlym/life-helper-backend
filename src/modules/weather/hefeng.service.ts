@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { hefeng } from 'src/config'
 import { RedisService } from 'nestjs-redis'
+import { HefengRequestOptions } from './weather.interface'
 import request from 'axios'
 
 @Injectable()
@@ -150,7 +151,10 @@ export class HefengService {
   async fetchData(type: string, location: string) {
     const { mode, url } = this.profile[type]
     const { baseURL, key } = hefeng[mode]
-    const requestOptions = { baseURL, url, params: { key, location } }
+    const requestOptions: HefengRequestOptions = { baseURL, url, params: { key, location } }
+    if (type.startsWith('indices-')) {
+      requestOptions.params.type = 0
+    }
     const { data: resData } = await request(requestOptions)
 
     if (resData.code === '200') {
