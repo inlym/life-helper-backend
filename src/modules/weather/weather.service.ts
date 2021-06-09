@@ -4,7 +4,16 @@ import * as dayjs from 'dayjs'
 import { HefengService } from './hefeng.service'
 import { WeatherCityService } from './weather-city.service'
 import { LocationService } from '../location/location.service'
-import { WeatherNow, WeatherHourlyForecastItem, WeatherDailyForecastItem, WeatherRainItem, WeatherMinutely, WeatherLiveIndexItem } from './weather.class'
+import {
+  WeatherNow,
+  WeatherHourlyForecastItem,
+  WeatherDailyForecastItem,
+  WeatherRainItem,
+  WeatherMinutely,
+  WeatherLiveIndexItem,
+  WeatherAirNow,
+  WeatherAir5dItem,
+} from './weather.class'
 
 @Injectable()
 export class WeatherService {
@@ -46,12 +55,13 @@ export class WeatherService {
     promises.push(this.getLiveIndex(locationId))
 
     const [now, f15d, f24h, airnow, air5d, rain, liveIndex] = await Promise.all(promises)
-    return { now, f15d, f24h, airnow, air5d, rain, liveIndex }
+    const skyClass = this.skyClass(now.icon)
+    return { now, f15d, f24h, airnow, air5d, rain, liveIndex, skyClass }
   }
 
   async getWeatherNow(locationId: string): Promise<WeatherNow> {
     const result = await this.hefengService.getData('weather-now', locationId)
-    return plainToClass(WeatherNow, result.now, { excludeExtraneousValues: true })
+    return plainToClass(WeatherNow, result.now)
   }
 
   async getWeather15d(locationId: string): Promise<WeatherDailyForecastItem[]> {
@@ -79,7 +89,7 @@ export class WeatherService {
       // 处理 `dateText`
       item.dateText = `${d.get('month') + 1}/${d.get('date')}`
 
-      return plainToClass(WeatherDailyForecastItem, item, { excludeExtraneousValues: true })
+      return plainToClass(WeatherDailyForecastItem, item)
     })
   }
 
@@ -87,18 +97,20 @@ export class WeatherService {
     const result = await this.hefengService.getData('weather-24h', locationId)
     return result.hourly.map((item) => {
       item.iconUrl = this.iconPath + item.icon + '.svg'
-      return plainToClass(WeatherHourlyForecastItem, item, { excludeExtraneousValues: true })
+      return plainToClass(WeatherHourlyForecastItem, item)
     })
   }
 
-  async getAirNow(locationId: string) {
+  async getAirNow(locationId: string): Promise<WeatherAirNow> {
     const result = await this.hefengService.getData('air-now', locationId)
-    return result.now
+    return plainToClass(WeatherAirNow, result.now)
   }
 
-  async getAir5d(locationId: string) {
+  async getAir5d(locationId: string): Promise<WeatherAir5dItem[]> {
     const result = await this.hefengService.getData('air-5d', locationId)
-    return result.daily
+    return result.daily.map((item) => {
+      return plainToClass(WeatherAir5dItem, item)
+    })
   }
 
   async getRain(longitude: number, latitude: number): Promise<WeatherMinutely> {
@@ -109,7 +121,7 @@ export class WeatherService {
     const list = result.minutely.map((item) => {
       item.time = item.fxTime.substring(11, 16)
       item.height = (parseFloat(item.precip) * 200 + 10).toFixed(0)
-      return plainToClass(WeatherRainItem, item, { excludeExtraneousValues: true })
+      return plainToClass(WeatherRainItem, item)
     })
     const updateTime = result.updateTime.substring(11, 16)
     const output = {
@@ -117,7 +129,7 @@ export class WeatherService {
       summary: result.summary,
       list,
     }
-    return plainToClass(WeatherMinutely, output, { excludeExtraneousValues: true })
+    return plainToClass(WeatherMinutely, output)
   }
 
   async getLiveIndex(locationId: string): Promise<WeatherLiveIndexItem[]> {
@@ -125,7 +137,7 @@ export class WeatherService {
     const iconUrlPrefix = 'https://img.lh.inlym.com/hefeng/life/'
     return result.daily.map((item) => {
       item.iconUrl = iconUrlPrefix + item.type + '.svg'
-      return plainToClass(WeatherLiveIndexItem, item, { excludeExtraneousValues: true })
+      return plainToClass(WeatherLiveIndexItem, item)
     })
   }
 

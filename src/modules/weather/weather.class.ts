@@ -1,9 +1,6 @@
-import { Expose, Transform } from 'class-transformer'
+import { Exclude, Expose, Transform } from 'class-transformer'
 
-/**
- * 实时天气方法返回内容
- * Weather#getWeatherNow
- */
+@Exclude()
 export class WeatherNow {
   obsTime: string
 
@@ -47,6 +44,7 @@ export class WeatherNow {
 /**
  * @see https://dev.qweather.com/docs/api/weather/weather-hourly-forecast/
  */
+@Exclude()
 export class WeatherHourlyForecastItem {
   @Expose({ name: 'fxTime' })
   @Transform((item) => {
@@ -68,6 +66,7 @@ export class WeatherHourlyForecastItem {
   iconUrl: string
 }
 
+@Exclude()
 export class WeatherDailyForecastItem {
   @Expose({ name: 'fxDate' })
   date: string
@@ -97,6 +96,7 @@ export class WeatherDailyForecastItem {
   iconNightUrl: string
 }
 
+@Exclude()
 export class WeatherRainItem {
   @Expose()
   time: string
@@ -108,6 +108,7 @@ export class WeatherRainItem {
   height: string
 }
 
+@Exclude()
 export class WeatherMinutely {
   @Expose()
   updateTime: string
@@ -119,6 +120,7 @@ export class WeatherMinutely {
   list: WeatherRainItem[]
 }
 
+@Exclude()
 export class WeatherLiveIndexItem {
   @Expose()
   iconUrl: string
@@ -140,4 +142,55 @@ export class WeatherLiveIndexItem {
 
   @Expose()
   text: string
+}
+
+@Exclude()
+export class WeatherAirNow {
+  @Expose()
+  aqi: string
+
+  @Expose()
+  level: string
+
+  @Expose()
+  category: string
+
+  @Expose()
+  primary: string
+
+  @Expose()
+  pm10: string
+
+  @Expose()
+  pm2p5: string
+
+  @Expose()
+  no2: string
+
+  @Expose()
+  so2: string
+
+  @Expose()
+  co: string
+
+  @Expose()
+  o3: string
+}
+
+@Exclude()
+export class WeatherAir5dItem {
+  @Expose({ name: 'fxDate' })
+  date: string
+
+  @Expose()
+  aqi: string
+
+  @Expose()
+  level: string
+
+  @Expose()
+  category: string
+
+  @Expose()
+  primary: string
 }
