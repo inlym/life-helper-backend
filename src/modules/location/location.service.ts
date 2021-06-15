@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common'
+import { plainToClass } from 'class-transformer'
 import { LbsqqService } from './lbsqq.service'
 import { Connection } from 'typeorm'
-import { LocationInfo, IpLocationResult, AddressInfo } from './location.interface'
+import { BasicAddressInfo, LocationInfo } from './location.model'
 
 @Injectable()
 export class LocationService {
@@ -12,17 +13,8 @@ export class LocationService {
    * @param ip IP 地址
    */
   async getLocationByIp(ip: string): Promise<LocationInfo> {
-    const result: IpLocationResult = await this.lbsqqService.ipLocation(ip)
-
-    return {
-      longitude: result.location.lng,
-      latitude: result.location.lat,
-      nation: result.ad_info.nation,
-      province: result.ad_info.province,
-      city: result.ad_info.city,
-      district: result.ad_info.district,
-      adcode: result.ad_info.adcode,
-    }
+    const result = await this.lbsqqService.ipLocation(ip)
+    return plainToClass(LocationInfo, Object.assign({}, result.ad_info, { longitude: result.location.lng, latitude: result.location.lat }))
   }
 
   /**
@@ -30,9 +22,16 @@ export class LocationService {
    * @param longitude 经度
    * @param latitude 纬度
    */
-  async getAddressInfoByCoord(longitude: number, latitude: number): Promise<AddressInfo> {
+  async getAddressInfoByCoord(longitude: number, latitude: number): Promise<BasicAddressInfo> {
     const result = await this.lbsqqService.geoLocationCoder(longitude, latitude)
-    const { nation, province, city, district = '', adcode } = result.ad_info
-    return { nation, province, city, district, adcode }
+    return plainToClass(BasicAddressInfo, result.ad_info)
+  }
+
+  /**
+   * 通过经纬度获取一句话地址描述
+   */
+  async getRecommendAddress(longitude: number, latitude: number): Promise<string> {
+    const result = await this.lbsqqService.geoLocationCoder(longitude, latitude)
+    return result.formatted_addresses.recommend
   }
 }

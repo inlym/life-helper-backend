@@ -30,22 +30,3 @@ export interface GeoLocationCoderResult {
   formatted_addresses: FormattedAddresses
   ad_info: AdInfo
 }
-
-// location.service
-export interface LocationInfo {
-  longitude: number
-  latitude: number
-  nation: string
-  province: string
-  city?: string
-  district?: string
-  adcode: string
-}
-
-export interface AddressInfo {
-  nation: string
-  province: string
-  city: string
-  district?: string
-  adcode: string
-}

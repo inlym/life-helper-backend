@@ -4,6 +4,13 @@ import { IpLocationResult, GeoLocationCoderResult } from './location.interface'
 import { RedisService } from 'nestjs-redis'
 import jshttp from 'jshttp'
 
+/**
+ * 当前 `LbsqqService` 类仅用于处理以下事项：
+ * 1. 封装对腾讯位置服务的请求
+ * 2. 对请求数据附加缓存逻辑
+ *
+ * 不对返回结果做任何处理。
+ */
 @Injectable()
 export class LbsqqService {
   /** 开发者密钥获取次数 */
