@@ -61,7 +61,10 @@ export class WeatherService {
 
   async getWeatherNow(locationId: string): Promise<WeatherNow> {
     const result = await this.hefengService.getData('weather-now', locationId)
-    return plainToClass(WeatherNow, result.now)
+    const now = result.now
+    now.summary = `现在${now.text}，温度 ${now.temp} 度。当前湿度 ${now.humidity}%，${now.windDir}${now.windScale}级，风速 ${now.windSpeed}km/h`
+
+    return plainToClass(WeatherNow, now)
   }
 
   async getWeather15d(locationId: string): Promise<WeatherDailyForecastItem[]> {
