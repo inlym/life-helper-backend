@@ -4,6 +4,13 @@ import { RedisService } from 'nestjs-redis'
 import { HefengRequestOptions } from './weather.interface'
 import request from 'axios'
 
+/**
+ * 当前 `HefengService` 类仅用于处理以下事项：
+ * 1. 封装对和风天气的请求
+ * 2. 对请求数据附加缓存逻辑
+ *
+ * 不对返回结果做任何处理。
+ */
 @Injectable()
 export class HefengService {
   constructor(private redisService: RedisService) {}
@@ -174,7 +181,6 @@ export class HefengService {
     if (redisResult) {
       return JSON.parse(redisResult)
     }
-
     const resData = await this.fetchData(type, location)
     const { expiration } = this.profile[type]
     await redis.set(redisKey, JSON.stringify(resData), 'EX', expiration)
@@ -196,7 +202,6 @@ export class HefengService {
     }
 
     const { data: resData } = await request(requestOptions)
-    console.log('resData: ', resData)
     if (resData.code === '200') {
       return resData.location[0].id
     } else {
