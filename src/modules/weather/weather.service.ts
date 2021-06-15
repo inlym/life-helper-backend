@@ -13,7 +13,7 @@ import {
   WeatherLiveIndexItem,
   WeatherAirNow,
   WeatherAir5dItem,
-} from './weather.class'
+} from './weather.model'
 
 @Injectable()
 export class WeatherService {
@@ -28,8 +28,9 @@ export class WeatherService {
     if (cities.length === 0) {
       const { longitude, latitude } = await this.locationService.getLocationByIp(ip)
       const locationId = await this.hefengService.getLocationId(longitude, latitude)
+      const address = await this.locationService.getRecommendAddress(longitude, latitude)
       const result = await this.mergeWeatherInfo(locationId, longitude, latitude)
-      return Object.assign({}, { cities }, result)
+      return Object.assign({}, { cities, address }, result)
     } else {
       let city = cities[0]
       if (cityId) {
@@ -38,9 +39,9 @@ export class WeatherService {
           city = city2
         }
       }
-      const { locationId, longitude, latitude } = city
+      const { locationId, longitude, latitude, name: address } = city
       const result = await this.mergeWeatherInfo(locationId, longitude, latitude)
-      return Object.assign({}, { cities }, result)
+      return Object.assign({}, { cities, address }, result)
     }
   }
 
