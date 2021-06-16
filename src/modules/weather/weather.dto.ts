@@ -1,4 +1,5 @@
 import { IsString, IsNumber, IsNotEmpty, Max, Min } from 'class-validator'
+import { WeatherDailyForecastItem } from './weather.model'
 
 /**
  * 小程序调用 `wx.chooseLocation` 获取的数据
@@ -25,4 +26,8 @@ export class WxChooseLocationResult {
   @Max(180)
   /** 经度，浮点数，范围为-180~180，负数表示西经。使用 gcj02 国测局坐标系 */
   longitude: number
+}
+
+export class Weather15dRes {
+  list: WeatherDailyForecastItem[]
 }
