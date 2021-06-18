@@ -21,7 +21,6 @@ export class UserInfoService {
    * 更新基本信息（由微信 `wx.getUserProfile` API 获取）
    */
   async updateInfo(userId: number, userinfo): Promise<UserInfo> {
-    userinfo.id = userId
-    return await this.userInfoRepository.save(userinfo)
+    return await this.userInfoRepository.save(Object.assign({}, userinfo, { id: userId }))
   }
 }
