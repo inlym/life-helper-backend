@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common'
-import { hefeng } from 'src/config'
+import { HefengConfig } from 'life-helper-config'
 import { RedisService } from 'nestjs-redis'
 import { HefengRequestOptions } from './weather.interface'
 import request from 'axios'
@@ -157,7 +157,7 @@ export class HefengService {
    */
   async fetchData(type: string, location: string) {
     const { mode, url } = this.profile[type]
-    const { baseURL, key } = hefeng[mode]
+    const { baseURL, key } = HefengConfig[mode]
     const requestOptions: HefengRequestOptions = { baseURL, url, params: { key, location } }
     if (type.startsWith('indices-')) {
       requestOptions.params.type = 0
@@ -197,7 +197,7 @@ export class HefengService {
       url: 'https://geoapi.qweather.com/v2/city/lookup',
       params: {
         location: `${longitude},${latitude}`,
-        key: hefeng.basic.key,
+        key: HefengConfig.basic.key,
       },
     }
 

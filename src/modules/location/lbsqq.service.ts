@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common'
-import { lbsqq } from 'src/config'
+import { LbsqqKeys } from 'life-helper-config'
 import { IpLocationResult, GeoLocationCoderResult } from './location.interface'
 import { RedisService } from 'nestjs-redis'
 import jshttp from 'jshttp'
@@ -23,7 +23,7 @@ export class LbsqqService {
    * @see https://lbs.qq.com/service/webService/webServiceGuide/webServiceOverview
    */
   getKey(): string {
-    const keys: string[] = lbsqq.keys
+    const keys: string[] = LbsqqKeys
     const n: number = this.counter++ % keys.length
     return keys[n]
   }

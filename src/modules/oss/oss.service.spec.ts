@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing'
 import { OssService } from './oss.service'
-import { ossConfig } from 'src/config'
+import { AliyunOssConfig } from 'life-helper-config'
 
 describe('OssService', () => {
   let service: OssService
@@ -19,7 +19,7 @@ describe('OssService', () => {
 
   describe('generateClientToken', () => {
     test('普通调用，逐个检查返回参数，格式正确', () => {
-      const ugcBucket = ossConfig('ugc')
+      const ugcBucket = AliyunOssConfig.ugc
       const dirname = 'test'
       const result = service.generateClientToken(dirname)
 

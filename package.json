@@ -45,7 +45,7 @@
     "class-transformer": "^0.4.0",
     "class-validator": "^0.13.1",
     "jshttp": "^0.4.2",
-    "life-helper-config": "^2.3.0",
+    "life-helper-config": "^2.6.2",
     "mysql2": "^2.2.5",
     "nestjs-redis": "^1.3.3",
     "pm2": "^4.5.6",

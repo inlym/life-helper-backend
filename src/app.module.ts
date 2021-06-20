@@ -2,8 +2,10 @@ import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { RedisModule } from 'nestjs-redis'
 import { ScheduleModule } from '@nestjs/schedule'
-import { TypeOrmOptions, RedisOtions } from './config'
 import { APP_INTERCEPTOR } from '@nestjs/core'
+
+// Config
+import { TypeOrmConfig, RedisConfig } from 'life-helper-config'
 
 // Interceptor
 import { SuccessMessageInterceptor } from './interceptors/success-message.interceptor'
@@ -23,8 +25,8 @@ import { UserInfoModule } from './modules/user-info/user-info.module'
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot(TypeOrmOptions),
-    RedisModule.register(RedisOtions),
+    TypeOrmModule.forRoot(TypeOrmConfig),
+    RedisModule.register(RedisConfig),
     ScheduleModule.forRoot(),
     DebugModule,
     WeixinModule,

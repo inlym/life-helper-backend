@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common'
 import jshttp from 'jshttp'
 import { code2SessionInterface, fetchAccessTokenInterface } from './weixin.interface'
-import { WeixinOptions } from 'src/config'
+import { WeixinMiniProgramConfig } from 'life-helper-config'
 import { RedisService } from 'nestjs-redis'
 import { Cron, CronExpression } from '@nestjs/schedule'
 
 /** 小程序开发者 ID 和密钥 */
-const { appid, secret } = WeixinOptions
+const { appid, secret } = WeixinMiniProgramConfig
 
 /**
  * 封装请求微信服务端相关方法
