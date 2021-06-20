@@ -7,9 +7,7 @@ import axios from 'axios'
 
 @Injectable()
 export class OssService {
-  constructor(private redisService: RedisService) {
-    this.redis = this.redisService.getClient()
-  }
+  constructor(private redisService: RedisService) {}
   /**
    * 生成用于客户端直传 OSS 所需的凭证信息
    * @param dirname {string} 目录名称
@@ -63,9 +61,11 @@ export class OssService {
    * 说明：
    * 1. 请求头 `x-oss-pub-key-url` - 获取公钥的 URL 地址
    * 2. 请求头 `authorization` - 签名
+   *
    */
-  async verifyOssCallbackSignature(signature: string, ossPubKeyUrlBase64: string) {
-    const { app, ctx, service } = this
+  async verifyOssCallbackSignature(options) {
+    const { signature, ossPubKeyUrlBase64, path, search, rawBody } = options
+    const redis = this.redisService.getClient()
 
     /**
      * 第 1 步：获取公钥
@@ -74,7 +74,7 @@ export class OssService {
      */
     let pubKey = ''
     const redisKey = 'system:oss-public-key'
-    const redisResult = await this.redis.get(redisKey)
+    const redisResult = await redis.get(redisKey)
     if (redisResult) {
       pubKey = redisResult
     } else {
@@ -95,29 +95,18 @@ export class OssService {
       }
     }
 
-    /**
-     * 2021-06-20
-     * todo
-     * 以下内容待调整，复制于旧代码
-     */
-
     // 计算签名字符串
-    const stringToSign = ctx.path + ctx.search + '\n' + ctx.request.rawBody
+    const stringToSign = path + search + '\n' + rawBody
 
     /** 签名内容 */
-    const signature = Buffer.from(ctx.get(HEADER_SIGNATURE), 'base64')
+    const signatureText = Buffer.from(signature, 'base64')
 
     // 进行校验
-    const verifyResult = crypto.createVerify('RSA-MD5').update(stringToSign).verify(pubKey, signature)
-
-    this.logger.debug('verifyResult', verifyResult)
+    const verifyResult = crypto.createVerify('RSA-MD5').update(stringToSign).verify(pubKey, signatureText)
 
     if (verifyResult) {
       return true
     } else {
-      // 存储错误回调
-      const { key: redisKey2 } = service.keys.ossErrorCallbackRequest(ctx.tracer.traceId)
-      app.redis.set(redisKey2, JSON.stringify(ctx.request))
       throw new Error('OSS 回调异常：签名校验未通过')
     }
   }
