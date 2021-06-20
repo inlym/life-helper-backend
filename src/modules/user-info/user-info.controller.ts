@@ -11,7 +11,7 @@ export class UserInfoController {
   /**
    * 获取昵称和头像
    */
-  @Get('basic')
+  @Get()
   @UseGuards(AuthGuard)
   async getBasicInfo(@User('id') userId: number) {
     const result = await this.userInfoService.getBasicInfo(userId)

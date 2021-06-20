@@ -3,6 +3,10 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 import { RedisModule } from 'nestjs-redis'
 import { ScheduleModule } from '@nestjs/schedule'
 import { TypeOrmOptions, RedisOtions } from './config'
+import { APP_INTERCEPTOR } from '@nestjs/core'
+
+// Interceptor
+import { SuccessMessageInterceptor } from './interceptors/success-message.interceptor'
 
 // Middleware
 import { UserMiddleware } from './common/middlewares/user.middleware'
@@ -30,6 +34,13 @@ import { UserInfoModule } from './modules/user-info/user-info.module'
     WeatherModule,
     LocationModule,
     UserInfoModule,
+  ],
+
+  providers: [
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: SuccessMessageInterceptor,
+    },
   ],
 })
 export class AppModule implements NestModule {
