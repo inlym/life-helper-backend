@@ -26,7 +26,7 @@ export class UserMiddleware implements NestMiddleware {
       user.id = await this.authService.getUserIdByToken(token)
       user.authType = 'token'
     } else if (code) {
-      const { openid, unionid } = await this.weixinService.code2Session(code)
+      const { openid, unionid } = await this.weixinService.getSession(code)
       user.id = await this.userService.findOrCreateUserByOpenid(openid, unionid)
       user.authType = 'code'
     } else {
