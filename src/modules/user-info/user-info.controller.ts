@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common'
+import { Body, Controller, Get, Put, UseGuards } from '@nestjs/common'
 import { UserInfoService } from './user-info.service'
 import { User } from 'src/common/decorators/user.decorator'
 import { AuthGuard } from 'src/common/guards/auth.guard'
@@ -25,12 +25,10 @@ export class UserInfoController {
   /**
    * 更新个人信息
    */
-  @Post()
+  @Put()
   @UseGuards(AuthGuard)
   async update(@User('id') userId: number, @Body() body: updateReqDto) {
-    const result = await this.userInfoService.updateInfo(userId, body)
-    return {
-      id: result.id,
-    }
+    await this.userInfoService.updateInfo(userId, body)
+    return body
   }
 }
