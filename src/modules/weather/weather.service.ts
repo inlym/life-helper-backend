@@ -57,6 +57,7 @@ export class WeatherService {
 
     const [now, f15d, f24h, airnow, air5d, rain, liveIndex] = await Promise.all(promises)
     const skyClass = this.skyClass(now.icon)
+
     return { now, f15d, f24h, airnow, air5d, rain, liveIndex, skyClass }
   }
 
@@ -69,11 +70,15 @@ export class WeatherService {
   }
 
   async getWeather15d(locationId: string): Promise<WeatherDailyForecastItem[]> {
-    const result = await this.hefengService.getData('weather-15d', locationId)
+    const promises = [this.hefengService.getData('weather-15d', locationId), this.getAir5d(locationId)]
+    const [w15Result, air5d] = await Promise.all(promises)
 
-    return result.daily.map((item) => {
+    return w15Result.daily.map((item) => {
       item.iconDayUrl = this.iconPath + item.iconDay + '.svg'
       item.iconNightUrl = this.iconPath + item.iconNight + '.svg'
+
+      // 处理 date
+      item.date = item.fxDate
 
       const d = dayjs(item.fxDate)
 
@@ -90,8 +95,19 @@ export class WeatherService {
         item.dayText = this.weekText[d.get('day')]
       }
 
+      // 处理 `text`
+      const { textDay, textNight } = item
+      if (textDay === textNight) {
+        item.text = textDay
+      } else {
+        item.text = textDay + '转' + textNight
+      }
+
       // 处理 `dateText`
       item.dateText = `${d.get('month') + 1}/${d.get('date')}`
+
+      // 绑定 `aqi` 属性
+      item.aqi = air5d.find((e) => e.date === item.date)
 
       return plainToClass(WeatherDailyForecastItem, item)
     })

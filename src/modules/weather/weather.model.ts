@@ -1,4 +1,22 @@
-import { Exclude, Expose, Transform } from 'class-transformer'
+import { Exclude, Expose, Transform, Type } from 'class-transformer'
+
+@Exclude()
+export class WeatherAir5dItem {
+  @Expose({ name: 'fxDate' })
+  date: string
+
+  @Expose()
+  aqi: string
+
+  @Expose()
+  level: string
+
+  @Expose()
+  category: string
+
+  @Expose()
+  primary: string
+}
 
 @Exclude()
 export class WeatherNow {
@@ -74,7 +92,7 @@ export class WeatherDailyForecastItem {
   // 以下为原始数据（未做处理）
 
   /** 预报日期 */
-  @Expose({ name: 'fxDate' })
+  @Expose()
   date: string
 
   /** 日出时间 */
@@ -187,11 +205,20 @@ export class WeatherDailyForecastItem {
   @Expose()
   dateText: string
 
+  /** `晴转多云` 格式的文字 */
+  @Expose()
+  text: string
+
   @Expose()
   iconDayUrl: string
 
   @Expose()
   iconNightUrl: string
+
+  // 额外绑定的 `air5d` 当天数据
+  @Expose()
+  @Type(() => WeatherAir5dItem)
+  aqi: WeatherAir5dItem
 }
 
 @Exclude()
@@ -273,22 +300,4 @@ export class WeatherAirNow {
 
   @Expose()
   o3: string
-}
-
-@Exclude()
-export class WeatherAir5dItem {
-  @Expose({ name: 'fxDate' })
-  date: string
-
-  @Expose()
-  aqi: string
-
-  @Expose()
-  level: string
-
-  @Expose()
-  category: string
-
-  @Expose()
-  primary: string
 }
