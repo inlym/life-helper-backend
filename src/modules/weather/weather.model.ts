@@ -215,6 +215,9 @@ export class WeatherDailyForecastItem {
   @Expose()
   iconNightUrl: string
 
+  @Expose()
+  imageUrl: string
+
   // 额外绑定的 `air5d` 当天数据
   @Expose()
   @Type(() => WeatherAir5dItem)

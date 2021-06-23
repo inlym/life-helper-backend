@@ -43,22 +43,32 @@ export class WeatherController {
     return this.weatherCityService.remove(userId, id)
   }
 
+  /**
+   * 获取未来 15 天天气预报
+   *
+   * 说明：
+   * 1. 为保证接口通用性，同时支持使用 `LocationId` 和经纬度请求，两者都无时，则使用客户端 IP 地址，最终结果是转化为 `LocationId`
+   *
+   * @param id 和风天气中的 `LocationId`
+   * @param location `120.111,30.222` 格式的经纬度坐标 组合
+   * @param ip 客户端 IP 地址
+   */
   @Get('15d')
   async getWeather15d(@Query('id') id: string, @Query('location') location: string, @Ip() ip: string): Promise<Weather15dRes> {
-    let list = []
+    let locationId: string
 
     if (id) {
-      list = await this.weatherService.getWeather15d(id)
+      locationId = id
     } else if (location) {
+      console.log('location: ', location)
       const [longitude, latitude] = location.split(',').map((item) => Number(item))
-      const locationId = await this.hefengService.getLocationId(longitude, latitude)
-      list = await this.weatherService.getWeather15d(locationId)
+      locationId = await this.hefengService.getLocationId(longitude, latitude)
     } else {
       const { longitude, latitude } = await this.locationService.getLocationByIp(ip)
-      const locationId = await this.hefengService.getLocationId(longitude, latitude)
-      list = await this.weatherService.getWeather15d(locationId)
+      locationId = await this.hefengService.getLocationId(longitude, latitude)
     }
 
-    return { list }
+    const f15d = await this.weatherService.getWeather15d(locationId)
+    return { list: f15d }
   }
 }

@@ -4,6 +4,7 @@ import * as dayjs from 'dayjs'
 import { HefengService } from './hefeng.service'
 import { WeatherCityService } from './weather-city.service'
 import { LocationService } from '../location/location.service'
+import { AliyunOssConfig } from 'life-helper-config'
 import {
   WeatherNow,
   WeatherHourlyForecastItem,
@@ -17,7 +18,8 @@ import {
 
 @Injectable()
 export class WeatherService {
-  public iconPath = 'https://img.lh.inlym.com/hefeng/c1/'
+  public iconPath = AliyunOssConfig.admin.url + '/static/hefeng/c1/'
+  public imagePath = AliyunOssConfig.admin.url + '/static/hefeng/s2/'
   public weekText = ['周日', '周一', '周二', '周三', '周四', '周五', '周六']
 
   constructor(private hefengService: HefengService, private weatherCityService: WeatherCityService, private locationService: LocationService) {}
@@ -76,13 +78,14 @@ export class WeatherService {
     return w15Result.daily.map((item) => {
       item.iconDayUrl = this.iconPath + item.iconDay + '.svg'
       item.iconNightUrl = this.iconPath + item.iconNight + '.svg'
+      item.imageUrl = this.imagePath + item.iconDay + '.png'
 
-      // 处理 date
+      // 添加 `date` 属性，格式：`2021-06-23`
       item.date = item.fxDate
 
       const d = dayjs(item.fxDate)
 
-      // 处理 `dayText`
+      // 添加 `dayText` 属性，格式：`昨天`，`今天`,`明天`,`后天`,`周一`,`周二` ...
       if (dayjs().get('date') === d.get('date')) {
         item.dayText = '今天'
       } else if (dayjs().add(1, 'day').get('date') === d.get('date')) {
@@ -95,7 +98,7 @@ export class WeatherService {
         item.dayText = this.weekText[d.get('day')]
       }
 
-      // 处理 `text`
+      // 添加 `text` 属性，格式：`多云转晴`，`多云`
       const { textDay, textNight } = item
       if (textDay === textNight) {
         item.text = textDay
@@ -103,7 +106,7 @@ export class WeatherService {
         item.text = textDay + '转' + textNight
       }
 
-      // 处理 `dateText`
+      // 添加 `dateText` 属性，格式：`6/19`
       item.dateText = `${d.get('month') + 1}/${d.get('date')}`
 
       // 绑定 `aqi` 属性
