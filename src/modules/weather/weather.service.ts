@@ -41,9 +41,10 @@ export class WeatherService {
           city = city2
         }
       }
+
       const { locationId, longitude, latitude, name: address } = city
       const result = await this.mergeWeatherInfo(locationId, longitude, latitude)
-      return Object.assign({}, { cities, address }, result)
+      return Object.assign({}, { cities, address, activeCityId: city.id }, result)
     }
   }
 

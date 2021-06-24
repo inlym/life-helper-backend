@@ -14,11 +14,13 @@ export class WeatherCityService {
     @InjectRepository(WeatherCity) private weatherCityRepository: Repository<WeatherCity>
   ) {}
 
-  async getAll(userId: number): Promise<WeatherCity[]> {
+  async getAll(userId: number, limit = 5, offset = 0): Promise<WeatherCity[]> {
     return await this.weatherCityRepository.find({
       select: ['id', 'locationId', 'name', 'city', 'district', 'longitude', 'latitude'],
       where: { userId },
       order: { id: 'DESC' },
+      take: limit,
+      skip: offset,
     })
   }
 
