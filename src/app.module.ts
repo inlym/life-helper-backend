@@ -22,6 +22,7 @@ import { UserModule } from './modules/user/user.module'
 import { WeatherModule } from './modules/weather/weather.module'
 import { LocationModule } from './modules/location/location.module'
 import { UserInfoModule } from './modules/user-info/user-info.module'
+import { CalendarModule } from './modules/calendar/calendar.module'
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { UserInfoModule } from './modules/user-info/user-info.module'
     WeatherModule,
     LocationModule,
     UserInfoModule,
+    CalendarModule,
   ],
 
   providers: [
