@@ -5,6 +5,7 @@ import { HefengService } from './hefeng.service'
 import { WeatherCityService } from './weather-city.service'
 import { LocationService } from '../location/location.service'
 import { AliyunOssConfig } from 'life-helper-config'
+
 import {
   WeatherNow,
   WeatherHourlyForecastItem,
@@ -158,7 +159,7 @@ export class WeatherService {
 
   async getLiveIndex(locationId: string): Promise<WeatherLiveIndexItem[]> {
     const result = await this.hefengService.getData('indices-1d', locationId)
-    const iconUrlPrefix = 'https://img.lh.inlym.com/hefeng/life/'
+    const iconUrlPrefix = 'https://img.lh.inlym.com/static/hefeng/live/'
     return result.daily.map((item) => {
       item.iconUrl = iconUrlPrefix + item.type + '.svg'
       return plainToClass(WeatherLiveIndexItem, item)
