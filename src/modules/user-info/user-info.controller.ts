@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Put, UseGuards } from '@nestjs/common'
 import { UserInfoService } from './user-info.service'
-import { User } from 'src/common/decorators/user.decorator'
-import { AuthGuard } from 'src/common/guards/auth.guard'
+import { User } from 'src/common/user.decorator'
+import { AuthGuard } from 'src/common/auth.guard'
 import { updateReqDto } from './user-info.dto'
 
 @Controller('userinfo')

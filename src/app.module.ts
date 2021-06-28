@@ -8,10 +8,10 @@ import { APP_INTERCEPTOR } from '@nestjs/core'
 import { TypeOrmConfig, RedisConfig } from 'life-helper-config'
 
 // Interceptor
-import { SuccessMessageInterceptor } from './interceptors/success-message.interceptor'
+import { SuccessMessageInterceptor } from './common/success-message.interceptor'
 
 // Middleware
-import { UserMiddleware } from './common/middlewares/user.middleware'
+import { UserMiddleware } from './common/user.middleware'
 
 // Module
 import { DebugModule } from './modules/debug/debug.module'

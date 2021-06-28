@@ -1,6 +1,6 @@
 import { Controller, Get, HttpException, HttpStatus } from '@nestjs/common'
-import { User } from 'src/common/decorators/user.decorator'
-import { RequestUser } from 'src/common/interfaces/request-user.interface'
+import { User } from 'src/common/user.decorator'
+import { RequestUser } from 'src/common/request-user.interface'
 import { AuthService } from './auth.service'
 
 @Controller()

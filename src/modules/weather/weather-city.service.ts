@@ -4,7 +4,7 @@ import { Repository } from 'typeorm'
 import { HefengService } from './hefeng.service'
 import { LocationService } from '../location/location.service'
 import { WxChooseLocationResult } from './weather.dto'
-import { WeatherCity } from 'src/entities/weather-city.entity'
+import { WeatherCity } from 'src/modules/weather/weather-city.entity'
 
 @Injectable()
 export class WeatherCityService {

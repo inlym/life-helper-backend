@@ -2,7 +2,7 @@ import { Controller, Req, Get } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
 import { Request } from 'express'
 import { RedisService } from 'nestjs-redis'
-import { User } from 'src/common/decorators/user.decorator'
+import { User } from 'src/common/user.decorator'
 
 @ApiTags('debug')
 @Controller('debug')

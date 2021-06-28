@@ -1,5 +1,5 @@
 import { Entity, Column } from 'typeorm'
-import { BaseEntity } from './base.entity'
+import { BaseEntity } from '../../common/base.entity'
 
 /**
  * 用户选择定位记录

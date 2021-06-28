@@ -2,7 +2,7 @@ import { NestFactory } from '@nestjs/core'
 import { ValidationPipe } from '@nestjs/common'
 import { NestExpressApplication } from '@nestjs/platform-express'
 import { AppModule } from './app.module'
-import { setupSwagger } from './plugins/swagger.plugin'
+import { setupSwagger } from './common/swagger.plugin'
 
 // 获取环境变量
 const port: number = (process.env.PORT && parseInt(process.env.PORT, 10)) || 3000

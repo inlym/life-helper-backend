@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing'
 import { UserService } from './user.service'
 import { AppModule } from '../../app.module'
-import { User } from '../../entities/user.entity'
+import { User } from './user.entity'
 import { getRepository, Repository } from 'typeorm'
 import { v4 as uuidv4 } from 'uuid'
 
