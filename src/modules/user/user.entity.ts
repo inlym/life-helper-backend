@@ -1,5 +1,5 @@
 import { Entity, Column } from 'typeorm'
-import { BaseEntity } from '../../common/base.entity'
+import { AbstractEntity } from '../../common/abstract.entity'
 
 /**
  * 用户账户表
@@ -8,7 +8,7 @@ import { BaseEntity } from '../../common/base.entity'
  * 2. 信息类字段放置于用户信息表中
  */
 @Entity()
-export class User extends BaseEntity {
+export class User extends AbstractEntity {
   @Column({
     type: 'varchar',
     length: 32,

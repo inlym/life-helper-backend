@@ -1,5 +1,5 @@
 import { Entity, Column } from 'typeorm'
-import { BaseEntity } from '../../common/base.entity'
+import { AbstractEntity } from '../../common/abstract.entity'
 
 /**
  * 用户选择定位记录
@@ -9,7 +9,7 @@ import { BaseEntity } from '../../common/base.entity'
  * 2. 不同功能模块使用 `type` 字段标记
  */
 @Entity()
-export class WeatherCity extends BaseEntity {
+export class WeatherCity extends AbstractEntity {
   @Column({
     name: 'user_id',
     type: 'int',

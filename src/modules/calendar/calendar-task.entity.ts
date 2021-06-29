@@ -1,11 +1,11 @@
 import { Entity, Column } from 'typeorm'
-import { BaseEntity } from 'src/common/base.entity'
+import { AbstractEntity } from 'src/common/abstract.entity'
 
 /**
  * 任务表
  */
 @Entity()
-export class CalendarTask extends BaseEntity {
+export class CalendarTask extends AbstractEntity {
   @Column({
     name: 'project_id',
     type: 'int',

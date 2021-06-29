@@ -1,5 +1,5 @@
 import { Entity, Column } from 'typeorm'
-import { BaseEntity } from '../../common/base.entity'
+import { AbstractEntity } from '../../common/abstract.entity'
 
 /**
  * 用户信息表
@@ -8,7 +8,7 @@ import { BaseEntity } from '../../common/base.entity'
  * 1. 直接使用主键 ID 作为 `userId`
  */
 @Entity()
-export class UserInfo extends BaseEntity {
+export class UserInfo extends AbstractEntity {
   @Column({
     name: 'nick_name',
     type: 'varchar',

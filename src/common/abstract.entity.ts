@@ -4,7 +4,7 @@ import { Min } from 'class-validator'
 /**
  * 当前实体包含所有公共列，所有实体继承当前实体
  */
-export abstract class BaseEntity {
+export abstract class AbstractEntity {
   @PrimaryGeneratedColumn({
     comment: '主键 ID',
   })

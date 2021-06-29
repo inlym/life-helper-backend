@@ -1,8 +1,8 @@
 import { Entity, Column } from 'typeorm'
-import { BaseEntity } from 'src/common/base.entity'
+import { AbstractEntity } from 'src/common/abstract.entity'
 
 @Entity()
-export class CalendarProject extends BaseEntity {
+export class CalendarProject extends AbstractEntity {
   @Column({
     name: 'user_id',
     type: 'int',
@@ -14,7 +14,6 @@ export class CalendarProject extends BaseEntity {
     type: 'varchar',
     length: 32,
     update: false,
-    unique: true,
     comment: '项目名称',
   })
   name: string
