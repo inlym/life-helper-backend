@@ -1,12 +1,10 @@
 import { NestFactory } from '@nestjs/core'
 import { ValidationPipe } from '@nestjs/common'
 import { NestExpressApplication } from '@nestjs/platform-express'
+import { PORT, PROXY_NUMBER } from 'life-helper-config'
+
 import { AppModule } from './app.module'
 import { setupSwagger } from './common/swagger.plugin'
-
-// 获取环境变量
-const port: number = (process.env.PORT && parseInt(process.env.PORT, 10)) || 3000
-const proxyNumber: number = (process.env.PROXY_NUMBER && parseInt(process.env.PROXY_NUMBER)) || 0
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule)
@@ -27,7 +25,7 @@ async function bootstrap() {
   app.set('etag', false)
 
   // 设置反向代理，获取客户端 IP 地址
-  app.set('trust proxy', proxyNumber)
+  app.set('trust proxy', PROXY_NUMBER)
 
   // 关闭 `X-Powered-By` 响应头
   app.set('x-powered-by', false)
@@ -35,7 +33,7 @@ async function bootstrap() {
   // 挂载 Swagger 插件
   setupSwagger(app)
 
-  await app.listen(port, '0.0.0.0')
+  await app.listen(PORT, '0.0.0.0')
 }
 
 bootstrap()
