@@ -48,7 +48,7 @@ import { CalendarModule } from './modules/calendar/calendar.module'
   ],
 })
 export class AppModule implements NestModule {
-  configure(consumer: MiddlewareConsumer) {
+  configure(consumer: MiddlewareConsumer): MiddlewareConsumer | void {
     consumer.apply(UserMiddleware).forRoutes('*')
   }
 }

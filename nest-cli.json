@@ -3,5 +3,8 @@
   "sourceRoot": "src",
   "compilerOptions": {
     "plugins": ["@nestjs/swagger"]
+  },
+  "generateOptions": {
+    "spec": false
   }
 }

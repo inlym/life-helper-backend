@@ -7,6 +7,7 @@
 # 依赖锁定版本文件
 package-lock.json
 yarn.lock
+pnpm-lock.yaml
 
 # 系统自带文件
 .DS_Store
