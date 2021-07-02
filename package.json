@@ -45,6 +45,7 @@
     "axios": "^0.21.1",
     "class-transformer": "^0.4.0",
     "class-validator": "^0.13.1",
+    "dayjs": "^1.8.36",
     "jshttp": "^0.4.2",
     "life-helper-config": "^2.6.2",
     "mysql2": "^2.2.5",
