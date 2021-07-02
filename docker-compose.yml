@@ -1,0 +1,8 @@
+version: '3'
+services:
+  app:
+    container_name: lifehelper
+    build: .
+    ports:
+      - 3050:3050
+    command: npm run start:docker:prod
