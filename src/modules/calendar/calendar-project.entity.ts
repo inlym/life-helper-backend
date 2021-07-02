@@ -1,4 +1,5 @@
 import { Entity, Column } from 'typeorm'
+
 import { AbstractEntity } from 'src/common/abstract.entity'
 
 @Entity()

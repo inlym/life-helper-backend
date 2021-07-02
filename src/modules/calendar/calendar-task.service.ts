@@ -1,11 +1,12 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
-import { CalendarTask } from './calendar-task.entity'
+
+import { CalendarTaskRepository } from './calendar-task.repository'
 
 @Injectable()
 export class CalendarTaskService {
-  constructor(@InjectRepository(CalendarTask) private readonly calendarTaskRepository: Repository<CalendarTask>) {}
+  constructor(private readonly calendarTaskRepository: CalendarTaskRepository) {}
 
   add(userId, data) {}
 }

@@ -5,15 +5,15 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 import { CalendarProjectService } from './calendar-project.service'
 import { CalendarTaskService } from './calendar-task.service'
 
-// Entity
-import { CalendarProject } from './calendar-project.entity'
-import { CalendarTask } from './calendar-task.entity'
+// Repository
+import { CalendarProjectRepository } from './calendar-project.repository'
+import { CalendarTaskRepository } from './calendar-task.repository'
 
 // Controller
 import { CalendarController } from './calendar.controller'
 
 @Module({
-  imports: [TypeOrmModule.forFeature([CalendarProject, CalendarTask])],
+  imports: [TypeOrmModule.forFeature([CalendarProjectRepository, CalendarTaskRepository])],
   providers: [CalendarProjectService, CalendarTaskService],
   controllers: [CalendarController],
 })
