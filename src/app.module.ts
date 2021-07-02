@@ -1,8 +1,8 @@
-import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common'
+import { Module, MiddlewareConsumer, NestModule, RequestMethod } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
-import { RedisModule } from 'nestjs-redis'
 import { ScheduleModule } from '@nestjs/schedule'
 import { APP_INTERCEPTOR } from '@nestjs/core'
+import { RedisModule } from 'nestjs-redis'
 
 // Config
 import { TypeOrmConfig, RedisConfig } from 'life-helper-config'
@@ -49,6 +49,10 @@ import { CalendarModule } from './modules/calendar/calendar.module'
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer): MiddlewareConsumer | void {
+    /** 中间件列表 */
+    const middlewares = [UserMiddleware]
+
     consumer.apply(UserMiddleware).forRoutes('*')
+    consumer.apply(...middlewares).forRoutes({ path: '*', method: RequestMethod.ALL })
   }
 }
