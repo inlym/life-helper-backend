@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing'
 import { UserService } from './user.service'
 import { AppModule } from '../../app.module'
-import { User } from './user.entity'
+import { UserEntity } from './user.entity'
 import { getRepository, Repository } from 'typeorm'
 import { v4 as uuidv4 } from 'uuid'
 
@@ -16,7 +16,7 @@ describe('UserService', () => {
     }).compile()
 
     service = module.get<UserService>(UserService)
-    userRepository = await getRepository(User)
+    userRepository = await getRepository(UserEntity)
   })
 
   test('成功创建服务', async () => {
