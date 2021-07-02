@@ -1,17 +1,19 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
+
 import { HefengService } from './hefeng.service'
 import { LocationService } from '../location/location.service'
 import { WxChooseLocationResult } from './weather.dto'
-import { WeatherCity } from 'src/modules/weather/weather-city.entity'
+import { WeatherCityRepository } from './weather-city.repository'
+import { WeatherCity } from './weather-city.entity'
 
 @Injectable()
 export class WeatherCityService {
   constructor(
-    private hefengService: HefengService,
-    private locationService: LocationService,
-    @InjectRepository(WeatherCity) private weatherCityRepository: Repository<WeatherCity>
+    private readonly hefengService: HefengService,
+    private readonly locationService: LocationService,
+    private readonly weatherCityRepository: WeatherCityRepository
   ) {}
 
   async getAll(userId: number, limit = 5, offset = 0): Promise<WeatherCity[]> {

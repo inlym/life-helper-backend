@@ -1,5 +1,6 @@
 import { Entity, Column } from 'typeorm'
-import { AbstractEntity } from '../../common/abstract.entity'
+
+import { AbstractEntity } from 'src/common/abstract.entity'
 
 /**
  * 用户选择定位记录
