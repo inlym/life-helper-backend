@@ -8,6 +8,7 @@ import { User } from 'src/common/user.decorator'
 @Controller('debug')
 export class DebugController {
   constructor(private redisService: RedisService) {}
+
   /**
    * 原样返回请求内容
    */
@@ -38,37 +39,19 @@ export class DebugController {
 
   @Get('status')
   status() {
-    return {
-      env: {
-        NODE_ENV: process.env.NODE_ENV,
-        PORT: process.env.PORT,
-      },
-      process: {
-        arch: process.arch,
-        argv: process.argv,
-        cwd: process.cwd(),
-        execArgv: process.execArgv,
-        execPath: process.execPath,
-        release: process.release,
-        pid: process.pid,
-        ppid: process.ppid,
-        platform: process.platform,
-        version: process.version,
-        uptime: process.uptime(),
-        versions: process.versions,
-      },
+    const env = {
+      NODE_ENV: process.env.NODE_ENV,
+      PORT: process.env.PORT,
     }
-  }
-
-  @Get('redis')
-  async pingRedis() {
-    const redis = await this.redisService.getClient()
-    return redis.ping()
-  }
-
-  @Get('temp')
-  temp() {
-    return 'hello'
+    const processInfo = {
+      cwd: process.cwd(),
+      pid: process.pid,
+      ppid: process.ppid,
+      platform: process.platform,
+      version: process.version,
+      uptime: process.uptime(),
+    }
+    return { ...env, ...processInfo }
   }
 
   @Get('user')
@@ -79,14 +62,5 @@ export class DebugController {
   @Get('userid')
   getUserId(@User('id') userId: number) {
     return userId
-  }
-
-  /**
-   * 用于调试时清空终端显示内容，无对应线上用途
-   */
-  @Get('clear')
-  clearScreen() {
-    console.clear()
-    return 'OK'
   }
 }
