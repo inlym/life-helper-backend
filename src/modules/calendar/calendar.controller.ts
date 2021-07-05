@@ -1,14 +1,17 @@
-import { Controller, UseGuards, Post, Body, Get, Delete, Query, Param } from '@nestjs/common'
+import { Controller, UseGuards, Post, Body, Get, Delete, Query, Param, Put } from '@nestjs/common'
+import { plainToClass } from 'class-transformer'
+
 import { User } from 'src/common/user.decorator'
 import { AuthGuard } from 'src/common/auth.guard'
-import { CreateProjectReqDto, CreateProjectResDto } from './calendar.dto'
+import { CreateProjectReqDto, CreateProjectResDto, CreateTaskRequestDto } from './calendar.dto'
+
 import { CalendarProjectService } from './calendar-project.service'
-import { plainToClass } from 'class-transformer'
+import { CalendarTaskService } from './calendar-task.service'
 
 @Controller('calendar')
 @UseGuards(AuthGuard)
 export class CalendarController {
-  constructor(private calendarProjectService: CalendarProjectService) {}
+  constructor(private readonly calendarProjectService: CalendarProjectService, private readonly calendarTaskService: CalendarTaskService) {}
 
   /**
    * 获取所有的日程项目列表
@@ -47,8 +50,9 @@ export class CalendarController {
    * 获取指定项目下的所有任务列表
    */
   @Get('tasks')
-  async getTasks(@User('id') userId: number, @Query('project_id') projectId: number) {
-    // todo
+  async getAllTasks(@User('id') userId: number, @Query('project_id') projectId = 0) {
+    const list = await this.calendarTaskService.getAll(userId, projectId)
+    return { list }
   }
 
   /**
@@ -56,15 +60,16 @@ export class CalendarController {
    */
   @Get('task/:id')
   async getTaskDetail(@User('id') userId: number, @Param('id') id: number) {
-    // todo
+    return this.calendarTaskService.getOne(userId, id)
   }
 
   /**
    * 新增一条任务
    */
   @Post('task')
-  async createTask(@User('id') userId: number, @Body() body) {
-    // todo
+  async createTask(@User('id') userId: number, @Body() body: CreateTaskRequestDto) {
+    const newTask = await this.calendarTaskService.create(userId, body)
+    return { id: newTask.id }
   }
 
   /**
@@ -72,6 +77,14 @@ export class CalendarController {
    */
   @Delete('task/:id')
   async deleteTask(@User('id') userId: number, @Param('id') id: number) {
-    // todo
+    return this.calendarTaskService.delete(userId, id)
+  }
+
+  /**
+   * 修改一条任务
+   */
+  @Put('task/:id')
+  async updateTask(@User('id') userId: number, @Param('id') taskId: number, @Body() body: CreateTaskRequestDto) {
+    return this.calendarTaskService.update(userId, taskId, body)
   }
 }

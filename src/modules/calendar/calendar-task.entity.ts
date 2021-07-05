@@ -4,8 +4,15 @@ import { AbstractEntity } from 'src/common/abstract.entity'
 /**
  * 任务表
  */
-@Entity()
+@Entity('calendar_task')
 export class CalendarTask extends AbstractEntity {
+  @Column({
+    name: 'user_id',
+    type: 'int',
+    comment: '所属用户 ID',
+  })
+  userId: number
+
   @Column({
     name: 'project_id',
     type: 'int',
@@ -16,7 +23,7 @@ export class CalendarTask extends AbstractEntity {
 
   @Column({
     type: 'varchar',
-    length: 32,
+    length: 200,
     default: '',
     comment: '任务标题',
   })
@@ -31,6 +38,7 @@ export class CalendarTask extends AbstractEntity {
   content: string
 
   @Column({
+    name: 'start_time',
     type: 'datetime',
     nullable: true,
     comment: '任务开始时间',
@@ -38,16 +46,34 @@ export class CalendarTask extends AbstractEntity {
   startTime: Date
 
   @Column({
+    name: 'due_time',
     type: 'datetime',
     nullable: true,
     comment: '任务到期时间',
   })
-  dueDate: Date
+  dueTime: Date
 
   @Column({
+    name: 'time_type',
     type: 'tinyint',
     default: 0,
     comment: '任务时间类型：0-未设置，1-时间段，2-整天',
   })
   timeType: number
+
+  @Column({
+    name: 'is_compulete',
+    type: 'tinyint',
+    default: false,
+    comment: '是否已完成',
+  })
+  isCompleted: boolean
+
+  @Column({
+    name: 'complete_time',
+    type: 'datetime',
+    nullable: true,
+    comment: '完成时间',
+  })
+  completeTime: Date
 }

@@ -2,12 +2,12 @@ import { Entity, Column } from 'typeorm'
 
 import { AbstractEntity } from 'src/common/abstract.entity'
 
-@Entity()
+@Entity('calendar_project')
 export class CalendarProject extends AbstractEntity {
   @Column({
     name: 'user_id',
     type: 'int',
-    comment: '所属人用户 ID',
+    comment: '所属用户 ID',
   })
   userId: number
 
