@@ -9,9 +9,9 @@ export class AuthService {
   /**
    * 为指定用户生成登录凭证 token
    * @param userId {number} 用户ID
-   * @param expiration {number} 有效期（单位：秒），默认 2 天
+   * @param expiration {number} 有效期（单位：秒），默认 10 天
    */
-  async createToken(userId: number, expiration: number = 3600 * 24 * 2): Promise<string> {
+  async createToken(userId: number, expiration: number = 3600 * 24 * 10): Promise<string> {
     if (userId < 1) {
       throw new Error('userId 不允许小于 1')
     }
@@ -37,7 +37,8 @@ export class AuthService {
    * 通过用户登录凭证换取用户 ID
    * @param token {string} 用户登录凭证
    *
-   * 1. 如果 token 无效则返回 `0`
+   * 说明：
+   * 1. 如果 `token` 无效则返回 `0`
    */
   async getUserIdByToken(token: string): Promise<number> {
     /** Redis 的键名 */
