@@ -11,6 +11,15 @@ import { AbstractEntity } from 'src/common/abstract.entity'
 @Entity({ name: 'user' })
 export class UserEntity extends AbstractEntity {
   @Column({
+    name: 'register_time',
+    type: 'datetime',
+    update: false,
+    default: () => 'CURRENT_TIMESTAMP',
+    comment: '注册时间',
+  })
+  registerTime: Date
+
+  @Column({
     type: 'varchar',
     length: 32,
     update: false,
