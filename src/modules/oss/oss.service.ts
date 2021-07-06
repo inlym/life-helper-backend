@@ -11,15 +11,16 @@ export class OssService {
   /**
    * 生成用于客户端直传 OSS 所需的凭证信息
    * @param dirname {string} 目录名称
+   * @param limitedSize {number} 上传最大体积，单位：B
    */
-  generateClientToken(dirname) {
-    const ugcBucket = AliyunOssConfig.ugc
+  generateClientToken(dirname: string, limitedSize: number) {
+    const ugcBucket = AliyunOssConfig.res
 
-    /** 有效时长：30 分钟 */
-    const timeout = 30 * 60 * 1000
+    /** 有效时长：4 小时 */
+    const timeout = 4 * 60 * 60 * 1000
 
-    /** 上传最大体积 30M */
-    const maxSize = 30 * 1024 * 1024
+    /** 上传最大体积，默认 50M */
+    const maxSize = limitedSize || 50 * 1024 * 1024
 
     /** 随机文件名（去掉短横线的 uuid） */
     const filename = uuidv4().replace(/-/gu, '')
