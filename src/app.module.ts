@@ -1,28 +1,20 @@
-import { Module, MiddlewareConsumer, NestModule, RequestMethod } from '@nestjs/common'
-import { TypeOrmModule } from '@nestjs/typeorm'
-import { ScheduleModule } from '@nestjs/schedule'
+import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common'
 import { APP_INTERCEPTOR } from '@nestjs/core'
+import { ScheduleModule } from '@nestjs/schedule'
+import { TypeOrmModule } from '@nestjs/typeorm'
+import { RedisConfig, TypeOrmConfig } from 'life-helper-config'
 import { RedisModule } from 'nestjs-redis'
-
-// Config
-import { TypeOrmConfig, RedisConfig } from 'life-helper-config'
-
-// Interceptor
 import { SuccessMessageInterceptor } from './common/success-message.interceptor'
-
-// Middleware
 import { UserMiddleware } from './common/user.middleware'
-
-// Module
-import { DebugModule } from './modules/debug/debug.module'
-import { WeixinModule } from './modules/weixin/weixin.module'
 import { AuthModule } from './modules/auth/auth.module'
+import { CalendarModule } from './modules/calendar/calendar.module'
+import { DebugModule } from './modules/debug/debug.module'
+import { LocationModule } from './modules/location/location.module'
 import { OssModule } from './modules/oss/oss.module'
+import { UserInfoModule } from './modules/user-info/user-info.module'
 import { UserModule } from './modules/user/user.module'
 import { WeatherModule } from './modules/weather/weather.module'
-import { LocationModule } from './modules/location/location.module'
-import { UserInfoModule } from './modules/user-info/user-info.module'
-import { CalendarModule } from './modules/calendar/calendar.module'
+import { WeixinModule } from './modules/weixin/weixin.module'
 
 @Module({
   imports: [

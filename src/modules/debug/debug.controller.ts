@@ -1,12 +1,15 @@
-import { Controller, Req, Get } from '@nestjs/common'
+import { Controller, Get, Req } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
 import { Request } from 'express'
 import { RedisService } from 'nestjs-redis'
+import { Logger } from '@nestjs/common'
 import { User } from 'src/common/user.decorator'
 
 @ApiTags('debug')
 @Controller('debug')
 export class DebugController {
+  private readonly logger = new Logger(DebugController.name)
+
   constructor(private redisService: RedisService) {}
 
   /**

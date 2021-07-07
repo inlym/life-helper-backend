@@ -1,9 +1,9 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, Logger } from '@nestjs/common'
+import { Cron, CronExpression } from '@nestjs/schedule'
 import jshttp from 'jshttp'
-import { code2SessionInterface, fetchAccessTokenInterface } from './weixin.interface'
 import { WeixinMiniProgramConfig } from 'life-helper-config'
 import { RedisService } from 'nestjs-redis'
-import { Cron, CronExpression } from '@nestjs/schedule'
+import { code2SessionInterface, fetchAccessTokenInterface } from './weixin.interface'
 
 /** 小程序开发者 ID 和密钥 */
 const { appid, secret } = WeixinMiniProgramConfig
@@ -13,6 +13,8 @@ const { appid, secret } = WeixinMiniProgramConfig
  */
 @Injectable()
 export class WeixinService {
+  private readonly logger = new Logger(WeixinService.name)
+
   constructor(private redisService: RedisService) {}
 
   /**
@@ -27,6 +29,7 @@ export class WeixinService {
     }
     const { data: resData } = await jshttp(reqOptions)
     if (resData.errcode) {
+      this.logger.error(`微信请求获取 openid 失败，code：\`${code}\`，错误码：${resData.errcode}，错误原因：${resData.errmsg}`)
       throw new Error(`微信请求获取 openid 失败，错误码：${resData.errcode}，错误原因：${resData.errmsg}`)
     } else {
       return resData
