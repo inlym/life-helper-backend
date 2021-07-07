@@ -1,13 +1,13 @@
-import { Controller, UseGuards, Post, Body, Get, Delete, Query, Param, Put } from '@nestjs/common'
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common'
+import { ApiTags } from '@nestjs/swagger'
 import { plainToClass } from 'class-transformer'
-
-import { User } from 'src/common/user.decorator'
 import { AuthGuard } from 'src/common/auth.guard'
-import { CreateProjectReqDto, CreateProjectResDto, CreateTaskRequestDto } from './calendar.dto'
-
+import { User } from 'src/common/user.decorator'
 import { CalendarProjectService } from './calendar-project.service'
 import { CalendarTaskService } from './calendar-task.service'
+import { CreateProjectReqDto, CreateProjectResDto, CreateTaskRequestDto } from './calendar.dto'
 
+@ApiTags('calendar')
 @Controller('calendar')
 @UseGuards(AuthGuard)
 export class CalendarController {

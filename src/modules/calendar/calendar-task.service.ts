@@ -1,13 +1,15 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common'
-
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
+import { InjectRepository } from '@nestjs/typeorm'
+import { Repository } from 'typeorm'
 import { CalendarTask } from './calendar-task.entity'
-import { CalendarTaskRepository } from './calendar-task.repository'
-
 import { CreateTaskRequestDto } from './calendar.dto'
 
 @Injectable()
 export class CalendarTaskService {
-  constructor(private readonly calendarTaskRepository: CalendarTaskRepository) {}
+  constructor(
+    @InjectRepository(CalendarTask)
+    private readonly calendarTaskRepository: Repository<CalendarTask>
+  ) {}
 
   getAll(userId: number, projectId) {
     return this.calendarTaskRepository.find({

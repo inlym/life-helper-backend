@@ -1,5 +1,5 @@
-import { Entity, Column } from 'typeorm'
 import { AbstractEntity } from 'src/common/abstract.entity'
+import { Column, Entity } from 'typeorm'
 
 /**
  * 任务表
