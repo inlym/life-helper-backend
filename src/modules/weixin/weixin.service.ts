@@ -47,7 +47,7 @@ export class WeixinService {
       return JSON.parse(redisResult)
     } else {
       const session = await this.code2Session(code)
-      await redis.set(redisKey, JSON.stringify(session), 'EX', 3600 * 24 * 4)
+      await redis.set(redisKey, JSON.stringify(session), 'EX', 3600 * 24 * 10)
       return session
     }
   }
