@@ -5,7 +5,6 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 import { RedisConfig, TypeOrmConfig } from 'life-helper-config'
 import { RedisModule } from 'nestjs-redis'
 import { AllExceptionFilter } from './common/all-exception.filter'
-import { SuccessMessageInterceptor } from './common/success-message.interceptor'
 import { UserMiddleware } from './common/user.middleware'
 import { AuthModule } from './modules/auth/auth.module'
 import { CalendarModule } from './modules/calendar/calendar.module'
@@ -34,10 +33,6 @@ import { WeixinModule } from './modules/weixin/weixin.module'
   ],
 
   providers: [
-    {
-      provide: APP_INTERCEPTOR,
-      useClass: SuccessMessageInterceptor,
-    },
     {
       provide: APP_FILTER,
       useClass: AllExceptionFilter,
