@@ -1,15 +1,19 @@
+import { ApiProperty } from '@nestjs/swagger'
 import { Exclude, Expose } from 'class-transformer'
 import { IsDateString, IsInt, IsNotEmpty, IsOptional, IsString, Max, Min } from 'class-validator'
-import { ApiProperty } from '@nestjs/swagger'
 
-export class CreateProjectReqDto {
+/**
+ * `Project`
+ */
+
+export class CreateProjectRequestDto {
   @IsString()
   @IsNotEmpty()
   name: string
 }
 
 @Exclude()
-export class CreateProjectResDto {
+export class CreateProjectResponseDto {
   @Expose()
   id: number
 
@@ -44,11 +48,18 @@ export class CreateTaskRequestDto {
 
   @IsOptional()
   @IsDateString()
-  dueDate?: string
+  dueTime?: string
 
   @IsOptional()
   @IsInt()
   @Min(0)
   @Max(2)
   timeType: number
+}
+
+export class GetAllTasksQueryDto {
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  project_id: number
 }

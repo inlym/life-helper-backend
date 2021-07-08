@@ -1,4 +1,4 @@
-import { Controller, Get, HttpException, Logger, Req } from '@nestjs/common'
+import { Controller, Get, HttpException, Logger, Query, Req } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
 import { Request } from 'express'
 import { RedisService } from 'nestjs-redis'
@@ -74,5 +74,10 @@ export class DebugController {
   @Get('test2')
   test2() {
     throw new HttpException({ name: 'mark' }, 502)
+  }
+
+  @Get('query')
+  query(@Query('id') id: number) {
+    return { id: id, type: typeof id }
   }
 }

@@ -53,6 +53,7 @@ enum Prompt {
 }
 
 const COMMON_MESSAGE_1 = '当前网络环境较差，请重新连接网络后再继续操作！'
+const NOT_FOUNT_MESSAGE_1 = '你访问的资源不存在！'
 
 export const ERRORS = {
   /** 请求成功 */
@@ -73,6 +74,12 @@ export const ERRORS = {
 
   /** 需要鉴权的接口，未提供 `token` 等鉴权信息 */
   UNAUTHORIZED_ACCESS: { message: COMMON_MESSAGE_1, prompt: Prompt.Modal_SingleButton },
+
+  /** 资源未找到 */
+  RESOURCE_NOT_FOUND: { message: NOT_FOUNT_MESSAGE_1, prompt: Prompt.Toast_None },
+
+  /** 资源找到，但是不属于当前账户 */
+  RESOURCE_UNAUTHORIZED: { message: NOT_FOUNT_MESSAGE_1, prompt: Prompt.Toast_None },
 
   /**
    * 纯服务器内部错误，或者服务器与第三方服务交互错误，与接口调用参数无关
