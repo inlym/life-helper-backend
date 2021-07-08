@@ -76,6 +76,7 @@ export const ERRORS = {
 
   /**
    * 纯服务器内部错误，或者服务器与第三方服务交互错误，与接口调用参数无关
+   * (所有未知错误都使用该提示)
    */
   COMMON_SERVER_ERROR: { message: '服务器开了个小差，请稍后重新操作！', prompt: Prompt.Modal_SingleButton },
 }

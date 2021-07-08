@@ -1,8 +1,7 @@
-import { Controller, Get, Req } from '@nestjs/common'
+import { Controller, Get, HttpException, Logger, Req } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
 import { Request } from 'express'
 import { RedisService } from 'nestjs-redis'
-import { Logger } from '@nestjs/common'
 import { User } from 'src/common/user.decorator'
 
 @ApiTags('debug')
@@ -65,5 +64,15 @@ export class DebugController {
   @Get('userid')
   getUserId(@User('id') userId: number) {
     return userId
+  }
+
+  @Get('test')
+  test() {
+    throw new Error('自定义错误')
+  }
+
+  @Get('test2')
+  test2() {
+    throw new HttpException({ name: 'mark' }, 502)
   }
 }

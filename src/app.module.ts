@@ -1,9 +1,10 @@
 import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common'
-import { APP_INTERCEPTOR } from '@nestjs/core'
+import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core'
 import { ScheduleModule } from '@nestjs/schedule'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { RedisConfig, TypeOrmConfig } from 'life-helper-config'
 import { RedisModule } from 'nestjs-redis'
+import { AllExceptionFilter } from './common/all-exception.filter'
 import { SuccessMessageInterceptor } from './common/success-message.interceptor'
 import { UserMiddleware } from './common/user.middleware'
 import { AuthModule } from './modules/auth/auth.module'
@@ -36,6 +37,10 @@ import { WeixinModule } from './modules/weixin/weixin.module'
     {
       provide: APP_INTERCEPTOR,
       useClass: SuccessMessageInterceptor,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: AllExceptionFilter,
     },
   ],
 })
