@@ -1,10 +1,9 @@
-import { Injectable } from '@nestjs/common'
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
+import { ERRORS } from 'src/common/errors.constant'
 import { Repository } from 'typeorm'
 import { CalendarProject } from './calendar-project.entity'
-import { CreateProjectReqDto } from './calendar.dto'
-import { HttpException, HttpStatus } from '@nestjs/common'
-import { ERRORS } from 'src/common/errors.constant'
+import { CreateProjectRequestDto } from './calendar.dto'
 
 @Injectable()
 export class CalendarProjectService {
@@ -13,7 +12,7 @@ export class CalendarProjectService {
     private readonly calendarProjectRepository: Repository<CalendarProject>
   ) {}
 
-  getAll(userId: number): CalendarProject[] {
+  getAll(userId: number): Promise<CalendarProject[]> {
     return this.calendarProjectRepository.find({
       select: ['id', 'name'],
       where: { userId },
@@ -21,7 +20,7 @@ export class CalendarProjectService {
     })
   }
 
-  getOne(userId: number, projectId: number) {
+  async getOne(userId: number, projectId: number) {
     const project = await this.calendarProjectRepository.findOne(projectId)
 
     if (!project) {
@@ -35,8 +34,8 @@ export class CalendarProjectService {
     return project
   }
 
-  create(userId: number, data: CreateProjectReqDto) {
-    return this.calendarProjectRepository.save(...data, userId)
+  create(userId: number, data: CreateProjectRequestDto): Promise<CalendarProject> {
+    return this.calendarProjectRepository.save(Object.assign({}, data, { userId }))
   }
 
   delete(userId: number, projectId: number) {
