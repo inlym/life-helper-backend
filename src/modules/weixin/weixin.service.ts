@@ -67,7 +67,8 @@ export class WeixinService {
     }
     const { data: resData } = await jshttp(reqOptions)
     if (resData.errcode) {
-      throw new Error(`调用微信获取 AccessToken 接口出错，错误码：${resData.errcode}，错误原因：${resData.errmsg}`)
+      this.logger.error(`调用微信获取 AccessToken 接口出错，错误码：${resData.errcode}，错误原因：${resData.errmsg}`)
+      throw new HttpException(ERRORS.COMMON_SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR)
     } else {
       return resData
     }

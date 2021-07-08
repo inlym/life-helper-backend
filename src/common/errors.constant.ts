@@ -34,6 +34,9 @@
  * 提示类型
  */
 enum Prompt {
+  /** 不需要提示 */
+  None = 0,
+
   /**
    * Toast 类型
    */
@@ -70,4 +73,9 @@ export const ERRORS = {
 
   /** 需要鉴权的接口，未提供 `token` 等鉴权信息 */
   UNAUTHORIZED_ACCESS: { message: COMMON_MESSAGE_1, prompt: Prompt.Modal_SingleButton },
+
+  /**
+   * 纯服务器内部错误，或者服务器与第三方服务交互错误，与接口调用参数无关
+   */
+  COMMON_SERVER_ERROR: { message: '服务器开了个小差，请稍后重新操作！', prompt: Prompt.Modal_SingleButton },
 }
