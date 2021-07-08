@@ -1,9 +1,9 @@
 import { Injectable, NestMiddleware } from '@nestjs/common'
-import { Request, Response, NextFunction } from 'express'
+import { NextFunction, Request, Response } from 'express'
+import { RequestUser } from 'src/common/request-user.interface'
 import { AuthService } from 'src/modules/auth/auth.service'
 import { UserService } from 'src/modules/user/user.service'
 import { WeixinService } from 'src/modules/weixin/weixin.service'
-import { RequestUser } from 'src/common/request-user.interface'
 
 interface NewRequest extends Request {
   user: RequestUser

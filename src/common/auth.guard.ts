@@ -1,4 +1,5 @@
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common'
+import { CanActivate, ExecutionContext, HttpException, HttpStatus, Injectable } from '@nestjs/common'
+import { ERRORS } from './errors.constant'
 
 /**
  * 用于需要登录的接口（即需要 `userId` 参数的控制器方法）
@@ -15,7 +16,7 @@ export class AuthGuard implements CanActivate {
     if (request.user && request.user.id > 0) {
       return true
     } else {
-      return false
+      throw new HttpException(ERRORS.UNAUTHORIZED_ACCESS, HttpStatus.UNAUTHORIZED)
     }
   }
 }
