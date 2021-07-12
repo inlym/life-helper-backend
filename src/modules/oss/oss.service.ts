@@ -1,13 +1,25 @@
-import { Injectable } from '@nestjs/common'
-import * as crypto from 'crypto'
-import { v4 as uuidv4 } from 'uuid'
-import { RedisService } from 'nestjs-redis'
-import { AliyunOssConfig } from 'life-helper-config'
+import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common'
+import * as OSS from 'ali-oss'
 import axios from 'axios'
+import * as crypto from 'crypto'
+import { AliyunOssConfig } from 'life-helper-config'
+import { RedisService } from 'nestjs-redis'
+import { ERRORS } from 'src/common/errors.constant'
+import { v4 as uuidv4 } from 'uuid'
 
 @Injectable()
 export class OssService {
-  constructor(private redisService: RedisService) {}
+  private readonly logger = new Logger(OssService.name)
+  private readonly ossClient: OSS
+
+  constructor(private redisService: RedisService) {
+    this.ossClient = new OSS({
+      bucket: AliyunOssConfig.res.bucket,
+      accessKeyId: AliyunOssConfig.res.accessKeyId,
+      accessKeySecret: AliyunOssConfig.res.accessKeySecret,
+      endpoint: process.env.NODE_ENV === 'production' ? 'oss-cn-hangzhou-internal.aliyuncs.com' : 'oss-cn-hangzhou.aliyuncs.com',
+    })
+  }
   /**
    * 生成用于客户端直传 OSS 所需的凭证信息
    * @param dirname {string} 目录名称
@@ -110,5 +122,19 @@ export class OssService {
     } else {
       throw new Error('OSS 回调异常：签名校验未通过')
     }
+  }
+
+  /**
+   * 调用 OSS 的 `put` 方法上传文件
+   * @see https://help.aliyun.com/document_detail/111266.html
+   */
+  async upload(name: string, buf: Buffer): Promise<string> {
+    const result = await this.ossClient.put(name, buf)
+    if (result.res.status === 200) {
+      return result.name
+    }
+
+    this.logger.error(`使用 OSS 上传文件失败，name => ${name}, status => ${result.res.status}`)
+    throw new HttpException(ERRORS.COMMON_SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR)
   }
 }

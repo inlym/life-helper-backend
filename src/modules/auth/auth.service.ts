@@ -1,10 +1,13 @@
 import { Injectable } from '@nestjs/common'
+import { AliyunOssConfig } from 'life-helper-config'
 import { RedisService } from 'nestjs-redis'
 import { v4 as uuidv4 } from 'uuid'
+import { OssService } from '../oss/oss.service'
+import { WeixinService } from '../weixin/weixin.service'
 
 @Injectable()
 export class AuthService {
-  constructor(private redisService: RedisService) {}
+  constructor(private readonly redisService: RedisService, private readonly ossService: OssService, private readonly weixinService: WeixinService) {}
 
   /**
    * 为指定用户生成登录凭证 token
@@ -52,5 +55,26 @@ export class AuthService {
       return parseInt(result, 10)
     }
     return 0
+  }
+
+  /**
+   * 生成用于扫码登录的微信小程序码
+   */
+  async generateLoginWxacode(): Promise<string> {
+    // 备注：临时使用测试页，后面再改回来
+    const page = 'pages/test/test'
+
+    const baseURL = AliyunOssConfig.res.url
+    const checkCode = uuidv4().replace(/-/gu, '')
+    const dirname = 'wxacode'
+    const filename = dirname + '/' + checkCode
+
+    const wxacodeBuf = await this.weixinService.getUnlimitedWxacode({ scene: checkCode, page })
+    await this.ossService.upload(filename, wxacodeBuf)
+
+    const redisKey = `auth:login-info:uuid:${checkCode}`
+    const redis = this.redisService.getClient()
+    await redis.set(redisKey, JSON.stringify({ createTime: Date.now() }), 'EX', 3600 * 24 * 2)
+    return baseURL + '/' + filename
   }
 }

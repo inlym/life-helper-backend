@@ -5,5 +5,6 @@ import { OssService } from './oss.service'
 @Module({
   controllers: [OssController],
   providers: [OssService],
+  exports: [OssService],
 })
 export class OssModule {}
