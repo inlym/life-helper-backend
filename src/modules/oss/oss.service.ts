@@ -128,8 +128,8 @@ export class OssService {
    * 调用 OSS 的 `put` 方法上传文件
    * @see https://help.aliyun.com/document_detail/111266.html
    */
-  async upload(name: string, buf: Buffer): Promise<string> {
-    const result = await this.ossClient.put(name, buf)
+  async upload(name: string, buf: Buffer, options: OSS.PutObjectOptions): Promise<string> {
+    const result = await this.ossClient.put(name, buf, options)
     if (result.res.status === 200) {
       return result.name
     }

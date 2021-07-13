@@ -96,7 +96,7 @@ export class AuthService {
     const filename = 'wxacode/' + checkCode
 
     const wxacodeBuf = await this.weixinService.getUnlimitedWxacode({ scene: checkCode, page })
-    await this.ossService.upload(filename, wxacodeBuf)
+    await this.ossService.upload(filename, wxacodeBuf, { headers: { 'Content-Type': 'image/png' } })
 
     return { url: baseURL + '/' + filename, code: checkCode }
   }
