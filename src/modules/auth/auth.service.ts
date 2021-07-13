@@ -87,8 +87,7 @@ export class AuthService {
    * 生成用于扫码登录的微信小程序码 url 和校验码
    */
   async generateLoginWxacode(): Promise<{ url: string; code: string }> {
-    // 备注：临时使用测试页，后面再改回来
-    const page = 'pages/test/test'
+    const page = 'pages/login/login-confirm/login-confirm'
 
     const baseURL = AliyunOssConfig.res.url
     const checkCode = await this.generateCheckCode()
