@@ -86,4 +86,9 @@ export const ERRORS = {
    * (所有未知错误都使用该提示)
    */
   COMMON_SERVER_ERROR: { message: '服务器开了个小差，请稍后重新操作！', prompt: Prompt.Modal_SingleButton },
+
+  /** 扫码登录 - start */
+  INVALID_LOGON_WXACODE: { message: '当前二维码已失效，请刷新页面后重新扫码！', prompt: Prompt.Modal_SingleButton },
+
+  /** 扫码登录 - end */
 }
