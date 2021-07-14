@@ -7,7 +7,7 @@ import { AppModule } from './app.module'
 import { setupSwagger } from './common/swagger.plugin'
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestExpressApplication>(AppModule)
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, { cors: true })
 
   // 添加全局自动验证管道
   app.useGlobalPipes(
