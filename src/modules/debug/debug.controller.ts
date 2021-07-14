@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Logger, Post, Req } from '@nestjs/common'
+import { All, Body, Controller, Get, Logger, Post, Req } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
 import { Request } from 'express'
 import { RedisService } from 'nestjs-redis'
@@ -13,7 +13,7 @@ export class DebugController {
   /**
    * 原样返回请求内容
    */
-  @Get()
+  @All()
   getRequestDetail(@Req() req: Request) {
     /** 从 `req` 获取并返回的属性 */
     const validKeys: string[] = [
