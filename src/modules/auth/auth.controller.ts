@@ -3,12 +3,14 @@ import { AuthGuard } from 'src/common/auth.guard'
 import { ERRORS } from 'src/common/errors.constant'
 import { RequestUser } from 'src/common/request-user.interface'
 import { User } from 'src/common/user.decorator'
-import { ConfirmLoginRequestDto, LoginByQrCodeQueryDto } from './auth.dto'
+import { ConfirmLoginRequestDto, LoginByQrCodeQueryDto, ConfirmLoginQueryDto } from './auth.dto'
 import { AuthService } from './auth.service'
+import { QrcodeService } from './qrcode.service'
+import { AuthenticationStatus } from './qrcode.model'
 
 @Controller()
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(private readonly authService: AuthService, private readonly qrcodeService: QrcodeService) {}
 
   @Get('login')
   async wxLogin(@User() user: RequestUser) {
@@ -23,10 +25,9 @@ export class AuthController {
   /**
    * 用于 Web 端获取用于扫码的小程序码
    */
-  @Get('login/qrcode')
-  async getLogonCode() {
-    const result = await this.authService.generateLoginWxacode()
-    return result
+  @Get('auth/qrcode')
+  async getLoginQrcode() {
+    return this.qrcodeService.getQrcode()
   }
 
   /**
@@ -34,21 +35,31 @@ export class AuthController {
    */
   @Post('login/confirm')
   @UseGuards(AuthGuard)
-  async confirmLogin(@User('id') userId: number, @Body() body: ConfirmLoginRequestDto) {
-    await this.authService.confirmCheckCode(userId, body)
+  async confirmLogin(@User('id') userId: number, @Body() body: ConfirmLoginRequestDto, @Query() query: ConfirmLoginQueryDto) {
+    const { code } = body
+    const { type } = query
+    if (type === 'scan') {
+      this.qrcodeService.scanQrcode(userId, code)
+    } else if (type === 'confirm') {
+      this.qrcodeService.checkQrcode(userId, code)
+    }
+
     return {}
   }
 
   /**
    * 查看登录结果，成功则返回对应登录凭证
    */
-  @Get('login/check')
-  async loginByQrCode(@Query() query: LoginByQrCodeQueryDto) {
+  @Get('login/qrcode')
+  async loginByQrcode(@Query() query: LoginByQrCodeQueryDto) {
     const { code } = query
-    const userId = await this.authService.getUserIdByCheckCode(code)
-    if (userId) {
-      return await this.authService.createToken(userId)
+
+    const { status, userId } = await this.qrcodeService.queryQrcode(code)
+    if (AuthenticationStatus.Checked === status) {
+      const token = await this.authService.createToken(userId)
+      return { status, token }
     }
-    return {}
+
+    return { status }
   }
 }

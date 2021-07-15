@@ -62,46 +62,6 @@ export class AuthService {
   }
 
   /**
-   * 生成待认证的校验码（主要用于扫码登录）
-   */
-  async generateCheckCode(): Promise<string> {
-    /**
-     * [去掉短横线的原因]
-     * 生成小程序码环节的参数 `scene` 最多支持 32 个字符，uuid （36）去掉短横线后刚好 32 个字符。
-     */
-    const code = uuidv4().replace(/-/gu, '')
-    const checkInfo: CheckInfo = {
-      createTime: Date.now(),
-      hasChecked: false,
-      userId: 0,
-    }
-
-    const redisKey = `auth:check-info:code:${code}`
-    const redis = this.redisService.getClient()
-    await redis.set(redisKey, JSON.stringify(checkInfo), 'EX', 3600 * 4)
-
-    return code
-  }
-
-  /**
-   * 生成用于扫码登录的微信小程序码 url 和校验码
-   */
-  async generateLoginWxacode(): Promise<{ url: string; code: string }> {
-    const page = 'pages/login/login-confirm/login-confirm'
-
-    const baseURL = AliyunOssConfig.res.url
-    const checkCode = await this.generateCheckCode()
-
-    /** 包含路径的文件名 */
-    const filename = 'wxacode/' + checkCode
-
-    const wxacodeBuf = await this.weixinService.getUnlimitedWxacode({ scene: checkCode, page })
-    await this.ossService.upload(filename, wxacodeBuf, { headers: { 'Content-Type': 'image/png' } })
-
-    return { url: baseURL + '/' + filename, code: checkCode }
-  }
-
-  /**
    * 对指定校验码进行认证
    */
   async confirmCheckCode(userId: number, data: ConfirmLoginRequestDto): Promise<boolean> {
