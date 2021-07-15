@@ -5,7 +5,7 @@ import { AuthService } from 'src/modules/auth/auth.service'
 import { UserService } from 'src/modules/user/user.service'
 import { WeixinService } from 'src/modules/weixin/weixin.service'
 
-interface NewRequest extends Request {
+interface RequestNew extends Request {
   user: RequestUser
 }
 
@@ -14,11 +14,14 @@ interface parsedAuthParams {
   token?: string
 }
 
+/**
+ * 鉴权中间件
+ */
 @Injectable()
-export class UserMiddleware implements NestMiddleware {
+export class AuthMiddleware implements NestMiddleware {
   constructor(private authService: AuthService, private userService: UserService, private weixinService: WeixinService) {}
 
-  async use(req: NewRequest, res: Response, next: NextFunction) {
+  async use(req: RequestNew, res: Response, next: NextFunction) {
     const { token, code } = this.parseAuthParams(req)
     const user: RequestUser = req.user || { id: 0, authType: '' }
 
@@ -44,15 +47,7 @@ export class UserMiddleware implements NestMiddleware {
   /**
    * 解析参数，获取 `code` 或 `token`
    */
-  parseAuthParams(req: NewRequest): parsedAuthParams {
-    if (req.query.token && typeof req.query.token === 'string') {
-      return { token: req.query.token }
-    }
-
-    if (req.query.code && typeof req.query.code === 'string') {
-      return { code: req.query.code }
-    }
-
+  parseAuthParams(req: RequestNew): parsedAuthParams {
     const authValue: string = req.get('authorization')
     if (authValue) {
       const [type, value]: string[] = authValue.split(' ')

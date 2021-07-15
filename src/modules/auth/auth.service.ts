@@ -1,5 +1,4 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
-import { AliyunOssConfig } from 'life-helper-config'
 import { RedisService } from 'nestjs-redis'
 import { ERRORS } from 'src/common/errors.constant'
 import { v4 as uuidv4 } from 'uuid'

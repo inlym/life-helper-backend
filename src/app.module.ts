@@ -5,7 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 import { RedisConfig, TypeOrmConfig } from 'life-helper-config'
 import { RedisModule } from 'nestjs-redis'
 import { AllExceptionFilter } from './common/all-exception.filter'
-import { UserMiddleware } from './common/user.middleware'
+import { AuthMiddleware } from './common/auth.middleware'
 import { AuthModule } from './modules/auth/auth.module'
 import { CalendarModule } from './modules/calendar/calendar.module'
 import { DebugModule } from './modules/debug/debug.module'
@@ -42,9 +42,8 @@ import { WeixinModule } from './modules/weixin/weixin.module'
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer): MiddlewareConsumer | void {
     /** 中间件列表 */
-    const middlewares = [UserMiddleware]
+    const middlewares = [AuthMiddleware]
 
-    consumer.apply(UserMiddleware).forRoutes('*')
     consumer.apply(...middlewares).forRoutes({ path: '*', method: RequestMethod.ALL })
   }
 }
