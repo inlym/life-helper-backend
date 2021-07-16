@@ -1,12 +1,12 @@
 import { Body, Controller, Get, HttpException, HttpStatus, Post, Query, UseGuards } from '@nestjs/common'
 import { AuthGuard } from 'src/common/auth.guard'
-import { ERRORS } from 'src/common/errors.constant'
+import { WX_LOGIN_FAIL } from 'src/common/errors.constant'
 import { RequestUser } from 'src/common/request-user.interface'
 import { User } from 'src/common/user.decorator'
-import { ConfirmLoginRequestDto, LoginByQrCodeQueryDto, ConfirmLoginQueryDto } from './auth.dto'
+import { ConfirmLoginQueryDto, ConfirmLoginRequestDto, LoginByQrCodeQueryDto } from './auth.dto'
 import { AuthService } from './auth.service'
-import { QrcodeService } from './qrcode.service'
 import { AuthenticationStatus } from './qrcode.model'
+import { QrcodeService } from './qrcode.service'
 
 @Controller()
 export class AuthController {
@@ -15,7 +15,7 @@ export class AuthController {
   @Get('login')
   async wxLogin(@User() user: RequestUser) {
     if (user.id <= 0 || user.authType === 'token') {
-      throw new HttpException(ERRORS.MP_LOGIN_FAIL, HttpStatus.UNAUTHORIZED)
+      throw new HttpException(WX_LOGIN_FAIL, HttpStatus.UNAUTHORIZED)
     }
 
     const token = await this.authService.createToken(user.id)

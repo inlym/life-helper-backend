@@ -32,12 +32,7 @@ import { WeixinModule } from './modules/weixin/weixin.module'
     CalendarModule,
   ],
 
-  providers: [
-    {
-      provide: APP_FILTER,
-      useClass: AllExceptionFilter,
-    },
-  ],
+  providers: [{ provide: APP_FILTER, useClass: AllExceptionFilter }],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer): MiddlewareConsumer | void {

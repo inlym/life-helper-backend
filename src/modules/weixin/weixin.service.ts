@@ -3,7 +3,7 @@ import { Cron, CronExpression } from '@nestjs/schedule'
 import jshttp from 'jshttp'
 import { WeixinMiniProgramConfig } from 'life-helper-config'
 import { RedisService } from 'nestjs-redis'
-import { ERRORS } from 'src/common/errors.constant'
+import { COMMON_SERVER_ERROR, WX_INVALID_CODE } from 'src/common/errors.constant'
 import { code2SessionInterface, FetchAccessTokenResult, GetUnlimitedOptions } from './weixin.interface'
 
 /** 小程序开发者 ID 和密钥 */
@@ -34,7 +34,7 @@ export class WeixinService {
     const { data: resData } = await jshttp(reqOptions)
     if (resData.errcode) {
       this.logger.error(`微信请求获取 openid 失败，code：\`${code}\`，错误码：${resData.errcode}，错误原因：${resData.errmsg}`)
-      throw new HttpException(ERRORS.INVILID_CODE, HttpStatus.NOT_ACCEPTABLE)
+      throw new HttpException(WX_INVALID_CODE, HttpStatus.NOT_ACCEPTABLE)
     } else {
       return resData
     }
@@ -72,7 +72,7 @@ export class WeixinService {
     const resData: FetchAccessTokenResult = response.data
     if (resData.errcode) {
       this.logger.error(`调用微信获取 AccessToken 接口出错，错误码：${resData.errcode}，错误原因：${resData.errmsg}`)
-      throw new HttpException(ERRORS.COMMON_SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR)
+      throw new HttpException(COMMON_SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR)
     } else {
       return resData
     }
@@ -127,7 +127,7 @@ export class WeixinService {
     }
 
     this.logger.warn(`请求微信服务端接口发生错误，请求参数 => ${JSON.stringify(options)}, errcode => ${data2.errcode}, errmsg => ${data2.errmsg}`)
-    throw new HttpException(ERRORS.COMMON_SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR)
+    throw new HttpException(COMMON_SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR)
   }
 
   /**
@@ -146,7 +146,7 @@ export class WeixinService {
     if (buf.length < 1024) {
       const { errcode, errmsg } = JSON.parse(buf.toString())
       this.logger.error(`微信请求获取小程序码失败，config：\`${JSON.stringify(config)}\`，错误码：${errcode}，错误原因：${errmsg}`)
-      throw new HttpException(ERRORS.COMMON_SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR)
+      throw new HttpException(COMMON_SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR)
     }
 
     return buf

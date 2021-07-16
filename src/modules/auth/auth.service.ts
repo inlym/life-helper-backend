@@ -1,11 +1,8 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import { RedisService } from 'nestjs-redis'
-import { ERRORS } from 'src/common/errors.constant'
 import { v4 as uuidv4 } from 'uuid'
 import { OssService } from '../oss/oss.service'
 import { WeixinService } from '../weixin/weixin.service'
-import { ConfirmLoginRequestDto } from './auth.dto'
-import { CheckInfo } from './auth.model'
 
 @Injectable()
 export class AuthService {
@@ -57,51 +54,6 @@ export class AuthService {
     if (result) {
       return parseInt(result, 10)
     }
-    return 0
-  }
-
-  /**
-   * 对指定校验码进行认证
-   */
-  async confirmCheckCode(userId: number, data: ConfirmLoginRequestDto): Promise<boolean> {
-    const { code } = data
-    const redisKey = `auth:check-info:code:${code}`
-    const redis = this.redisService.getClient()
-
-    const result = await redis.get(redisKey)
-    console.log('result: ', result)
-    if (!result) {
-      throw new HttpException(ERRORS.INVALID_LOGON_WXACODE, HttpStatus.FORBIDDEN)
-    }
-
-    const checkInfo: CheckInfo = JSON.parse(result)
-    checkInfo.hasChecked = true
-    checkInfo.userId = userId
-    checkInfo.checkTime = Date.now()
-
-    await redis.set(redisKey, JSON.stringify(checkInfo), 'EX', 600)
-    return true
-  }
-
-  /**
-   * 根据校验码获取用户 ID（返回 `0` 表示不存在）
-   * @param code 校验码
-   * @returns 用户 ID
-   */
-  async getUserIdByCheckCode(code: string): Promise<number> {
-    const redisKey = `auth:check-info:code:${code}`
-    const redis = this.redisService.getClient()
-
-    const result = await redis.get(redisKey)
-    if (!result) {
-      throw new HttpException(ERRORS.INVALID_LOGON_WXACODE, HttpStatus.FORBIDDEN)
-    }
-
-    const checkInfo: CheckInfo = JSON.parse(result)
-    if (checkInfo.hasChecked) {
-      return checkInfo.userId
-    }
-
     return 0
   }
 }

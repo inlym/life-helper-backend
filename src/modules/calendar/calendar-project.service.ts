@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { ERRORS } from 'src/common/errors.constant'
+import { RESOURCE_NOT_FOUND, RESOURCE_UNAUTHORIZED } from 'src/common/errors.constant'
 import { Repository } from 'typeorm'
 import { CalendarProject } from './calendar-project.entity'
 import { CreateProjectRequestDto } from './calendar.dto'
@@ -24,11 +24,11 @@ export class CalendarProjectService {
     const project = await this.calendarProjectRepository.findOne(projectId)
 
     if (!project) {
-      throw new HttpException(ERRORS.RESOURCE_NOT_FOUND, HttpStatus.NOT_FOUND)
+      throw new HttpException(RESOURCE_NOT_FOUND, HttpStatus.NOT_FOUND)
     }
 
     if (userId !== project.userId) {
-      throw new HttpException(ERRORS.RESOURCE_UNAUTHORIZED, HttpStatus.UNAUTHORIZED)
+      throw new HttpException(RESOURCE_UNAUTHORIZED, HttpStatus.UNAUTHORIZED)
     }
 
     return project

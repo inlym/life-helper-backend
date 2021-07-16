@@ -1,7 +1,6 @@
 import { ArgumentsHost, Catch, ExceptionFilter, HttpException, HttpStatus, Logger } from '@nestjs/common'
 import { Request, Response } from 'express'
-import { ERRORS } from './errors.constant'
-
+import { COMMON_SERVER_ERROR } from './errors.constant'
 /**
  * `@Catch()` 参数为空表示捕获所有错误
  */
@@ -25,7 +24,7 @@ export class AllExceptionFilter implements ExceptionFilter {
       response.status(status).json(responseContent)
     } else {
       this.logger.warn(`[${request.method} ${request.url}] 未知错误：${exception}`)
-      response.status(HttpStatus.INTERNAL_SERVER_ERROR).json(ERRORS.COMMON_SERVER_ERROR)
+      response.status(HttpStatus.INTERNAL_SERVER_ERROR).json(COMMON_SERVER_ERROR)
     }
   }
 }

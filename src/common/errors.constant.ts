@@ -1,94 +1,88 @@
-/**
- * 返回响应的错误状态码
- */
-
-/**
- * API 调用者可能的来源：
- * 1. 官方应用程序
- * 2. 第三方调用者（攻击者）：攻击者可能通过抓包等方式获取接口的调用方式，进行自行调用。
- */
-
-/**
- * 错误处理策略：
- *
- * --- 业务层面错误 ---
- * - 【普通界面操作是否可能触发】：是
- * - 【常见触发原因】：由于页面停留导致状态变更未同步，用户进行了当前状态不允许的操作。
- * - 【案例】：给已超时失效的订单付款等
- * - 【处理策略】：向用户给出明确的错误提示以及操作建议（使用标准的产品文案）
- *
- * --- 内部错误 ---
- * - 【普通界面操作是否可能触发】：与用户无关
- * - 【常见触发原因】：配置出错，依赖的第三方服务出错
- * - 【案例】：向第三方购买的资源包用完了
- * - 【处理策略】：不告知真实错误原因，仅给出模糊性的毫无意义的提示
- *
- * --- 接口调用错误 ---
- * - 【普通界面操作是否可能触发】：客户端开发测试通过后，触发概率较低
- * - 【常见触发原因】：由攻击者自行枚举调用 API
- * - 【案例】：向第三方购买的资源包用完了
- * - 【处理策略】：不告知真实错误原因，仅给出模糊性的毫无意义的提示
- */
-
-/**
- * 提示类型
- */
-enum Prompt {
-  /** 不需要提示 */
-  None = 0,
-
-  /**
-   * Toast 类型
-   */
-  Toast_None = 101,
-
-  /**
-   * Modal 类型
-   */
-
-  /**
-   * 单个按钮，按钮文案：【我知道了】
-   */
-  Modal_SingleButton = 201,
+export interface IError {
+  code: number
+  message: string
 }
 
-const COMMON_MESSAGE_1 = '当前网络环境较差，请重新连接网络后再继续操作！'
-const NOT_FOUNT_MESSAGE_1 = '你访问的资源不存在！'
+/**
+ * -------------------- [ 权限相关错误 ] --------------------
+ *
+ * 编号：10000 ~ 199999
+ */
 
-export const ERRORS = {
-  /** 请求成功 */
-  SUCCESS: { code: 0 },
+/**
+ * [场景]：需要登录的接口，未提供有效的鉴权信息，被 “守卫” 拦截。
+ */
+export const INVALID_AUTH_INFO: IError = {
+  code: 10001,
+  message: '当前页面需要登录才能访问，请先登录！',
+}
 
-  /**
-   * `4xxxx` 系列表示权限相关错误
-   */
+/**
+ *
+ * [场景]：微信登录接口，使用了 `token` 而非 `code` 进行鉴权，正常交互不会出现该错误。
+ */
+export const WX_LOGIN_FAIL: IError = {
+  code: 10002,
+  message: '登录失败，可能是当前网络环境较差，请稍后再试！',
+}
 
-  /** 无效的 `code` */
-  INVILID_CODE: { code: 40001, message: COMMON_MESSAGE_1, prompt: Prompt.Modal_SingleButton },
+/**
+ * [场景]：向微信服务器使用 `code` 换取 `session` 接口，`code` 无效。
+ * [说明]：正常交互不会出现该问题。
+ */
+export const WX_INVALID_CODE: IError = {
+  code: 10003,
+  message: '登录失败，可能是当前网络环境较差，请稍后再试！',
+}
 
-  /** 无效的 `token` */
-  INVILID_TOKEN: { code: 40002 },
+/**
+ * -------------------- [ 普通增删改查中的错误 ] --------------------
+ *
+ * [编号]：30000 ~ 39999
+ */
 
-  /** 小程序登录失败 */
-  MP_LOGIN_FAIL: { message: COMMON_MESSAGE_1, prompt: Prompt.Modal_SingleButton },
+/**
+ * [场景]：通过 ID 查找资源，但该资源未找到（无该 ID 或已被删除）
+ */
+export const RESOURCE_NOT_FOUND: IError = {
+  code: 30001,
+  message: '你访问的资源不存在！',
+}
 
-  /** 需要鉴权的接口，未提供 `token` 等鉴权信息 */
-  UNAUTHORIZED_ACCESS: { message: COMMON_MESSAGE_1, prompt: Prompt.Modal_SingleButton },
+/**
+ * [场景]：通过 ID 查找资源，该资源存在，但不属于当前用户
+ */
+export const RESOURCE_UNAUTHORIZED: IError = {
+  code: 30002,
+  message: '你访问的资源不存在！',
+}
 
-  /** 资源未找到 */
-  RESOURCE_NOT_FOUND: { message: NOT_FOUNT_MESSAGE_1, prompt: Prompt.Toast_None },
+/**
+ * -------------------- [ 其他类型错误 ] --------------------
+ *
+ * [说明]
+ * 1. 并非特定错误，而是针对某一类型的错误。
+ * 2. 真实的错误原因使用日志打印，给用户一个笼统模糊的错误说明。
+ *
+ * [编号]：90000 ~ 99999
+ */
 
-  /** 资源找到，但是不属于当前账户 */
-  RESOURCE_UNAUTHORIZED: { message: NOT_FOUNT_MESSAGE_1, prompt: Prompt.Toast_None },
+/**
+ * [场景]：
+ * 1. 不需要让用户知道真实错误原因
+ * 2. 疑似抓包攻击，正常交互不会发出该请求
+ */
+export const UNIVERSAL_ERROR: IError = {
+  code: 90000,
+  message: '网络好像崩溃了，请稍等一会后再试哦 ~',
+}
 
-  /**
-   * 纯服务器内部错误，或者服务器与第三方服务交互错误，与接口调用参数无关
-   * (所有未知错误都使用该提示)
-   */
-  COMMON_SERVER_ERROR: { message: '服务器开了个小差，请稍后重新操作！', prompt: Prompt.Modal_SingleButton },
-
-  /** 扫码登录 - start */
-  INVALID_LOGON_WXACODE: { message: '当前二维码已失效，请刷新页面后重新扫码！', prompt: Prompt.Modal_SingleButton },
-
-  /** 扫码登录 - end */
+/**
+ * [场景]：
+ * 1. 与请求无关的服务端错误
+ * 2. 不可预知的第三方接口报错
+ */
+export const COMMON_SERVER_ERROR: IError = {
+  code: 90001,
+  message: '服务器开了个小差，请稍后再试！',
 }

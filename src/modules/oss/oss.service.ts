@@ -4,7 +4,7 @@ import axios from 'axios'
 import * as crypto from 'crypto'
 import { AliyunOssConfig } from 'life-helper-config'
 import { RedisService } from 'nestjs-redis'
-import { ERRORS } from 'src/common/errors.constant'
+import { COMMON_SERVER_ERROR } from 'src/common/errors.constant'
 import { v4 as uuidv4 } from 'uuid'
 
 @Injectable()
@@ -135,6 +135,6 @@ export class OssService {
     }
 
     this.logger.error(`使用 OSS 上传文件失败，name => ${name}, status => ${result.res.status}`)
-    throw new HttpException(ERRORS.COMMON_SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR)
+    throw new HttpException(COMMON_SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR)
   }
 }
