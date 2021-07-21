@@ -1,4 +1,4 @@
-import { Entity, Column } from 'typeorm'
+import { Column, Entity } from 'typeorm'
 import { AbstractEntity } from '../../common/abstract.entity'
 
 /**
@@ -32,7 +32,7 @@ export class UserInfo extends AbstractEntity {
     default: 0,
     comment: '性别，0-未知，1-男性，2-女性',
   })
-  gender: string
+  gender: number
 
   @Column({
     type: 'varchar',

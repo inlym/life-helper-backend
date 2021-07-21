@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
-import { UserInfo } from 'src/modules/user-info/user-info.entity'
+import { UpdateWxUserInfoRequestDto } from './user-info.dto'
+import { UserInfo } from './user-info.entity'
 
 @Injectable()
 export class UserInfoService {
@@ -20,7 +21,16 @@ export class UserInfoService {
   /**
    * 更新基本信息（由微信 `wx.getUserProfile` API 获取）
    */
-  async updateInfo(userId: number, userinfo): Promise<UserInfo> {
-    return await this.userInfoRepository.save(Object.assign({}, userinfo, { id: userId }))
+  async updateInfo(userId: number, userinfo: UpdateWxUserInfoRequestDto) {
+    const user = await this.userInfoRepository.findOne(userId)
+    this.userInfoRepository.merge(user, userinfo, { id: userId })
+    return this.userInfoRepository.save(user)
+  }
+
+  /**
+   * 单独修改用户的个人头像
+   */
+  async modifyAvatar(userId: number, url: string) {
+    return this.userInfoRepository.update(userId, { avatarUrl: url })
   }
 }
