@@ -1,12 +1,13 @@
 import { Body, Controller, Delete, Get, Ip, Post, Query, UseGuards } from '@nestjs/common'
-import { User } from 'src/common/user.decorator'
-import { WeatherCityService } from './weather-city.service'
-import { WeatherService } from './weather.service'
-import { HefengService } from './hefeng.service'
-import { LocationService } from '../location/location.service'
-import { WxChooseLocationResult, Weather15dRes } from './weather.dto'
-import { AuthGuard } from 'src/common/auth.guard'
 import { ApiTags } from '@nestjs/swagger'
+import { AuthGuard } from 'src/common/auth.guard'
+import { User } from 'src/common/user.decorator'
+import { LocationService } from '../location/location.service'
+import { HefengService } from './hefeng.service'
+import { WeatherCityService } from './weather-city.service'
+import { Weather15dRes, WxChooseLocationResult } from './weather.dto'
+import { WeatherService } from './weather.service'
+
 @ApiTags('weather')
 @Controller('weather')
 export class WeatherController {

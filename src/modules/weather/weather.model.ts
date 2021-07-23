@@ -95,6 +95,8 @@ export class WeatherDailyForecastItem {
   @Expose()
   date: string
 
+  fxDate: string
+
   /** 日出时间 */
   @Expose()
   sunrise: string

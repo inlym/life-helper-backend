@@ -1,20 +1,19 @@
 import { Injectable } from '@nestjs/common'
 import { plainToClass } from 'class-transformer'
 import * as dayjs from 'dayjs'
+import { AliyunOssConfig } from 'life-helper-config'
+import { LocationService } from '../location/location.service'
 import { HefengService } from './hefeng.service'
 import { WeatherCityService } from './weather-city.service'
-import { LocationService } from '../location/location.service'
-import { AliyunOssConfig } from 'life-helper-config'
-
 import {
-  WeatherNow,
-  WeatherHourlyForecastItem,
-  WeatherDailyForecastItem,
-  WeatherRainItem,
-  WeatherMinutely,
-  WeatherLiveIndexItem,
-  WeatherAirNow,
   WeatherAir5dItem,
+  WeatherAirNow,
+  WeatherDailyForecastItem,
+  WeatherHourlyForecastItem,
+  WeatherLiveIndexItem,
+  WeatherMinutely,
+  WeatherNow,
+  WeatherRainItem,
 } from './weather.model'
 
 @Injectable()
@@ -32,7 +31,7 @@ export class WeatherService {
       const { longitude, latitude } = await this.locationService.getLocationByIp(ip)
       const locationId = await this.hefengService.getLocationId(longitude, latitude)
       const address = await this.locationService.getRecommendAddress(longitude, latitude)
-      const result = await this.mergeWeatherInfo(locationId, longitude, latitude)
+      const result = await this.getAdvancedWeather(locationId, longitude, latitude)
       return Object.assign({}, { cities, address }, result)
     } else {
       let city = cities[0]
@@ -44,40 +43,62 @@ export class WeatherService {
       }
 
       const { locationId, longitude, latitude, name: address } = city
-      const result = await this.mergeWeatherInfo(locationId, longitude, latitude)
+      const result = await this.getAdvancedWeather(locationId, longitude, latitude)
       return Object.assign({}, { cities, address, activeCityId: city.id }, result)
     }
   }
 
-  async mergeWeatherInfo(locationId: string, longitude: number, latitude: number) {
+  /**
+   * 获取汇总的高级天气数据
+   */
+  async getAdvancedWeather(locationId: string, longitude: number, latitude: number) {
+    const promises = []
+    promises.push(this.getOrdinaryWeather(locationId))
+    promises.push(this.getRain(longitude, latitude))
+
+    const [ordinaryWeather, rain] = await Promise.all(promises)
+
+    return { ...ordinaryWeather, rain }
+  }
+
+  /**
+   * 获取汇总的通用天气数据
+   */
+  async getOrdinaryWeather(locationId: string) {
     const promises = []
     promises.push(this.getWeatherNow(locationId))
     promises.push(this.getWeather15d(locationId))
     promises.push(this.getWeather24h(locationId))
     promises.push(this.getAirNow(locationId))
     promises.push(this.getAir5d(locationId))
-    promises.push(this.getRain(longitude, latitude))
     promises.push(this.getLiveIndex(locationId))
 
-    const [now, f15d, f24h, airnow, air5d, rain, liveIndex] = await Promise.all(promises)
+    const [now, f15d, f24h, airnow, air5d, liveIndex] = await Promise.all(promises)
     const skyClass = this.skyClass(now.icon)
 
-    return { now, f15d, f24h, airnow, air5d, rain, liveIndex, skyClass }
+    return { now, f15d, f24h, airnow, air5d, liveIndex, skyClass }
   }
 
+  /**
+   * 获取当前实时天气
+   * @update 2021-07-23
+   */
   async getWeatherNow(locationId: string): Promise<WeatherNow> {
     const result = await this.hefengService.getData('weather-now', locationId)
-    const now = result.now
+    const now: Partial<WeatherNow> = result.now
     now.summary = `现在${now.text}，温度 ${now.temp} 度。当前湿度 ${now.humidity}%，${now.windDir}${now.windScale}级，风速 ${now.windSpeed}km/h`
 
     return plainToClass(WeatherNow, now)
   }
 
+  /**
+   * 获取未来 15 天天气预报（包含了未来 5 天空气质量预报）
+   */
   async getWeather15d(locationId: string): Promise<WeatherDailyForecastItem[]> {
     const promises = [this.hefengService.getData('weather-15d', locationId), this.getAir5d(locationId)]
     const [w15Result, air5d] = await Promise.all(promises)
 
-    return w15Result.daily.map((item) => {
+    return w15Result.daily.map((item: Partial<WeatherDailyForecastItem>) => {
       item.iconDayUrl = this.iconPath + item.iconDay + '.svg'
       item.iconNightUrl = this.iconPath + item.iconNight + '.svg'
       item.imageUrl = this.imagePath + item.iconDay + '.png'
