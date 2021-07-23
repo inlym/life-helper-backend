@@ -202,18 +202,25 @@ export class HefengService {
    * @param latitude 纬度
    */
   async getLocationId(longitude: number, latitude: number): Promise<string> {
+    const location = `${longitude},${latitude}`
+    const redisKey = `hefeng:location-id:location:${location}`
+
+    const result = await this.redis.get(redisKey)
+    if (result) {
+      return result
+    }
+
     const options = {
       url: 'https://geoapi.qweather.com/v2/city/lookup',
-      params: {
-        location: `${longitude},${latitude}`,
-        key: HefengConfig.basic.key,
-      },
+      params: { location, key: HefengConfig.basic.key },
     }
 
     const response = await request(options)
     const resData: HefengResponseData = response.data
     if (resData.code === '200') {
-      return resData.location[0].id
+      const locationId = resData.location[0].id
+      this.redis.set(redisKey, locationId, 'EX', 3600 * 24 * 10)
+      return locationId
     } else {
       this.logger.error(`[接口请求错误] 和风天气 - 城市信息查询, 响应 code => \`${resData.code}\`，参数 params => ${JSON.stringify(options.params)}`)
       throw new HttpException(COMMON_SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR)
