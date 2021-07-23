@@ -24,6 +24,20 @@ export class WeatherController {
     return await this.weatherService.getWeather(userId, ip, cityId)
   }
 
+  /**
+   * 获取通用天气数据
+   */
+  @Get('common')
+  async getOrdinaryWeather(@Ip() ip: string, @Query('location_id') locationId: string) {
+    if (locationId) {
+      return this.weatherService.getOrdinaryWeather(locationId)
+    } else {
+      const { longitude, latitude } = await this.locationService.getLocationByIp(ip)
+      const id = await this.hefengService.getLocationId(longitude, latitude)
+      return this.weatherService.getOrdinaryWeather(id)
+    }
+  }
+
   @Get('cities')
   @UseGuards(AuthGuard)
   async getAllCities(@User('id') userId: number) {
