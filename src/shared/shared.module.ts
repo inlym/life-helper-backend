@@ -11,9 +11,10 @@
 
 import { Module } from '@nestjs/common'
 import { LbsqqService } from './lbsqq/lbsqq.service'
+import { OssService } from './oss/oss.service'
 import { WeixinService } from './weixin/weixin.service'
 
-const services = [LbsqqService, WeixinService]
+const services = [LbsqqService, WeixinService, OssService]
 
 @Module({
   providers: services,

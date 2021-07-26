@@ -2,9 +2,9 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
 import { AliyunOssConfig } from 'life-helper-config'
 import { RedisService } from 'nestjs-redis'
 import { v4 as uuidv4 } from 'uuid'
-import { OssService } from '../oss/oss.service'
 import { AuthenticationStatus, IAuthentication, QrcodeProfile, QueryQrcodeResult } from './qrcode.model'
 import { WeixinService } from 'src/shared/weixin/weixin.service'
+import { OssService } from 'src/shared/oss/oss.service'
 
 /**
  * 当前服务用于处理 [扫码登录] 相关逻辑

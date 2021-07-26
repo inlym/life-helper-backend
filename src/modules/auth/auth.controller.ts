@@ -3,14 +3,15 @@ import { AuthGuard } from 'src/common/auth.guard'
 import { WX_LOGIN_FAIL } from 'src/common/errors.constant'
 import { RequestUser } from 'src/common/request-user.interface'
 import { User } from 'src/common/user.decorator'
-import { ConfirmLoginQueryDto, ConfirmLoginRequestDto, LoginByQrCodeQueryDto } from './auth.dto'
+import { ConfirmLoginQueryDto, ConfirmLoginRequestDto, LoginByQrCodeQueryDto, GetOssClientTokenQueryDto } from './auth.dto'
 import { AuthService } from './auth.service'
 import { AuthenticationStatus } from './qrcode.model'
 import { QrcodeService } from './qrcode.service'
+import { OssService } from 'src/shared/oss/oss.service'
 
 @Controller()
 export class AuthController {
-  constructor(private readonly authService: AuthService, private readonly qrcodeService: QrcodeService) {}
+  constructor(private readonly authService: AuthService, private readonly qrcodeService: QrcodeService, private readonly ossService: OssService) {}
 
   @Get('login')
   async wxLogin(@User() user: RequestUser) {
@@ -61,5 +62,26 @@ export class AuthController {
     }
 
     return { status }
+  }
+
+  /**
+   * 客户端获取能够直传 OSS 的凭证
+   */
+  @Get('oss_token')
+  async getOssClientToken(@Query() query: GetOssClientTokenQueryDto) {
+    const { n = 1, type = 'picture' } = query
+
+    const profile = {
+      picture: { dirname: 'p', maxSize: 30 * 1024 * 1024 },
+      video: { dirname: 'v', maxSize: 500 * 1024 * 1024 },
+    }
+
+    const { dirname, maxSize } = profile[type]
+
+    const list = Array(n)
+      .fill(0)
+      .map(() => this.ossService.generateClientToken({ dirname, maxSize }))
+
+    return { list, maxSize }
   }
 }

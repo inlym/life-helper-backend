@@ -1,11 +1,10 @@
 import { Injectable } from '@nestjs/common'
 import { RedisService } from 'nestjs-redis'
 import { v4 as uuidv4 } from 'uuid'
-import { OssService } from '../oss/oss.service'
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly redisService: RedisService, private readonly ossService: OssService) {}
+  constructor(private readonly redisService: RedisService) {}
 
   /**
    * 为指定用户生成登录凭证 tokenO
