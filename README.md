@@ -8,11 +8,11 @@
 
 ## 相关仓库
 
-### 服务端（当前仓库）
+### 服务端
 
-仓库地址： [life-helper-backend](https://github.com/inlym/life-helper-backend)
+仓库（当前仓库）地址： [life-helper-backend](https://github.com/inlym/life-helper-backend)
 
-技术栈： `Node.js` + `Nest.js` + `TypeScript` + `Typeorm` + `MySQL` + `Redis`
+技术栈： `Node.js` + `Nest.js` + `TypeScript` + `Typeorm` + `MySQL` + `Redis` + `Docker`
 
 ### 小程序端
 
@@ -26,7 +26,7 @@
 
 仓库地址： [life-helper-frontend](https://github.com/inlym/life-helper-frontend)
 
-技术栈： `Angular` + `TypeScript` + `RxJS` + `Swagger`
+技术栈： `Angular` + `TypeScript` + `Sass` + `RxJS` + `Swagger` + `Webpack`
 
 Web 地址： [我的个人助手](https://www.lifehelper.com.cn/)
 
