@@ -9,6 +9,7 @@ import { AuthMiddleware } from './common/auth.middleware'
 import { AuthModule } from './modules/auth/auth.module'
 import { CalendarModule } from './modules/calendar/calendar.module'
 import { DebugModule } from './modules/debug/debug.module'
+import { IpModule } from './modules/ip/ip.module'
 import { LocationModule } from './modules/location/location.module'
 import { OssModule } from './modules/oss/oss.module'
 import { UserInfoModule } from './modules/user-info/user-info.module'
@@ -30,6 +31,7 @@ import { WeixinModule } from './modules/weixin/weixin.module'
     LocationModule,
     UserInfoModule,
     CalendarModule,
+    IpModule,
   ],
 
   providers: [{ provide: APP_FILTER, useClass: AllExceptionFilter }],
