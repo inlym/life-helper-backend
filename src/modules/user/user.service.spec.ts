@@ -23,7 +23,7 @@ describe('UserService', () => {
     expect(service).toBeDefined()
   })
 
-  describe('findOrCreateUserByOpenid', () => {
+  describe('findOrCreateUser', () => {
     let userId: number
 
     const fakeOpenid = uuidv4().replace(/-/gu, '')
@@ -38,13 +38,13 @@ describe('UserService', () => {
         },
       })
 
-      userId = await service.findOrCreateUserByOpenid(fakeOpenid, fakeUnionid)
+      userId = await service.findOrCreateUser(fakeOpenid, fakeUnionid)
 
       expect(userId).toBe(lastUser.id + 1)
     })
 
     test('使用该虚拟的 `openid` 查询，返回上述已获取的 `userId` ', async () => {
-      const newId = await service.findOrCreateUserByOpenid(fakeOpenid, fakeUnionid)
+      const newId = await service.findOrCreateUser(fakeOpenid, fakeUnionid)
       expect(newId).toBe(userId)
     })
 

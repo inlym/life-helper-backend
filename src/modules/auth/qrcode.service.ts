@@ -3,8 +3,8 @@ import { AliyunOssConfig } from 'life-helper-config'
 import { RedisService } from 'nestjs-redis'
 import { v4 as uuidv4 } from 'uuid'
 import { OssService } from '../oss/oss.service'
-import { WeixinService } from '../weixin/weixin.service'
 import { AuthenticationStatus, IAuthentication, QrcodeProfile, QueryQrcodeResult } from './qrcode.model'
+import { WeixinService } from 'src/shared/weixin/weixin.service'
 
 /**
  * 当前服务用于处理 [扫码登录] 相关逻辑
@@ -79,6 +79,7 @@ export class QrcodeService {
     const filename = 'wxacode/' + code
 
     const buf = await this.weixinService.getUnlimitedWxacode({ scene: code, page })
+
     await this.ossService.upload(filename, buf, { headers: { 'Content-Type': 'image/png' } })
 
     return { url: baseURL + '/' + filename, code }
