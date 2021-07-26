@@ -24,7 +24,7 @@ export interface AddressInfo {
   district?: string
 
   /** 行政区划代码 */
-  adcode: number
+  adcode: string | number
 }
 
 /** IP定位结果 */
@@ -101,6 +101,9 @@ export interface GeoLocationCoderResult {
 
   /** 地址部件，address不满足需求时可自行拼接 */
   address_component: AddressComponent
+
+  /** 行政区划信息 */
+  ad_info: AddressInfo
 }
 
 /** 逆地址解析接口调用响应数据 */
@@ -116,4 +119,15 @@ export interface GeoLocationCoderResponse {
 
   /** 逆地址解析结果 */
   result: GeoLocationCoderResult
+}
+
+/** ═════════════════ getCoorByIp ═════════════════ */
+
+/** 经纬度坐标 */
+export interface LocationCoordinate {
+  /** 经度 */
+  longitude: number
+
+  /** 纬度 */
+  latitude: number
 }

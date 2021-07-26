@@ -9,11 +9,13 @@
 
 import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common'
 import axios from 'axios'
+import { plainToClass } from 'class-transformer'
 import { Redis } from 'ioredis'
 import { LbsqqKeys } from 'life-helper-config'
 import { RedisService } from 'nestjs-redis'
 import { COMMON_SERVER_ERROR } from 'src/common/errors.constant'
-import { GeoLocationCoderResponse, LocateIpResponse } from './lbsqq.interface'
+import { GeoLocationCoderResponse, LocateIpResponse, LocationCoordinate } from './lbsqq.interface'
+import { AddressInfo } from './lbsqq.model'
 
 @Injectable()
 export class LbsqqService {
@@ -113,5 +115,40 @@ export class LbsqqService {
     const expiration = 3600 * 24 * 10
     this.redis.set(redisKey, JSON.stringify(response.data), 'EX', expiration)
     return response.data
+  }
+
+  /** ═════════════════  以下方法为对原生方法的二次封装方法  ═════════════════ */
+
+  /**
+   * 通过 IP 地址获取经纬度坐标
+   *
+   * @param ip IP 地址
+   */
+  async getCoordinateByIp(ip: string): Promise<LocationCoordinate> {
+    const result = await this.locateIp(ip)
+    const coord = result.result.location
+    return { longitude: coord.lng, latitude: coord.lat }
+  }
+
+  /**
+   * 通过经纬度获取对应地点的一句话描述
+   *
+   * @param longitude 经度
+   * @param latitude 纬度
+   */
+  async getRecommendAddressDescrption(longitude: number, latitude: number): Promise<string> {
+    const result = await this.geoLocationCoder(longitude, latitude)
+    return result.result.formatted_addresses.recommend
+  }
+
+  /**
+   * 通过经纬度获取省市区等行政区划信息
+   *
+   * @param longitude 经度
+   * @param latitude 纬度
+   */
+  async getAddressInfo(longitude: number, latitude: number): Promise<AddressInfo> {
+    const result = await this.geoLocationCoder(longitude, latitude)
+    return plainToClass(AddressInfo, result.result.ad_info)
   }
 }
