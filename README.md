@@ -58,6 +58,7 @@ API 文档地址：https://doc.lh.inlym.com/api/index.html
 1. 按照对应功能划分模块，以模块为单位进行封装，该模块称为 “特性模块”。
 2. 特性模块放在 `src/modules/` 目录下，每个模块一个同名目录。
 3. 该功能对应的 `controller`，`service`，`model`，`interface` 等文件等放置在该特性模块内，无需再建二级目录。
+4. 不要在特性模块的控制器（`controller`）中直接使用共享模块的服务，而应该自建一个服务，在该服务内使用共享模块的服务，哪怕只有一行代码也要这样做。
 
 #### 共享模块（shared module）
 
