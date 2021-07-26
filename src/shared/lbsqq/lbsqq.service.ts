@@ -1,10 +1,8 @@
 /**
- * ╔═════════════════════════════   说明   ═════════════════════════════════
+ * ╔═════════════════════════════   腾讯位置服务   ═════════════════════════════════
  * ║
- * ╟── 1. 当前服务（`LbsqqService`）仅用于处理以下事项：
- * ║       - 封装对腾讯位置服务的请求
- * ║       - 对请求数据附加缓存逻辑
- * ╟── 2. 当前服务不对返回结果做任何数据处理
+ * ╟── 1. 封装对 腾讯位置服务 API 接口的调用
+ * ╟── 2. 对调用接口结果再做一层封装，方便内部使用
  * ║
  * ╚════════════════════════════════════════════════════════════════════════
  */
@@ -15,7 +13,7 @@ import { Redis } from 'ioredis'
 import { LbsqqKeys } from 'life-helper-config'
 import { RedisService } from 'nestjs-redis'
 import { COMMON_SERVER_ERROR } from 'src/common/errors.constant'
-import { LocateIpResponse } from './lbsqq.interface'
+import { GeoLocationCoderResponse, LocateIpResponse } from './lbsqq.interface'
 
 @Injectable()
 export class LbsqqService {
@@ -72,6 +70,42 @@ export class LbsqqService {
     const response = await axios.request<LocateIpResponse>(options)
     if (response.data.status !== 0) {
       this.logger.error(`[腾讯位置服务] [IP 定位] 接口请求失败，ip => \`${ip}\`，错误原因 => ${response.data.message}`)
+      throw new HttpException(COMMON_SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR)
+    }
+
+    /** Redis 缓存时长：10 天 */
+    const expiration = 3600 * 24 * 10
+    this.redis.set(redisKey, JSON.stringify(response.data), 'EX', expiration)
+    return response.data
+  }
+
+  /**
+   * 逆地址解析，将经纬度转换为文字地址及相关位置信息
+   *
+   * @param longitude 经度
+   * @param latitude 纬度
+   *
+   * @see [文档地址](https://lbs.qq.com/service/webService/webServiceGuide/webServiceGcoder)
+   */
+  async geoLocationCoder(longitude: number, latitude: number): Promise<GeoLocationCoderResponse> {
+    const redisKey = `lbsqq:address:location:${longitude},${latitude}`
+    const result = await this.redis.get(redisKey)
+
+    if (result) {
+      return JSON.parse(result)
+    }
+
+    const key: string = this.getKey()
+
+    /** 请求参数 */
+    const options = {
+      url: 'https://apis.map.qq.com/ws/geocoder/v1',
+      params: { location: `${latitude},${longitude}`, key, get_poi: 0 },
+    }
+
+    const response = await axios.request<GeoLocationCoderResponse>(options)
+    if (response.data.status !== 0) {
+      this.logger.error(`[腾讯位置服务] [逆地址解析] 接口请求失败，params => \`${options.params}\`，错误原因 => ${response.data.message}`)
       throw new HttpException(COMMON_SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR)
     }
 

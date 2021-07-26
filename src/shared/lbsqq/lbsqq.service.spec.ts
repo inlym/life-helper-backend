@@ -2,9 +2,9 @@ import { Test, TestingModule } from '@nestjs/testing'
 import { Redis } from 'ioredis'
 import { LbsqqKeys, RedisConfig } from 'life-helper-config'
 import { RedisModule, RedisService } from 'nestjs-redis'
-import { LbsqqService } from './lbsqq.service'
 import { SharedModule } from '../shared.module'
-import { LocateIpResponse } from './lbsqq.interface'
+import { GeoLocationCoderResponse, LocateIpResponse } from './lbsqq.interface'
+import { LbsqqService } from './lbsqq.service'
 
 describe('LbsqqService', () => {
   let service: LbsqqService
@@ -65,7 +65,7 @@ describe('LbsqqService', () => {
       expect(ip).toBeDefined()
     })
 
-    test('调用方法有响应结果', async () => {
+    test('方法调用成功', async () => {
       result = await service.locateIp(ip)
       expect(result).toBeDefined()
     })
@@ -76,6 +76,35 @@ describe('LbsqqService', () => {
 
     test('请求的 IP 地址与响应数据中的请求 IP 相同', () => {
       expect(ip).toBe(result.result.ip)
+    })
+
+    test('响应数据被 Redis 缓存正确', async () => {
+      const redisResult = await redis.get(redisKey)
+      expect(JSON.parse(redisResult)).toEqual(result)
+    })
+  })
+
+  describe('[method] geoLocationCoder', () => {
+    // 随机生成 1 个国内的经纬度
+    const longitude = Math.floor(Math.random() * 10000) / 10000 + 120
+    const latitude = Math.floor(Math.random() * 10000) / 10000 + 30
+
+    const redisKey = `lbsqq:address:location:${longitude},${latitude}`
+
+    let result: GeoLocationCoderResponse
+
+    test('随机经纬度生成成功', () => {
+      expect(longitude).toBeDefined()
+      expect(latitude).toBeDefined()
+    })
+
+    test('方法调用成功', async () => {
+      result = await service.geoLocationCoder(longitude, latitude)
+      expect(result).toBeDefined()
+    })
+
+    test('响应结果的状态码为 0（表示请求成功）', () => {
+      expect(result.status).toBe(0)
     })
 
     test('响应数据被 Redis 缓存正确', async () => {
