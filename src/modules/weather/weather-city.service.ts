@@ -1,19 +1,16 @@
 import { Injectable } from '@nestjs/common'
-import { InjectRepository } from '@nestjs/typeorm'
-import { Repository } from 'typeorm'
-
+import { LbsqqService } from 'src/shared/lbsqq/lbsqq.service'
 import { HefengService } from './hefeng.service'
-import { LocationService } from '../location/location.service'
-import { WxChooseLocationResult } from './weather.dto'
-import { WeatherCityRepository } from './weather-city.repository'
 import { WeatherCity } from './weather-city.entity'
+import { WeatherCityRepository } from './weather-city.repository'
+import { WxChooseLocationResult } from './weather.dto'
 
 @Injectable()
 export class WeatherCityService {
   constructor(
     private readonly hefengService: HefengService,
-    private readonly locationService: LocationService,
-    private readonly weatherCityRepository: WeatherCityRepository
+    private readonly weatherCityRepository: WeatherCityRepository,
+    private readonly lbsqqService: LbsqqService
   ) {}
 
   async getAll(userId: number, limit = 5, offset = 0): Promise<WeatherCity[]> {
@@ -35,7 +32,8 @@ export class WeatherCityService {
 
     const promises = []
     promises.push(this.hefengService.getLocationId(longitude, latitude))
-    promises.push(this.locationService.getAddressInfoByCoord(longitude, latitude))
+    promises.push(this.lbsqqService.getAddressInfo(longitude, latitude))
+
     const [locationId, addressInfo] = await Promise.all(promises)
 
     return await this.weatherCityRepository.save(Object.assign({}, { name, address, longitude, latitude, locationId, userId }, addressInfo))

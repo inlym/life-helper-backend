@@ -82,6 +82,14 @@ export class WeixinService {
     return response.data.access_token
   }
 
+  /**
+   * 封装好获取微信服务端凭证的请求接口
+   *
+   * @param options 请求配置
+   *
+   * @description
+   * 注意：非文本请求不要使用当前方法
+   */
   async request<T extends BasicWeixinResponse>(options: AxiosRequestConfig) {
     const token = await this.getAccessToken()
     const params = options.params || {}
@@ -89,7 +97,7 @@ export class WeixinService {
     options.params = params
 
     const response = await axios.request<T>(options)
-    if (options.responseType === 'arraybuffer' || !response.data.errcode) {
+    if (!response.data.errcode) {
       return response.data
     }
 
@@ -100,7 +108,7 @@ export class WeixinService {
     options.params.access_token = refreshedToken
 
     const response2 = await axios.request<T>(options)
-    if (options.responseType === 'arraybuffer' || !response2.data.errcode) {
+    if (!response2.data.errcode) {
       return response2.data
     }
 
@@ -116,33 +124,38 @@ export class WeixinService {
    * @see [官方文档](https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/qr-code/wxacode.getUnlimited.html)
    */
   async getUnlimitedWxacode(config: GetUnlimitedConfig): Promise<Buffer> {
-    const options = {
+    const token = await this.getAccessToken()
+
+    const options: AxiosRequestConfig = {
+      params: { access_token: token },
       method: 'POST',
       url: 'https://api.weixin.qq.com/wxa/getwxacodeunlimit',
       data: config,
       responseType: 'arraybuffer',
     }
 
-    const buf = await this.request<Buffer>(options)
+    const response = await axios.request<Buffer>(options)
 
     // 附加一层校验：响应数据小于 1KB，说明内容是文本字符内容，而不是小程序码图片
-    if (buf.length > 1024) {
-      return buf
+    if (response.data.length > 1024) {
+      return response.data
     }
 
     // 小于 1KB情况
-    const { errcode, errmsg } = JSON.parse(buf.toString())
+    const { errcode, errmsg } = JSON.parse(response.data.toString()) as BasicWeixinResponse
     this.logger.error(`微信请求获取小程序码失败，config：\`${JSON.stringify(config)}\`，错误码：${errcode}，错误原因：${errmsg}`)
 
     // 先刷新 token，然后再请求一次
-    await this.getAccessToken(true)
-    const buf2 = await this.request<Buffer>(options)
-    if (buf2.length > 1024) {
-      return buf2
+    const token2 = await this.getAccessToken(true)
+    options.params = { access_token: token2 }
+
+    const response2 = await axios.request<Buffer>(options)
+    if (response2.data.length > 1024) {
+      return response2.data
     }
 
-    const { errcode, errmsg } = JSON.parse(buf2.toString())
-    this.logger.error(`微信请求获取小程序码失败，config：\`${JSON.stringify(config)}\`，错误码：${errcode}，错误原因：${errmsg}`)
+    const { errcode: errcode2, errmsg: errmsg2 } = JSON.parse(response2.data.toString())
+    this.logger.error(`微信请求获取小程序码失败，config：\`${JSON.stringify(config)}\`，错误码：${errcode2}，错误原因：${errmsg2}`)
     throw new HttpException(COMMON_SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR)
   }
 

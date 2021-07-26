@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common'
 import { plainToClass } from 'class-transformer'
 import * as dayjs from 'dayjs'
 import { AliyunOssConfig } from 'life-helper-config'
-import { LocationService } from '../location/location.service'
+import { LbsqqService } from 'src/shared/lbsqq/lbsqq.service'
 import { HefengService } from './hefeng.service'
 import { WeatherCityService } from './weather-city.service'
 import {
@@ -22,15 +22,20 @@ export class WeatherService {
   public imagePath = AliyunOssConfig.admin.url + '/static/hefeng/s2/'
   public weekText = ['周日', '周一', '周二', '周三', '周四', '周五', '周六']
 
-  constructor(private hefengService: HefengService, private weatherCityService: WeatherCityService, private locationService: LocationService) {}
+  constructor(
+    private readonly hefengService: HefengService,
+    private readonly weatherCityService: WeatherCityService,
+    private readonly lbsqqService: LbsqqService
+  ) {}
 
   async getWeather(userId: number, ip: string, cityId?: number) {
     const cities = await this.weatherCityService.getAll(userId)
 
     if (cities.length === 0) {
-      const { longitude, latitude } = await this.locationService.getLocationByIp(ip)
+      const { longitude, latitude } = await this.lbsqqService.getCoordinateByIp(ip)
+
       const locationId = await this.hefengService.getLocationId(longitude, latitude)
-      const address = await this.locationService.getRecommendAddress(longitude, latitude)
+      const address = await this.lbsqqService.getRecommendAddressDescrption(longitude, latitude)
       const result = await this.getAdvancedWeather(locationId, longitude, latitude)
       return Object.assign({}, { cities, address }, result)
     } else {

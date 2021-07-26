@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, Ip, Post, Query, UseGuards } from '@nest
 import { ApiTags } from '@nestjs/swagger'
 import { AuthGuard } from 'src/common/auth.guard'
 import { User } from 'src/common/user.decorator'
-import { LocationService } from '../location/location.service'
+import { LbsqqService } from 'src/shared/lbsqq/lbsqq.service'
 import { HefengService } from './hefeng.service'
 import { WeatherCityService } from './weather-city.service'
 import { Weather15dRes, WxChooseLocationResult } from './weather.dto'
@@ -15,7 +15,7 @@ export class WeatherController {
     private weatherCityService: WeatherCityService,
     private weatherService: WeatherService,
     private hefengService: HefengService,
-    private locationService: LocationService
+    private readonly lbsqqService: LbsqqService
   ) {}
 
   @Get('')
@@ -32,7 +32,7 @@ export class WeatherController {
     if (locationId) {
       return this.weatherService.getOrdinaryWeather(locationId)
     } else {
-      const { longitude, latitude } = await this.locationService.getLocationByIp(ip)
+      const { longitude, latitude } = await this.lbsqqService.getCoordinateByIp(ip)
       const id = await this.hefengService.getLocationId(longitude, latitude)
       return this.weatherService.getOrdinaryWeather(id)
     }
@@ -79,7 +79,7 @@ export class WeatherController {
       const [longitude, latitude] = location.split(',').map((item) => Number(item))
       locationId = await this.hefengService.getLocationId(longitude, latitude)
     } else {
-      const { longitude, latitude } = await this.locationService.getLocationByIp(ip)
+      const { longitude, latitude } = await this.lbsqqService.getCoordinateByIp(ip)
       locationId = await this.hefengService.getLocationId(longitude, latitude)
     }
 
