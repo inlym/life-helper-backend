@@ -5,7 +5,7 @@ import { User } from 'src/common/user.decorator'
 import { LbsqqService } from 'src/shared/lbsqq/lbsqq.service'
 import { HefengService } from './hefeng.service'
 import { WeatherCityService } from './weather-city.service'
-import { Weather15dRes, WxChooseLocationResult } from './weather.dto'
+import { GetOrdinaryWeatherQueryDto, Weather15dRes, WxChooseLocationResult } from './weather.dto'
 import { WeatherService } from './weather.service'
 
 @ApiTags('weather')
@@ -28,14 +28,23 @@ export class WeatherController {
    * 获取通用天气数据
    */
   @Get('common')
-  async getOrdinaryWeather(@Ip() ip: string, @Query('location_id') locationId: string) {
+  async getOrdinaryWeather(@Ip() ip: string, @Query() query: GetOrdinaryWeatherQueryDto) {
+    const { location_id: locationId, location } = query
+
     if (locationId) {
       return this.weatherService.getOrdinaryWeather(locationId)
-    } else {
-      const { longitude, latitude } = await this.lbsqqService.getCoordinateByIp(ip)
-      const id = await this.hefengService.getLocationId(longitude, latitude)
-      return this.weatherService.getOrdinaryWeather(id)
     }
+
+    if (location) {
+      const [lng, lat] = location.split(',')
+      if (lng && lat) {
+        const id = await this.hefengService.getLocationId(Number(lng), Number(lat))
+        return this.weatherService.getOrdinaryWeather(id)
+      }
+    }
+
+    const id2 = await this.hefengService.transformIp2LocationId(ip)
+    return this.weatherService.getOrdinaryWeather(id2)
   }
 
   @Get('cities')

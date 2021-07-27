@@ -1,4 +1,4 @@
-import { IsString, IsNumber, IsNotEmpty, Max, Min } from 'class-validator'
+import { IsNotEmpty, IsNumber, IsOptional, IsString, Max, Min } from 'class-validator'
 import { WeatherDailyForecastItem } from './weather.model'
 
 /**
@@ -30,4 +30,18 @@ export class WxChooseLocationResult {
 
 export class Weather15dRes {
   list: WeatherDailyForecastItem[]
+}
+
+export class GetOrdinaryWeatherQueryDto {
+  /** 和风天气中的 `LocationId` */
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
+  location_id: string
+
+  /** `lng,lat` 格式的经纬度坐标 */
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
+  location: string
 }

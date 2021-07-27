@@ -16,6 +16,7 @@ import { HefengConfig } from 'life-helper-config'
 import { RedisService } from 'nestjs-redis'
 import { COMMON_SERVER_ERROR } from 'src/common/errors.constant'
 import { HefengApiType, HefengRequestOptions, HefengResponseData, ProfileItem } from './hefeng.interface'
+import { LbsqqService } from 'src/shared/lbsqq/lbsqq.service'
 
 @Injectable()
 export class HefengService {
@@ -153,7 +154,7 @@ export class HefengService {
   }
   private readonly redis: Redis
 
-  constructor(private redisService: RedisService) {
+  constructor(private redisService: RedisService, private readonly lbsqqService: LbsqqService) {
     this.redis = this.redisService.getClient()
   }
 
@@ -225,5 +226,15 @@ export class HefengService {
       this.logger.error(`[接口请求错误] 和风天气 - 城市信息查询, 响应 code => \`${resData.code}\`，参数 params => ${JSON.stringify(options.params)}`)
       throw new HttpException(COMMON_SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR)
     }
+  }
+
+  /**
+   * 将 IP 地址转化为和风天气的 `LocationID`
+   *
+   * @param ip IP 地址
+   */
+  async transformIp2LocationId(ip: string): Promise<string> {
+    const { longitude, latitude } = await this.lbsqqService.getCoordinateByIp(ip)
+    return await this.getLocationId(longitude, latitude)
   }
 }
