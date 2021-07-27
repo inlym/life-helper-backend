@@ -1,10 +1,6 @@
 # life-helper-backend
 
-本仓库是「我的个人助手」项目的服务端部分代码。
-
-## 项目介绍
-
-这是一个线上正式运营中的小程序项目，主要用于为用户提供一些日常使用的小工具，为生活提供便利。
+「我的个人助手」主要用于为用户提供一些日常使用的小工具，包含天气查询、日程管理、事项提醒等功能。
 
 ## 相关仓库
 
@@ -30,19 +26,61 @@
 
 Web 地址： [我的个人助手](https://www.lifehelper.com.cn/)
 
-## 其他
+## 项目架构
 
-#### 阿里云服务
+以下是当前项目的技术架构，可供读者参考。
 
-项目主要部署在阿里云上，目前使用了以下阿里云服务：
+### 本地开发环境
 
-![](https://img.inlym.com/89197dc26280494a943613e9545b0e81.png)
+### 测试环境
 
-#### 服务端架构
+### 预发布环境
 
-下图是本项目的服务端架构：
+### 生产环境
 
-![服务端架构图](https://img.inlym.com/f4e09df7d8534331a978c6b08b66ab42.png)
+#### 基本原则
+
+1. 尽量使用阿里云封装好的服务，缺点是贵，但有点是免运维，比自己部署稳定的多。例如：API 网关、负载均衡等中间件。
+2. 使用阿里云云效（`Codeup`）进行自动化部署，尽量避免手工上线。
+
+#### 技术架构
+
+##### 网关层
+
+1. 服务端 URL： `https://api.lifehelper.com.cn`
+2. 使用阿里云 [API 网关](https://www.aliyun.com/product/apigateway?userCode=lzfqdh6g) 承接 HTTP 请求，不将内部服务器直接暴露在公网上。
+3. 使用阿里云 [API 网关](https://www.aliyun.com/product/apigateway?userCode=lzfqdh6g) 自带的 [摘要签名认证](https://help.aliyun.com/document_detail/29475.html?userCode=lzfqdh6g) 对 HTTP 请求进行基本鉴权，保证只有我方客户端发起的 HTTP 请求才进行转发，其他非法请求全部进行拦截。
+4. 将合法请求转发至阿里云 [负载均衡](https://www.aliyun.com/product/slb?userCode=lzfqdh6g) 。
+5. [API 网关](https://www.aliyun.com/product/apigateway?userCode=lzfqdh6g) 后的所有服务，均部署在阿里云 [专有网络 VPC](https://www.aliyun.com/product/vpc?userCode=lzfqdh6g) ，与公网不互通。
+
+##### 转发层
+
+1. 合法请求由 [API 网关](https://www.aliyun.com/product/apigateway?userCode=lzfqdh6g) 转发至 [负载均衡](https://www.aliyun.com/product/slb?userCode=lzfqdh6g) 服务，再由 [负载均衡](https://www.aliyun.com/product/slb?userCode=lzfqdh6g) 转发至服务器组上。
+2. 服务器组按照配置情况使用 `加权轮询` 调度算法进行请求分配。
+
+##### 服务器组
+
+1. 尽量遵循 “低配多台” 的原则配置服务器，即：低配置的多台服务器的综合性能优于同价格的高配置服务器。
+
+##### Web 端
+
+1. Web 端 URL： `https://www.lifehelper.com.cn`
+2. 使用 `CDN` + `OSS` 的架构承接 Web 端服务。关于如何让 `OSS` 支持单页应用请看这篇文章 —— [《如何让 OSS 支持单页应用》](https://mp.weixin.qq.com/s/BW7Sh-qOz2Z1YoUlvxR-zQ)
+
+##### 使用到的阿里云服务
+
+1. [API 网关](https://www.aliyun.com/product/apigateway?userCode=lzfqdh6g)
+2. [负载均衡](https://www.aliyun.com/product/slb?userCode=lzfqdh6g)
+3. [专有网络](https://www.aliyun.com/product/vpc?userCode=lzfqdh6g)
+4. [云服务器](https://www.aliyun.com/product/ecs)
+5. [MySQL](https://www.aliyun.com/product/rds/mysql)
+6. [Redis](https://www.aliyun.com/product/kvstore)
+7. [表格存储](https://www.aliyun.com/product/ots)
+8. [日志服务](https://www.aliyun.com/product/sls)
+9. [CDN](https://www.aliyun.com/product/cdn)
+10. [对象存储](https://www.aliyun.com/product/oss)
+11. [短信服务](https://www.aliyun.com/product/sms)
+12. [DNS 解析](https://wanwang.aliyun.com/domain/dns)
 
 ## 最佳实践
 
