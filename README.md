@@ -32,9 +32,15 @@ Web 地址： [我的个人助手](https://www.lifehelper.com.cn/)
 
 ### 本地开发环境
 
+本地开发环境主要用于新功能开发的前期阶段，就在当前开发的电脑部署环境，`MySQL` 和 `Redis` 等服务也是自建的。
+
 ### 测试环境
 
+本地开发到了较为成熟的阶段，会将代码进行提交在测试环境部署，测试环境用的是一台低配具有公网 IP 的阿里云服务器，`MySQL` 和 `Redis` 等资源购买的是阿里云的服务。
+
 ### 预发布环境
+
+预发布环境处理运行代码的服务器以外，其他服务直接连生产环境的资源，用于临上线前的最后一道测试。
 
 ### 生产环境
 
@@ -72,15 +78,15 @@ Web 地址： [我的个人助手](https://www.lifehelper.com.cn/)
 1. [API 网关](https://www.aliyun.com/product/apigateway?userCode=lzfqdh6g)
 2. [负载均衡](https://www.aliyun.com/product/slb?userCode=lzfqdh6g)
 3. [专有网络](https://www.aliyun.com/product/vpc?userCode=lzfqdh6g)
-4. [云服务器](https://www.aliyun.com/product/ecs)
-5. [MySQL](https://www.aliyun.com/product/rds/mysql)
-6. [Redis](https://www.aliyun.com/product/kvstore)
-7. [表格存储](https://www.aliyun.com/product/ots)
-8. [日志服务](https://www.aliyun.com/product/sls)
-9. [CDN](https://www.aliyun.com/product/cdn)
-10. [对象存储](https://www.aliyun.com/product/oss)
-11. [短信服务](https://www.aliyun.com/product/sms)
-12. [DNS 解析](https://wanwang.aliyun.com/domain/dns)
+4. [云服务器](https://www.aliyun.com/product/ecs?userCode=lzfqdh6g)
+5. [MySQL](https://www.aliyun.com/product/rds/mysql?userCode=lzfqdh6g)
+6. [Redis](https://www.aliyun.com/product/kvstore?userCode=lzfqdh6g)
+7. [表格存储](https://www.aliyun.com/product/ots?userCode=lzfqdh6g)
+8. [日志服务](https://www.aliyun.com/product/sls?userCode=lzfqdh6g)
+9. [CDN](https://www.aliyun.com/product/cdn?userCode=lzfqdh6g)
+10. [对象存储](https://www.aliyun.com/product/oss?userCode=lzfqdh6g)
+11. [短信服务](https://www.aliyun.com/product/sms?userCode=lzfqdh6g)
+12. [DNS 解析](https://wanwang.aliyun.com/domain/dns?userCode=lzfqdh6g)
 
 ## 最佳实践
 
