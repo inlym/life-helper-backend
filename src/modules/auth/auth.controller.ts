@@ -3,15 +3,21 @@ import { AuthGuard } from 'src/common/auth.guard'
 import { WX_LOGIN_FAIL } from 'src/common/errors.constant'
 import { RequestUser } from 'src/common/request-user.interface'
 import { User } from 'src/common/user.decorator'
-import { ConfirmLoginQueryDto, ConfirmLoginRequestDto, LoginByQrCodeQueryDto, GetOssClientTokenQueryDto } from './auth.dto'
+import { OssService } from 'src/shared/oss/oss.service'
+import { UserInfoService } from '../user-info/user-info.service'
+import { ConfirmLoginQueryDto, ConfirmLoginRequestDto, GetOssClientTokenQueryDto, LoginByQrCodeQueryDto } from './auth.dto'
 import { AuthService } from './auth.service'
 import { AuthenticationStatus } from './qrcode.model'
 import { QrcodeService } from './qrcode.service'
-import { OssService } from 'src/shared/oss/oss.service'
 
 @Controller()
 export class AuthController {
-  constructor(private readonly authService: AuthService, private readonly qrcodeService: QrcodeService, private readonly ossService: OssService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly qrcodeService: QrcodeService,
+    private readonly ossService: OssService,
+    private readonly userInfoService: UserInfoService
+  ) {}
 
   @Get('login')
   async wxLogin(@User() user: RequestUser) {
@@ -58,7 +64,8 @@ export class AuthController {
     const { status, userId } = await this.qrcodeService.queryQrcode(code)
     if (AuthenticationStatus.Checked === status) {
       const token = await this.authService.createToken(userId)
-      return { status, token }
+      const userInfo = await this.userInfoService.getBasicInfo(userId)
+      return { status, token, ...userInfo }
     }
 
     return { status }
