@@ -25,8 +25,9 @@ export class AuthController {
       throw new HttpException(WX_LOGIN_FAIL, HttpStatus.UNAUTHORIZED)
     }
 
-    const token = await this.authService.createToken(user.id)
-    return { token }
+    const expiration = 3600 * 24 * 10
+    const token = await this.authService.createToken(user.id, expiration)
+    return { token, expiration }
   }
 
   /**
@@ -63,9 +64,10 @@ export class AuthController {
 
     const { status, userId } = await this.qrcodeService.queryQrcode(code)
     if (AuthenticationStatus.Checked === status) {
-      const token = await this.authService.createToken(userId)
+      const expiration = 3600 * 24 * 10
+      const token = await this.authService.createToken(userId, expiration)
       const userInfo = await this.userInfoService.getBasicInfo(userId)
-      return { status, token, ...userInfo }
+      return { status, token, expiration, ...userInfo }
     }
 
     return { status }
