@@ -10,13 +10,13 @@
  */
 
 import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common'
-import request from 'axios'
+import { default as axios } from 'axios'
 import { Redis } from 'ioredis'
 import { HefengConfig } from 'life-helper-config'
 import { RedisService } from 'nestjs-redis'
 import { COMMON_SERVER_ERROR } from 'src/common/errors.constant'
-import { HefengApiType, HefengRequestOptions, HefengResponseData, ProfileItem } from './hefeng.interface'
 import { LbsqqService } from 'src/shared/lbsqq/lbsqq.service'
+import { CityInfo, HefengApiType, HefengRequestOptions, HefengResponseData, ProfileItem } from './hefeng.interface'
 
 @Injectable()
 export class HefengService {
@@ -171,7 +171,7 @@ export class HefengService {
     if (type.startsWith('indices-')) {
       requestOptions.params.type = 0
     }
-    const response = await request(requestOptions)
+    const response = await axios.request(requestOptions)
     const resData: HefengResponseData = response.data
 
     if (resData.code === '200') {
@@ -198,34 +198,103 @@ export class HefengService {
   }
 
   /**
+   * 城市信息查询
+   *
+   * @see [开发文档](https://dev.qweather.com/docs/api/geo/city-lookup/)
+   *
+   * @param longitude 经度
+   * @param latitude 纬度
+   */
+  async lookupCity(longitude: number, latitude: number): Promise<CityInfo> {
+    const lng = longitude.toFixed(3)
+    const lat = latitude.toFixed(3)
+    const location = `${lng},${lat}`
+
+    const redisKey = `hefeng:city:location:${location}`
+    const result = await this.redis.get(redisKey)
+    if (result) {
+      return JSON.parse(result)
+    }
+
+    const response = await axios.request<HefengResponseData>({
+      url: 'https://geoapi.qweather.com/v2/city/lookup',
+      params: {
+        key: HefengConfig.basic.key,
+        location,
+      },
+    })
+
+    // 请求成功情况
+    if (response.data.code === '200') {
+      const city = response.data.location[0]
+      const expiration = 3600 * 24 * 10
+      this.redis.set(redisKey, JSON.stringify(city), 'EX', expiration)
+
+      // 附加存储一份使用 `LocationId` 查询城市
+      this.redis.set(`hefeng:city:location_id:${city.id}`, JSON.stringify(city), 'EX', expiration)
+
+      return city
+    } else {
+      this.logger.error(`[接口请求错误] 和风天气 - 城市信息查询, 响应 code => \`${response.data.code}\`,  location => \`${location}\` `)
+      throw new HttpException(COMMON_SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR)
+    }
+  }
+
+  /**
+   * 热门城市查询
+   *
+   * @see [开发文档](https://dev.qweather.com/docs/api/geo/top-city/)
+   */
+  async topCity(): Promise<CityInfo[]> {
+    const redisKey = `hefeng:top_city`
+    const result = await this.redis.get(redisKey)
+    if (result) {
+      return JSON.parse(result)
+    }
+
+    const response = await axios.request<HefengResponseData>({
+      url: 'https://geoapi.qweather.com/v2/city/top',
+      params: {
+        key: HefengConfig.basic.key,
+        range: 'cn',
+        number: '20',
+      },
+    })
+
+    // 请求成功情况
+    if (response.data.code === '200') {
+      const cities = response.data.topCityList
+      const expiration = 3600 * 2
+      this.redis.set(redisKey, JSON.stringify(cities), 'EX', expiration)
+      return cities
+    } else {
+      this.logger.error(`[接口请求错误] 和风天气 - 热门城市查询, 响应 code => \`${response.data.code}\` `)
+      throw new HttpException(COMMON_SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR)
+    }
+  }
+
+  /**
    * 获取和风天气体系中的 `LocationID`
+   *
    * @param longitude 经度
    * @param latitude 纬度
    */
   async getLocationId(longitude: number, latitude: number): Promise<string> {
-    const location = `${longitude},${latitude}`
-    const redisKey = `hefeng:location-id:location:${location}`
+    const result = await this.lookupCity(longitude, latitude)
+    return result.id
+  }
 
+  /**
+   * 获取城市名称
+   */
+  async getLocationName(locationId: string): Promise<string> {
+    const redisKey = `hefeng:city:location_id:${locationId}`
     const result = await this.redis.get(redisKey)
     if (result) {
-      return result
+      const city: CityInfo = JSON.parse(result)
+      return city.name
     }
-
-    const options = {
-      url: 'https://geoapi.qweather.com/v2/city/lookup',
-      params: { location, key: HefengConfig.basic.key },
-    }
-
-    const response = await request(options)
-    const resData: HefengResponseData = response.data
-    if (resData.code === '200') {
-      const locationId = resData.location[0].id
-      this.redis.set(redisKey, locationId, 'EX', 3600 * 24 * 10)
-      return locationId
-    } else {
-      this.logger.error(`[接口请求错误] 和风天气 - 城市信息查询, 响应 code => \`${resData.code}\`，参数 params => ${JSON.stringify(options.params)}`)
-      throw new HttpException(COMMON_SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR)
-    }
+    return ''
   }
 
   /**
