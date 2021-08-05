@@ -71,6 +71,7 @@ export class WeatherService {
    */
   async getOrdinaryWeather(locationId: string) {
     const promises = []
+    promises.push(this.hefengService.getLocationName(locationId))
     promises.push(this.getWeatherNow(locationId))
     promises.push(this.getWeather15d(locationId))
     promises.push(this.getWeather24h(locationId))
@@ -78,10 +79,10 @@ export class WeatherService {
     promises.push(this.getAir5d(locationId))
     promises.push(this.getLiveIndex(locationId))
 
-    const [now, f15d, f24h, airnow, air5d, liveIndex] = await Promise.all(promises)
+    const [locationName, now, f15d, f24h, airnow, air5d, liveIndex] = await Promise.all(promises)
     const skyClass = this.skyClass(now.icon)
 
-    return { now, f15d, f24h, airnow, air5d, liveIndex, skyClass }
+    return { locationName, now, f15d, f24h, airnow, air5d, liveIndex, skyClass }
   }
 
   /**

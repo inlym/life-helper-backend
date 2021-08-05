@@ -292,7 +292,7 @@ export class HefengService {
     const result = await this.redis.get(redisKey)
     if (result) {
       const city: CityInfo = JSON.parse(result)
-      return city.name
+      return `${city.name}，${city.adm2}，${city.adm1}`
     }
     return ''
   }
