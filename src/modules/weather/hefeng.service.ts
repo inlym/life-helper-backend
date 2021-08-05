@@ -228,10 +228,10 @@ export class HefengService {
     if (response.data.code === '200') {
       const city = response.data.location[0]
       const expiration = 3600 * 24 * 10
-      this.redis.set(redisKey, JSON.stringify(city), 'EX', expiration)
+      await this.redis.set(redisKey, JSON.stringify(city), 'EX', expiration)
 
       // 附加存储一份使用 `LocationId` 查询城市
-      this.redis.set(`hefeng:city:location_id:${city.id}`, JSON.stringify(city), 'EX', expiration)
+      await this.redis.set(`hefeng:city:location_id:${city.id}`, JSON.stringify(city), 'EX', expiration)
 
       return city
     } else {
@@ -265,7 +265,7 @@ export class HefengService {
     if (response.data.code === '200') {
       const cities = response.data.topCityList
       const expiration = 3600 * 2
-      this.redis.set(redisKey, JSON.stringify(cities), 'EX', expiration)
+      await this.redis.set(redisKey, JSON.stringify(cities), 'EX', expiration)
       return cities
     } else {
       this.logger.error(`[接口请求错误] 和风天气 - 热门城市查询, 响应 code => \`${response.data.code}\` `)
