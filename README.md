@@ -113,3 +113,41 @@ Web 地址： [我的个人助手](https://www.lifehelper.com.cn/)
 3. 共享模块中的每个服务均需要完整测试用例。
 4. 共享模块仅被需要的特性模块引入，不要引入根模块。
 5. 共享模块内不得建立 `*.controller.ts` 和 `*.dto.ts` 文件。
+
+### 特性模块目录结构
+
+1. 以特性模块的 **业务名** 作为目录名称，一律使用 **小写** 英文字符，使用短横线（`-`）分隔，所有该业务相关文件均放置于该目录下。
+2. 业务模块内应至少包含一个控制器，以及和控制器同名的 DTO 文件（`*.controller.ts` 和 `*.dto.ts` 文件一一对应）。
+3. 比较大的子模块应新建子目录。
+
+目录示例（假设业务名为 `my-feature`）：
+
+```
+my-feature/
+│
+├── my-feature.service.ts          # 主要
+│
+├── my-feature-a.controller.ts       # 控制器，每个业务模块至少对应一个控制器
+├── my-feature-a.dto.ts              # DTO 文件，与同名控制器一一对应
+│
+├── my-feature-b.controller.ts       # 控制器，每个业务模块至少对应一个控制器
+├── my-feature-b.dto.ts              # DTO 文件，与同名控制器一一对应
+│
+├── ...
+│
+├── feature-one/
+│   ├── feature-one.service.ts
+│   ├── feature-one.interface.ts
+│   ├── feature-one.entity.ts
+│   └── feature-one.model.ts
+│
+├── feature-two/
+│   ├── feature-two.service.ts
+│   ├── feature-two.interface.ts
+│   ├── feature-two.entity.ts
+│   └── feature-two.model.ts
+│
+└── ...
+
+
+```
