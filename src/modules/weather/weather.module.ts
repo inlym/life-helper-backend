@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { SharedModule } from 'src/shared/shared.module'
-import { HefengService } from './hefeng.service'
-import { WeatherCityRepository } from './weather-city.repository'
-import { WeatherCityService } from './weather-city.service'
+import { HefengService } from './hefeng/hefeng.service'
+import { WeatherCityRepository } from './weather-city/weather-city.repository'
+import { WeatherCityService } from './weather-city/weather-city.service'
 import { WeatherController } from './weather.controller'
 import { WeatherService } from './weather.service'
 

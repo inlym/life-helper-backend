@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common'
 import { LbsqqService } from 'src/shared/lbsqq/lbsqq.service'
-import { HefengService } from './hefeng.service'
+import { HefengService } from '../hefeng/hefeng.service'
 import { WeatherCity } from './weather-city.entity'
 import { WeatherCityRepository } from './weather-city.repository'
-import { WxChooseLocationResult } from './weather.dto'
+import { WxChooseLocationResult } from '../weather.dto'
 
 @Injectable()
 export class WeatherCityService {

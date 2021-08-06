@@ -3,8 +3,8 @@ import { plainToClass } from 'class-transformer'
 import * as dayjs from 'dayjs'
 import { AliyunOssConfig } from 'life-helper-config'
 import { LbsqqService } from 'src/shared/lbsqq/lbsqq.service'
-import { HefengService } from './hefeng.service'
-import { WeatherCityService } from './weather-city.service'
+import { HefengService } from './hefeng/hefeng.service'
+import { WeatherCityService } from './weather-city/weather-city.service'
 import {
   WeatherAir5dItem,
   WeatherAirNow,
