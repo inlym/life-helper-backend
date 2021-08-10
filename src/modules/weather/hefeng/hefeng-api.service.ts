@@ -205,11 +205,7 @@ export class HefengApiService {
    * @param longitude 经度
    * @param latitude 纬度
    */
-  async lookupCity(longitude: number, latitude: number): Promise<CityInfo> {
-    const lng = longitude.toFixed(3)
-    const lat = latitude.toFixed(3)
-    const location = `${lng},${lat}`
-
+  async lookupCity(location: string): Promise<CityInfo> {
     const redisKey = `hefeng:city:location:${location}`
     const result = await this.redis.get(redisKey)
     if (result) {
@@ -231,7 +227,9 @@ export class HefengApiService {
       await this.redis.set(redisKey, JSON.stringify(city), 'EX', expiration)
 
       // 附加存储一份使用 `LocationId` 查询城市
-      await this.redis.set(`hefeng:city:location_id:${city.id}`, JSON.stringify(city), 'EX', expiration)
+      if (city.id !== location) {
+        await this.redis.set(`hefeng:city:location:${city.id}`, JSON.stringify(city), 'EX', expiration)
+      }
 
       return city
     } else {

@@ -11,7 +11,6 @@ import {
   AirNowResponse,
   GridWeatherMinutelyItem,
   GridWeatherMinutelyResponse,
-  GridWeatherMinutelyResult,
   LivingIndexItem,
   LivingIndexResponse,
   WeatherDailyForecastItem,
@@ -38,13 +37,31 @@ export class HefengService {
   /**
    * 城市信息查询
    *
+   * @param locationId 和风天气的 `LocationId`
+   */
+  async getCityInfo(locationId: string): Promise<CityInfo>
+
+  /**
+   * 城市信息查询
+   *
    * @see [开发文档](https://dev.qweather.com/docs/api/geo/city-lookup/)
    *
    * @param longitude 经度
    * @param latitude 纬度
    */
-  async getCityInfo(longitude: number, latitude: number): Promise<CityInfo> {
-    return this.hefengApiService.lookupCity(longitude, latitude)
+  async getCityInfo(longitude: number, latitude: number): Promise<CityInfo>
+
+  async getCityInfo(first: string | number, second?: number): Promise<CityInfo> {
+    if (typeof first === 'number' && typeof second === 'number') {
+      const longitude = first.toFixed(2)
+      const latitude = second.toFixed(2)
+      const location = `${longitude},${latitude}`
+      return this.hefengApiService.lookupCity(location)
+    } else if (typeof first === 'string' && typeof second === 'undefined') {
+      return this.hefengApiService.lookupCity(first)
+    } else {
+      // 空
+    }
   }
 
   /**
