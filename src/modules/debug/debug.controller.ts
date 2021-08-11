@@ -1,10 +1,10 @@
-import { Body, Controller, Get, Logger, Post, Req } from '@nestjs/common'
+import { Controller, Get, Logger, Req } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
 import { Request } from 'express'
 import { RedisService } from 'nestjs-redis'
 
 @ApiTags('debug')
-@Controller('debug')
+@Controller()
 export class DebugController {
   private readonly logger = new Logger(DebugController.name)
 
@@ -13,7 +13,7 @@ export class DebugController {
   /**
    * 原样返回请求内容
    */
-  @Post()
+  @All('debug')
   getRequestDetail(@Req() req: Request) {
     /** 从 `req` 获取并返回的属性 */
     const validKeys: string[] = [
@@ -53,11 +53,5 @@ export class DebugController {
       uptime: process.uptime(),
     }
     return { ...env, ...processInfo }
-  }
-
-  /** 测试日志 */
-  @Post('logger')
-  showLogger(@Body() body: any) {
-    this.logger.verbose(body.content)
   }
 }
