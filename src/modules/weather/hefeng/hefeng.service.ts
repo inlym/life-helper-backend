@@ -172,7 +172,7 @@ export class HefengService {
     const response: WeatherHourlyForecastResponse = await this.hefengApiService.getData(hourlyType, locationId)
     return response.hourly.map((item: WeatherHourlyForecastItem) => {
       item.iconUrl = this.iconPath + item.icon + '.svg'
-      item.time = item.fxTime
+      item.time = item.fxTime.substring(11, 16)
 
       return plainToClass(WeatherHourlyForecastItem, item)
     })
@@ -206,7 +206,7 @@ export class HefengService {
    */
   async getLivingIndex(locationId: string): Promise<LivingIndexItem[]> {
     const response: LivingIndexResponse = await this.hefengApiService.getData('indices-1d', locationId)
-    const iconUrlPrefix = 'https://img.lh.inlym.com/static/hefeng/live/'
+    const iconUrlPrefix = AliyunOssConfig.admin.url + '/static/hefeng/live/'
 
     return response.daily.map((item: LivingIndexItem) => {
       item.iconUrl = iconUrlPrefix + item.type + '.svg'
@@ -226,7 +226,7 @@ export class HefengService {
     const location = `${lng},${lat}`
 
     const response: GridWeatherMinutelyResponse = await this.hefengApiService.getData('minutely-5m', location)
-
+    response.updateTime = response.updateTime.substring(11, 16)
     response.list = response.minutely.map((item: GridWeatherMinutelyItem) => {
       item.time = item.fxTime.substring(11, 16)
       item.height = (parseFloat(item.precip) * 200 + 10).toFixed(0)

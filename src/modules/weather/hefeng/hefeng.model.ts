@@ -1,4 +1,40 @@
-import { Exclude, Expose, Type } from 'class-transformer'
+import { Exclude, Expose } from 'class-transformer'
+
+export interface AirNowResponse {
+  now: AirNow
+}
+
+@Exclude()
+export class AirDailyForecastItem {
+  /** 预报日期 */
+  fxDate: string
+
+  /** 空气质量指数 */
+  @Expose()
+  aqi: string
+
+  /** 空气质量指数等级 */
+  @Expose()
+  level: string
+
+  /** 空气质量指数级别 */
+  @Expose()
+  category: string
+
+  /** 空气质量的主要污染物，空气质量为优时，返回值为 `NA` */
+  @Expose()
+  primary: string
+
+  // 自定义数据
+
+  /** 预报日期 */
+  @Expose()
+  date: string
+}
+
+export interface AirDailyForecastResponse {
+  daily: AirDailyForecastItem[]
+}
 
 /** 实时天气数据 */
 @Exclude()
@@ -210,6 +246,9 @@ export class WeatherDailyForecastItem {
 
   @Expose()
   imageUrl: string
+
+  @Expose()
+  aqi: AirDailyForecastItem
 }
 
 export interface WeatherDailyForecastResponse {
@@ -365,42 +404,6 @@ export class AirNow {
   /** 臭氧 */
   @Expose()
   o3: string
-}
-
-export interface AirNowResponse {
-  now: AirNow
-}
-
-@Exclude()
-export class AirDailyForecastItem {
-  /** 预报日期 */
-  fxDate: string
-
-  /** 空气质量指数 */
-  @Expose()
-  aqi: string
-
-  /** 空气质量指数等级 */
-  @Expose()
-  level: string
-
-  /** 空气质量指数级别 */
-  @Expose()
-  category: string
-
-  /** 空气质量的主要污染物，空气质量为优时，返回值为 `NA` */
-  @Expose()
-  primary: string
-
-  // 自定义数据
-
-  /** 预报日期 */
-  @Expose()
-  date: string
-}
-
-export interface AirDailyForecastResponse {
-  daily: AirDailyForecastItem[]
 }
 
 @Exclude()

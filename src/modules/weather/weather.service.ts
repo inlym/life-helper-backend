@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { LbsqqService } from 'src/shared/lbsqq/lbsqq.service'
+import { AirDailyForecastItem, WeatherDailyForecastItem, WeatherNow } from './hefeng/hefeng.model'
 import { HefengService } from './hefeng/hefeng.service'
 import { WeatherCity } from './weather-city/weather-city.entity'
 import { WeatherCityService } from './weather-city/weather-city.service'
@@ -93,7 +94,14 @@ export class WeatherService {
 
     const [now, f15d, f24h, airnow, air5d, livingIndex] = await Promise.all(promises)
 
-    return { now, f15d, f24h, airnow, air5d, livingIndex }
+    const skyClass = this.skyClass((now as WeatherNow).icon)
+
+    const f15dWithAqi = (f15d as WeatherDailyForecastItem[]).map((item: WeatherDailyForecastItem) => {
+      item.aqi = (air5d as AirDailyForecastItem[]).find((airItem: AirDailyForecastItem) => airItem.date === item.date)
+      return item
+    })
+
+    return { now, f15d: f15dWithAqi, f24h, airnow, air5d, livingIndex, skyClass }
   }
 
   /**
@@ -106,8 +114,8 @@ export class WeatherService {
     const basicWeather = await this.getBasicWeather(locationId)
 
     const location = {
-      id: city.id,
-      position: `${city.name},${city.adm2},${city.adm1}`,
+      locationId: city.id,
+      address: `${city.name},${city.adm2},${city.adm1}`,
     }
 
     return { location, ...basicWeather }
@@ -147,10 +155,14 @@ export class WeatherService {
     }
 
     const { locationId, longitude, latitude } = city
+    const location = {
+      address: city.name,
+      cityId: city.id,
+    }
 
     const rain = await this.hefengService.getGridWeatherMinutely(longitude, latitude)
     const basic = await this.getBasicWeather(locationId)
 
-    return { cities, rain, ...basic }
+    return { cities, rain, location, ...basic }
   }
 }
