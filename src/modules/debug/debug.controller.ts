@@ -2,13 +2,14 @@ import { All, Controller, Get, Logger, Req } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
 import { Request } from 'express'
 import { RedisService } from 'nestjs-redis'
+import { OssService } from 'src/shared/oss/oss.service'
 
 @ApiTags('debug')
 @Controller()
 export class DebugController {
   private readonly logger = new Logger(DebugController.name)
 
-  constructor(private readonly redisService: RedisService) {}
+  constructor(private readonly redisService: RedisService, private readonly ossService: OssService) {}
 
   /**
    * 原样返回请求内容

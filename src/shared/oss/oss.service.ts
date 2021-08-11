@@ -9,6 +9,11 @@ import { ClientToken, GenerateClientTokenConfig } from './oss.interface'
 import axios from 'axios'
 import { COMMON_SERVER_ERROR } from 'src/common/errors.constant'
 
+/**
+ * OSS 目录定义
+ * - `d` => 转储的资源
+ */
+
 @Injectable()
 export class OssService {
   private readonly logger = new Logger(OssService.name)
@@ -92,13 +97,46 @@ export class OssService {
    *
    * @see [管理文件元信息](https://help.aliyun.com/document_detail/31859.htm)
    */
-  async upload(name: string, buf: Buffer, options: OSS.PutObjectOptions): Promise<string> {
+  async upload(name: string, buf: Buffer, options?: OSS.PutObjectOptions): Promise<string> {
     const result = await this.ossClient.put(name, buf, options)
     if (result.res.status === 200) {
       return result.name
     }
 
     this.logger.error(`使用 OSS 上传文件失败，name => ${name}, status => ${result.res.status}`)
+    throw new HttpException(COMMON_SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR)
+  }
+
+  /**
+   * 转储资源至 OSS
+   *
+   * @param url 待转储资源的 URL
+   * @param options 配置
+   */
+  async dump(url: string, options: OSS.PutObjectOptions = {}): Promise<string> {
+    const response = await axios.request({
+      method: 'GET',
+      url: url,
+      responseType: 'arraybuffer',
+    })
+
+    const field: string = Object.keys(response.headers).find((key: string) => key.toLowerCase() === 'content-type')
+    const contentType = response.headers[field]
+
+    options.headers = options.headers || {}
+    options.headers['Content-Type'] = contentType
+
+    /** 随机文件名（去掉短横线的 uuid） */
+    const filename = uuidv4().replace(/-/gu, '')
+
+    const name = `d/${filename}`
+
+    const result = await this.ossClient.put(name, response.data, options)
+    if (result.res.status === 200) {
+      return result.name
+    }
+
+    this.logger.error(`转储文件失败, url => ${url}, name => ${name}`)
     throw new HttpException(COMMON_SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR)
   }
 
