@@ -1,16 +1,17 @@
 import { Injectable } from '@nestjs/common'
+import { InjectRepository } from '@nestjs/typeorm'
 import { LbsqqService } from 'src/shared/lbsqq/lbsqq.service'
+import { Repository } from 'typeorm'
 import { HefengService } from '../hefeng/hefeng.service'
-import { WeatherCity } from './weather-city.entity'
-import { WeatherCityRepository } from './weather-city.repository'
 import { WxChooseLocationResult } from '../weather.dto'
+import { WeatherCity } from './weather-city.entity'
 
 @Injectable()
 export class WeatherCityService {
   constructor(
     private readonly hefengService: HefengService,
-    private readonly weatherCityRepository: WeatherCityRepository,
-    private readonly lbsqqService: LbsqqService
+    private readonly lbsqqService: LbsqqService,
+    @InjectRepository(WeatherCity) private readonly weatherCityRepository: Repository<WeatherCity>
   ) {}
 
   async getByPk(userId: number, id: number): Promise<WeatherCity | undefined> {
