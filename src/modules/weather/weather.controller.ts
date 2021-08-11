@@ -1,11 +1,11 @@
-import { Body, Controller, Delete, Get, Ip, Post, Query, UseGuards } from '@nestjs/common'
+import { Controller, Get, Ip, Query, UseGuards } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
 import { AuthGuard } from 'src/common/auth.guard'
 import { User } from 'src/common/user.decorator'
 import { LbsqqService } from 'src/shared/lbsqq/lbsqq.service'
 import { HefengService } from './hefeng/hefeng.service'
 import { WeatherCityService } from './weather-city/weather-city.service'
-import { GetPrivateWeatherQueryDto, WxChooseLocationResult } from './weather.dto'
+import { GetPrivateWeatherQueryDto, GetPublicWeatherQueryDto } from './weather.dto'
 import { WeatherService } from './weather.service'
 
 @ApiTags('weather')
@@ -18,6 +18,9 @@ export class WeatherController {
     private readonly lbsqqService: LbsqqService
   ) {}
 
+  /**
+   * 用于已登录状态获取天气详情
+   */
   @Get('')
   @UseGuards(AuthGuard)
   async getPrivateWeather(@User('id') userId: number, @Ip() ip: string, @Query() query: GetPrivateWeatherQueryDto) {
@@ -29,30 +32,17 @@ export class WeatherController {
    * 用于未登录状态获取天气详情
    */
   @Get('public')
-  async getPublicWeather(@Ip() ip: string, @Query('location_id') locationId: string) {
+  async getPublicWeather(@Ip() ip: string, @Query() query: GetPublicWeatherQueryDto) {
+    const locationId = query.location_id
+    const location = query.location
+
     if (locationId) {
       return this.weatherService.getWeatherForPublic(locationId)
+    } else if (location) {
+      const [longitude, latitude] = location.split(',').map((str: string) => Number(str))
+      const locationId2 = await this.hefengService.getLocationId(longitude, latitude)
+      return this.weatherService.getWeatherForPublic(locationId2)
     }
     return this.weatherService.getWeatherByIp(ip)
-  }
-
-  @Get('cities')
-  @UseGuards(AuthGuard)
-  async getAllCities(@User('id') userId: number) {
-    const result = await this.weatherCityService.getAll(userId)
-    console.log('result: ', result)
-    return result
-  }
-
-  @Post('city')
-  @UseGuards(AuthGuard)
-  addCity(@User('id') userId: number, @Body() body: WxChooseLocationResult) {
-    return this.weatherCityService.add(userId, body)
-  }
-
-  @Delete('city')
-  @UseGuards(AuthGuard)
-  removeCity(@User('id') userId: number, @Query('id') id: number) {
-    return this.weatherCityService.remove(userId, id)
   }
 }

@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 import { SharedModule } from 'src/shared/shared.module'
 import { HefengApiService } from './hefeng/hefeng-api.service'
 import { HefengService } from './hefeng/hefeng.service'
+import { WeatherCityController } from './weather-city/weather-city.controller'
 import { WeatherCity } from './weather-city/weather-city.entity'
 import { WeatherCityService } from './weather-city/weather-city.service'
 import { WeatherController } from './weather.controller'
@@ -10,7 +11,7 @@ import { WeatherService } from './weather.service'
 
 @Module({
   imports: [TypeOrmModule.forFeature([WeatherCity]), SharedModule],
-  controllers: [WeatherController],
+  controllers: [WeatherController, WeatherCityController],
   providers: [WeatherService, HefengService, WeatherCityService, HefengApiService],
   exports: [WeatherService, HefengService, WeatherCityService],
 })
