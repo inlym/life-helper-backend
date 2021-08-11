@@ -13,7 +13,6 @@ import { IpModule } from './modules/ip/ip.module'
 import { UserInfoModule } from './modules/user-info/user-info.module'
 import { UserModule } from './modules/user/user.module'
 import { WeatherModule } from './modules/weather/weather.module'
-import { WeixinModule } from './modules/weixin/weixin.module'
 
 @Module({
   imports: [
@@ -21,7 +20,6 @@ import { WeixinModule } from './modules/weixin/weixin.module'
     RedisModule.register(RedisConfig),
     ScheduleModule.forRoot(),
     DebugModule,
-    WeixinModule,
     AuthModule,
     UserModule,
     WeatherModule,
