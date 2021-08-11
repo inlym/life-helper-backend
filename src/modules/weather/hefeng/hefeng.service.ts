@@ -102,7 +102,7 @@ export class HefengService {
     const response: WeatherNowResponse = await this.hefengApiService.getData('weather-now', locationId)
     const result = response.now
 
-    const diff = dayjs().diff(dayjs(response.updateTime), 'minutes')
+    const diff = dayjs().diff(dayjs(response.updateTime), 'minute')
     if (diff < 5) {
       result.updateTime = `刚刚更新`
     } else {
