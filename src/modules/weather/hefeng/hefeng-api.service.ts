@@ -1,12 +1,9 @@
 /**
- * ╔═════════════════════════════   说明   ═════════════════════════════════
- * ║
- * ╟── 1. 当前服务（`HefengService`）只做以下 2 件事：
- * ║       - 封装对和风天气 API 的请求。
- * ║       - 对请求结果附加缓存逻辑。
- * ╟── 2. 当前服务不对返回结果做任何数据处理（数据处理过程在 `WeatherService` 服务中）。
- * ║
- * ╚════════════════════════════════════════════════════════════════════════
+ * ═════════════════════════════   说明   ═════════════════════════════════
+ *
+ * - 当前服务仅用于封装和风天气 API（包含缓存处理），不要做二次封装
+ *
+ * ════════════════════════════════════════════════════════════════════════
  */
 
 import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common'
@@ -269,28 +266,5 @@ export class HefengApiService {
       this.logger.error(`[接口请求错误] 和风天气 - 热门城市查询, 响应 code => \`${response.data.code}\` `)
       throw new HttpException(COMMON_SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR)
     }
-  }
-
-  /**
-   * 获取城市名称
-   */
-  async getLocationName(locationId: string): Promise<string> {
-    const redisKey = `hefeng:city:location_id:${locationId}`
-    const result = await this.redis.get(redisKey)
-    if (result) {
-      const city: CityInfo = JSON.parse(result)
-      return `${city.name}，${city.adm2}，${city.adm1}`
-    }
-    return ''
-  }
-
-  /**
-   * 将 IP 地址转化为和风天气的 `LocationID`
-   *
-   * @param ip IP 地址
-   */
-  async transformIp2LocationId(ip: string): Promise<string> {
-    const { longitude, latitude } = await this.lbsqqService.getCoordinateByIp(ip)
-    return await this.getLocationId(longitude, latitude)
   }
 }

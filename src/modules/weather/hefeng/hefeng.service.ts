@@ -1,7 +1,16 @@
+/**
+ * ═════════════════════════════   说明   ═════════════════════════════════
+ *
+ * - 当前服务用于对和风天气 API 做二次封装处理，用于外层调用
+ *
+ * ════════════════════════════════════════════════════════════════════════
+ */
+
 import { Injectable, Logger } from '@nestjs/common'
 import { plainToClass } from 'class-transformer'
 import * as dayjs from 'dayjs'
 import { AliyunOssConfig } from 'life-helper-config'
+import { LbsqqService } from 'src/shared/lbsqq/lbsqq.service'
 import { HefengApiService } from './hefeng-api.service'
 import { CityInfo } from './hefeng.interface'
 import {
@@ -21,8 +30,8 @@ import {
   WeatherNowResponse,
 } from './hefeng.model'
 
-export type DailyType = '15d' | '10d' | '7d' | '3d'
-export type HourlyType = '24h'
+export type DailyType = 'weather-15d' | 'weather-7d'
+export type HourlyType = 'weather-24h'
 
 @Injectable()
 export class HefengService {
@@ -32,7 +41,7 @@ export class HefengService {
   private readonly imagePath = AliyunOssConfig.admin.url + '/static/hefeng/s2/'
   private readonly weekText = ['周日', '周一', '周二', '周三', '周四', '周五', '周六']
 
-  constructor(private hefengApiService: HefengApiService) {}
+  constructor(private readonly hefengApiService: HefengApiService, private readonly lbsqqService: LbsqqService) {}
 
   /**
    * 城市信息查询
@@ -69,7 +78,7 @@ export class HefengService {
    *
    * @see [开发文档](https://dev.qweather.com/docs/api/geo/top-city/)
    */
-  async getTopCity(): Promise<CityInfo> {
+  async getTopCity(): Promise<CityInfo[]> {
     return this.hefengApiService.topCity()
   }
 
@@ -90,10 +99,18 @@ export class HefengService {
    * @param locationId 和风天气的 `LocationId`
    */
   async getWeatherNow(locationId: string): Promise<WeatherNow> {
-    const response: WeatherNowResponse = await this.hefengApiService.getData('warning-now', locationId)
+    const response: WeatherNowResponse = await this.hefengApiService.getData('weather-now', locationId)
     const result = response.now
+
+    const diff = dayjs().diff(dayjs(response.updateTime), 'minutes')
+    if (diff < 5) {
+      result.updateTime = `刚刚更新`
+    } else {
+      result.updateTime = `${diff}分钟前更新`
+    }
+
     result.updateTime = response.updateTime
-    result.summary = `现在${result.text}，温度 ${result.temp} 度。当前湿度 ${result.humidity}%，${result.windDir}${result.windScale}级，风速 ${result.windSpeed}km/h`
+    result.summary = `现在${result.text}，温度 ${result.temp} 度。当前湿度 ${result.humidity}%，${result.windDir} ${result.windScale} 级，风速 ${result.windSpeed}km/h`
 
     return plainToClass(WeatherNow, result)
   }
@@ -104,9 +121,8 @@ export class HefengService {
    * @param locationId
    * @param dailyType
    */
-  async getWeatherDailyForecast(locationId: string, dailyType?: DailyType = '15d'): Promise<WeatherDailyForecastItem[]> {
-    const type = 'weather-' + dailyType
-    const response: WeatherDailyForecastResponse = await this.hefengApiService.getData(type, locationId)
+  async getWeatherDailyForecast(locationId: string, dailyType: DailyType): Promise<WeatherDailyForecastItem[]> {
+    const response: WeatherDailyForecastResponse = await this.hefengApiService.getData(dailyType, locationId)
 
     return response.daily.map((item: WeatherDailyForecastItem) => {
       item.iconDayUrl = this.iconPath + item.iconDay + '.svg'
@@ -152,11 +168,12 @@ export class HefengService {
    * @param locationId 和风天气的 `LocationId`
    * @param hourlyType 目前仅 '24h'
    */
-  async getWeatherHourlyForecast(locationId: string, hourlyType?: HourlyType = '24h'): Promise<WeatherHourlyForecastItem[]> {
-    const type = 'weather-' + hourlyType
-    const response: WeatherHourlyForecastResponse = await this.hefengApiService.getData(type, locationId)
+  async getWeatherHourlyForecast(locationId: string, hourlyType: HourlyType): Promise<WeatherHourlyForecastItem[]> {
+    const response: WeatherHourlyForecastResponse = await this.hefengApiService.getData(hourlyType, locationId)
     return response.hourly.map((item: WeatherHourlyForecastItem) => {
-      item.iconUrl = this.iconPath = item.icon + '.svg'
+      item.iconUrl = this.iconPath + item.icon + '.svg'
+      item.time = item.fxTime
+
       return plainToClass(WeatherHourlyForecastItem, item)
     })
   }
@@ -203,7 +220,7 @@ export class HefengService {
    * @param longitude 经度
    * @param latitude 纬度
    */
-  getGridWeatherMinutely(longitude: number, latitude: number): Promise<GridWeatherMinutelyResponse> {
+  async getGridWeatherMinutely(longitude: number, latitude: number): Promise<GridWeatherMinutelyResponse> {
     const lng = longitude.toFixed(2)
     const lat = latitude.toFixed(2)
     const location = `${lng},${lat}`
@@ -217,5 +234,15 @@ export class HefengService {
     })
 
     return plainToClass(GridWeatherMinutelyResponse, response)
+  }
+
+  /**
+   * 将 IP 地址转化为和风天气的 `LocationID`
+   *
+   * @param ip IP 地址
+   */
+  async getLocationIdByIp(ip: string): Promise<string> {
+    const { longitude, latitude } = await this.lbsqqService.getCoordinateByIp(ip)
+    return await this.getLocationId(longitude, latitude)
   }
 }

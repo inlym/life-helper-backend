@@ -13,6 +13,13 @@ export class WeatherCityService {
     private readonly lbsqqService: LbsqqService
   ) {}
 
+  async getByPk(userId: number, id: number): Promise<WeatherCity | undefined> {
+    const result = await this.weatherCityRepository.findOne(id)
+    if (result && result.userId === userId) {
+      return result
+    }
+  }
+
   async getAll(userId: number, limit = 5, offset = 0): Promise<WeatherCity[]> {
     return await this.weatherCityRepository.find({
       select: ['id', 'locationId', 'name', 'city', 'district', 'longitude', 'latitude'],

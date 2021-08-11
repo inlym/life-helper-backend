@@ -1,5 +1,4 @@
-import { IsNotEmpty, IsNumber, IsOptional, IsString, Max, Min } from 'class-validator'
-import { WeatherDailyForecastItem } from './weather.model'
+import { IsInt, IsNotEmpty, IsNumber, IsOptional, IsString, Max, Min } from 'class-validator'
 
 /**
  * 小程序调用 `wx.chooseLocation` 获取的数据
@@ -28,10 +27,6 @@ export class WxChooseLocationResult {
   longitude: number
 }
 
-export class Weather15dRes {
-  list: WeatherDailyForecastItem[]
-}
-
 export class GetOrdinaryWeatherQueryDto {
   /** 和风天气中的 `LocationId` */
   @IsOptional()
@@ -44,4 +39,11 @@ export class GetOrdinaryWeatherQueryDto {
   @IsString()
   @IsNotEmpty()
   location: string
+}
+
+export class GetPrivateWeatherQueryDto {
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  city_id?: number
 }

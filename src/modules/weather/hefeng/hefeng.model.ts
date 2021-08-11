@@ -222,7 +222,6 @@ export interface WeatherDailyForecastResponse {
 @Exclude()
 export class WeatherHourlyForecastItem {
   /** 预报时间 */
-  @Expose()
   fxTime: string
 
   /** 温度，默认单位：摄氏度 */
@@ -280,6 +279,10 @@ export class WeatherHourlyForecastItem {
   // 人工处理的属性
   @Expose()
   iconUrl: string
+
+  /** 预报时间 */
+  @Expose()
+  time: string
 }
 
 export interface WeatherHourlyForecastResponse {
@@ -371,7 +374,6 @@ export interface AirNowResponse {
 @Exclude()
 export class AirDailyForecastItem {
   /** 预报日期 */
-  @Expose()
   fxDate: string
 
   /** 空气质量指数 */

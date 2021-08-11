@@ -5,7 +5,7 @@ import { User } from 'src/common/user.decorator'
 import { LbsqqService } from 'src/shared/lbsqq/lbsqq.service'
 import { HefengService } from './hefeng/hefeng.service'
 import { WeatherCityService } from './weather-city/weather-city.service'
-import { GetOrdinaryWeatherQueryDto, Weather15dRes, WxChooseLocationResult } from './weather.dto'
+import { GetPrivateWeatherQueryDto, WxChooseLocationResult } from './weather.dto'
 import { WeatherService } from './weather.service'
 
 @ApiTags('weather')
@@ -20,31 +20,20 @@ export class WeatherController {
 
   @Get('')
   @UseGuards(AuthGuard)
-  async getWeather(@User('id') userId: number, @Ip() ip: string, @Query('id') cityId: number) {
-    return await this.weatherService.getWeather(userId, ip, cityId)
+  async getPrivateWeather(@User('id') userId: number, @Ip() ip: string, @Query() query: GetPrivateWeatherQueryDto) {
+    const cityId = query.city_id
+    return this.weatherService.getPrivateWeather(userId, ip, cityId)
   }
 
   /**
-   * 获取通用天气数据
+   * 用于未登录状态获取天气详情
    */
-  @Get('common')
-  async getOrdinaryWeather(@Ip() ip: string, @Query() query: GetOrdinaryWeatherQueryDto) {
-    const { location_id: locationId, location } = query
-
+  @Get('public')
+  async getPublicWeather(@Ip() ip: string, @Query('location_id') locationId: string) {
     if (locationId) {
-      return this.weatherService.getOrdinaryWeather(locationId)
+      return this.weatherService.getWeatherForPublic(locationId)
     }
-
-    if (location) {
-      const [lng, lat] = location.split(',')
-      if (lng && lat) {
-        const id = await this.hefengService.getLocationId(Number(lng), Number(lat))
-        return this.weatherService.getOrdinaryWeather(id)
-      }
-    }
-
-    const id2 = await this.hefengService.transformIp2LocationId(ip)
-    return this.weatherService.getOrdinaryWeather(id2)
+    return this.weatherService.getWeatherByIp(ip)
   }
 
   @Get('cities')
@@ -65,34 +54,5 @@ export class WeatherController {
   @UseGuards(AuthGuard)
   removeCity(@User('id') userId: number, @Query('id') id: number) {
     return this.weatherCityService.remove(userId, id)
-  }
-
-  /**
-   * 获取未来 15 天天气预报
-   *
-   * 说明：
-   * 1. 为保证接口通用性，同时支持使用 `LocationId` 和经纬度请求，两者都无时，则使用客户端 IP 地址，最终结果是转化为 `LocationId`
-   *
-   * @param id 和风天气中的 `LocationId`
-   * @param location `120.111,30.222` 格式的经纬度坐标 组合
-   * @param ip 客户端 IP 地址
-   */
-  @Get('15d')
-  async getWeather15d(@Query('id') id: string, @Query('location') location: string, @Ip() ip: string): Promise<Weather15dRes> {
-    let locationId: string
-
-    if (id) {
-      locationId = id
-    } else if (location) {
-      console.log('location: ', location)
-      const [longitude, latitude] = location.split(',').map((item) => Number(item))
-      locationId = await this.hefengService.getLocationId(longitude, latitude)
-    } else {
-      const { longitude, latitude } = await this.lbsqqService.getCoordinateByIp(ip)
-      locationId = await this.hefengService.getLocationId(longitude, latitude)
-    }
-
-    const f15d = await this.weatherService.getWeather15d(locationId)
-    return { list: f15d }
   }
 }
