@@ -8,7 +8,7 @@ import { RedisService } from 'nestjs-redis'
 export class DebugController {
   private readonly logger = new Logger(DebugController.name)
 
-  constructor(private readonly redisService: RedisService, private readonly ossService: OssService) {}
+  constructor(private readonly redisService: RedisService) {}
 
   /**
    * 原样返回请求内容
