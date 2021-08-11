@@ -31,7 +31,7 @@ export class WeatherController {
   /**
    * 用于未登录状态获取天气详情
    */
-  @Get('public')
+  @Get(['public', 'common'])
   async getPublicWeather(@Ip() ip: string, @Query() query: GetPublicWeatherQueryDto) {
     const locationId = query.location_id
     const location = query.location
