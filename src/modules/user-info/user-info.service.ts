@@ -21,6 +21,7 @@ export class UserInfoService {
       where: { id: userId },
     })
 
+    // 一般情况下获取到的地址格式为 `d/...`，为兼容可能存储完整 URL 的场景，此处做一个附加的判断
     if (!userInfo.avatarUrl.startsWith('http')) {
       userInfo.avatarUrl = this.ossPrefix + '/' + userInfo.avatarUrl
     }
@@ -31,14 +32,22 @@ export class UserInfoService {
   /**
    * 更新基本信息（由微信 `wx.getUserProfile` API 获取）
    */
-  async updateInfo(userId: number, userinfo: UpdateWxUserInfoRequestDto): Promise<UserInfo> {
+  async updateInfo(userId: number, userInfo: UpdateWxUserInfoRequestDto): Promise<UserInfo> {
     const user = await this.userInfoRepository.findOne(userId)
 
-    // 将头像的图片转储到 OSS 中
-    const newUrl = await this.ossService.dump(userinfo.avatarUrl)
-    userinfo.avatarUrl = newUrl
+    /**
+     * 变更从微信获取的 URL 地址
+     *
+     * @description
+     * 从微信获取的头像 URL 为：`https://thirdwx.qlogo.cn/../../../132` 格式，最后面的 `132` 代表 132x132 尺寸，`0` 代表最大的 640x640 尺寸
+     */
+    const avatarUrl = userInfo.avatarUrl.replace(/132$/, '0')
 
-    this.userInfoRepository.merge(user, userinfo, { id: userId })
+    // 将头像的图片转储到 OSS 中，并获取内部的地址，格式为 `d/...`
+    const newUrl = await this.ossService.dump(avatarUrl)
+    userInfo.avatarUrl = newUrl
+
+    this.userInfoRepository.merge(user, userInfo, { id: userId })
     await this.userInfoRepository.save(user)
     return this.getBasicInfo(userId)
   }
