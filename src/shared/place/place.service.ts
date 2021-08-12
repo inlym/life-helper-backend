@@ -15,14 +15,14 @@ export class PlaceService {
    * @param wxLocation 从微信获取到的定位数据
    * @returns 新增记录的主键 ID
    */
-  async add(wxLocation: WxLocation): Promise<number> {
+  async add(wxLocation: WxLocation): Promise<Place> {
     const { longitude, latitude } = wxLocation
     const addressInfo = await this.lbsqqService.getAddressInfo(longitude, latitude)
 
     const place = this.placeRepository.create()
     this.placeRepository.merge(place, wxLocation, addressInfo)
     await this.placeRepository.save(place)
-    return place.id
+    return place
   }
 
   /**
