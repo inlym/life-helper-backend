@@ -67,7 +67,7 @@ export class QrcodeService {
    */
   async generateQrcode(): Promise<QrcodeProfile> {
     /** 小程序中定义的页面 */
-    const page = 'pages/login/login-confirm/login-confirm'
+    const page = 'pages/auth/login-confirm/login-confirm'
 
     /** 返回的 URL 的 `origin` 部分 */
     const baseURL = AliyunOssConfig.res.url
