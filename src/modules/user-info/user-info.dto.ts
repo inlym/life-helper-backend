@@ -21,9 +21,3 @@ export class UpdateWxUserInfoRequestDto {
   @IsString()
   province: string
 }
-
-export class ModifyAvatarRequestDto {
-  @IsString()
-  @IsNotEmpty()
-  avatarUrl: string
-}

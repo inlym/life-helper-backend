@@ -1,7 +1,7 @@
-import { Body, Controller, Get, Patch, Put, UseGuards } from '@nestjs/common'
+import { Body, Controller, Get, Put, UseGuards } from '@nestjs/common'
 import { AuthGuard } from 'src/common/auth.guard'
 import { User } from 'src/common/user.decorator'
-import { ModifyAvatarRequestDto, UpdateWxUserInfoRequestDto } from './user-info.dto'
+import { UpdateWxUserInfoRequestDto } from './user-info.dto'
 import { UserInfoService } from './user-info.service'
 
 @Controller('userinfo')
@@ -27,15 +27,6 @@ export class UserInfoController {
    */
   @Put()
   async updateWxUserInfo(@User('id') userId: number, @Body() body: UpdateWxUserInfoRequestDto) {
-    await this.userInfoService.updateInfo(userId, body)
-    return body
-  }
-
-  /**
-   * 修改头像
-   */
-  @Patch('avatar')
-  async modifyAvatar(@User('id') userId: number, @Body() body: ModifyAvatarRequestDto) {
-    return this.userInfoService.modifyAvatar(userId, body.avatarUrl)
+    return this.userInfoService.updateInfo(userId, body)
   }
 }
