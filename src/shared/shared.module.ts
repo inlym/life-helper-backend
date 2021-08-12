@@ -10,13 +10,17 @@
  */
 
 import { Module } from '@nestjs/common'
+import { TypeOrmModule } from '@nestjs/typeorm'
 import { LbsqqService } from './lbsqq/lbsqq.service'
 import { OssService } from './oss/oss.service'
+import { Place } from './place/place.entity'
+import { PlaceService } from './place/place.service'
 import { WeixinService } from './weixin/weixin.service'
 
-const services = [LbsqqService, WeixinService, OssService]
+const services = [LbsqqService, WeixinService, OssService, PlaceService]
 
 @Module({
+  imports: [TypeOrmModule.forFeature([Place])],
   providers: services,
   exports: services,
 })
