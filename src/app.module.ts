@@ -9,6 +9,7 @@ import { AuthMiddleware } from './common/auth.middleware'
 import { AuthModule } from './modules/auth/auth.module'
 import { CalendarModule } from './modules/calendar/calendar.module'
 import { DebugModule } from './modules/debug/debug.module'
+import { DiaryModule } from './modules/diary/diary.module'
 import { IpModule } from './modules/ip/ip.module'
 import { UserInfoModule } from './modules/user-info/user-info.module'
 import { UserModule } from './modules/user/user.module'
@@ -26,6 +27,7 @@ import { WeatherModule } from './modules/weather/weather.module'
     UserInfoModule,
     CalendarModule,
     IpModule,
+    DiaryModule,
   ],
 
   providers: [{ provide: APP_FILTER, useClass: AllExceptionFilter }],
