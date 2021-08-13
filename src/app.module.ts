@@ -14,6 +14,7 @@ import { IpModule } from './modules/ip/ip.module'
 import { UserInfoModule } from './modules/user-info/user-info.module'
 import { UserModule } from './modules/user/user.module'
 import { WeatherModule } from './modules/weather/weather.module'
+import { UploadModule } from './modules/upload/upload.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { WeatherModule } from './modules/weather/weather.module'
     CalendarModule,
     IpModule,
     DiaryModule,
+    UploadModule,
   ],
 
   providers: [{ provide: APP_FILTER, useClass: AllExceptionFilter }],

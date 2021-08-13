@@ -18,22 +18,3 @@ export class ConfirmLoginQueryDto {
 }
 
 export class LoginByQrCodeQueryDto extends ConfirmLoginRequestDto {}
-
-export class GetOssClientTokenQueryDto {
-  /**
-   * 需要获取的凭证数量
-   */
-  @IsOptional()
-  @IsInt()
-  @Min(1)
-  @Max(20)
-  n: number
-
-  /**
-   * 需要获取的凭证类型（对应不同的文件夹和上传限制）
-   */
-  @IsOptional()
-  @IsString()
-  @IsIn(['picture', 'video'])
-  type: string
-}

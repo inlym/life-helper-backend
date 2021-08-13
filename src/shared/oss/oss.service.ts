@@ -9,11 +9,6 @@ import { ClientToken, GenerateClientTokenConfig } from './oss.interface'
 import axios from 'axios'
 import { COMMON_SERVER_ERROR } from 'src/common/errors.constant'
 
-/**
- * OSS 目录定义
- * - `d` => 转储的资源
- */
-
 @Injectable()
 export class OssService {
   private readonly logger = new Logger(OssService.name)

@@ -10,7 +10,7 @@ import { DiaryService } from '../diary/diary.service'
 export class DebugController {
   private readonly logger = new Logger(DebugController.name)
 
-  constructor(private readonly redisService: RedisService, private readonly ossService: OssService, private readonly diaryService: DiaryService) {}
+  constructor(private readonly redisService: RedisService, private readonly ossService: OssService) {}
 
   /**
    * 原样返回请求内容
