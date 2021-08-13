@@ -1,20 +1,21 @@
-import { All, Controller, Get, Logger, Req } from '@nestjs/common'
+import { Controller, Get, Logger, Post, Req } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
 import { Request } from 'express'
 import { RedisService } from 'nestjs-redis'
 import { OssService } from 'src/shared/oss/oss.service'
+import { DiaryService } from '../diary/diary.service'
 
 @ApiTags('debug')
-@Controller()
+@Controller('debug')
 export class DebugController {
   private readonly logger = new Logger(DebugController.name)
 
-  constructor(private readonly redisService: RedisService, private readonly ossService: OssService) {}
+  constructor(private readonly redisService: RedisService, private readonly ossService: OssService, private readonly diaryService: DiaryService) {}
 
   /**
    * 原样返回请求内容
    */
-  @All('debug')
+  @Post()
   getRequestDetail(@Req() req: Request) {
     /** 从 `req` 获取并返回的属性 */
     const validKeys: string[] = [
