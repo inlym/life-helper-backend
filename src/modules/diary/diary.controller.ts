@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common'
+import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
 import { AuthGuard } from 'src/common/auth.guard'
 import { User } from 'src/common/user.decorator'
@@ -15,8 +15,17 @@ export class DiaryController {
    * 新增一条生活记录
    */
   @Post()
-  async addDiary(@User('id') userId: number, @Body() body: AddDiaryRequestDto) {
+  async addDiary(@User('id') userId: number, @Body() body: AddDiaryRequestDto): Promise<number> {
     const diary = await this.diaryService.add(userId, body)
-    return diary
+    return diary.id
+  }
+
+  /**
+   * 获取指定用户所有的生活记录
+   */
+  @Get()
+  async getAllDiaries(@User('id') userId: number) {
+    const list = await this.diaryService.getAll(userId)
+    return { list }
   }
 }

@@ -24,7 +24,7 @@ export class Diary extends AbstractEntity {
     type: 'simple-array',
     comment: '照片列表',
   })
-  photos: string[]
+  images: string[]
 
   @Column({
     type: 'simple-array',

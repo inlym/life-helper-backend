@@ -9,7 +9,7 @@ export class AddDiaryRequestDto {
   /** 照片列表 */
   @IsArray()
   @IsOptional()
-  photos: string[]
+  images: string[]
 
   /** 视频列表 */
   @IsArray()
