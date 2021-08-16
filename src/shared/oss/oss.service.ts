@@ -45,7 +45,7 @@ export class OssService {
     }
 
     /** 有效时间：默认 4 小时 */
-    const timeout = (config.expiration || 4) * 60 * 60 * 100
+    const timeout = (config.expiration || 4) * 60 * 60 * 1000
 
     /** 上传最大体积，默认 100M */
     const maxSize = (config.maxSize || 100) * 1024 * 1024
@@ -133,6 +133,17 @@ export class OssService {
 
     this.logger.error(`转储文件失败, url => ${url}, name => ${name}`)
     throw new HttpException(COMMON_SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR)
+  }
+
+  /**
+   * 获取视频封面图
+   *
+   * @param url 视频 URL 地址
+   *
+   * @see [文档地址](https://help.aliyun.com/document_detail/64555.html)
+   */
+  getVideoSnapshot(url: string) {
+    return url + '?x-oss-process=video/snapshot,t_0,f_jpg,w_0,h_0,m_fast'
   }
 
   /**
