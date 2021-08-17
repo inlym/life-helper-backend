@@ -40,6 +40,11 @@ export class DebugController {
     }, {})
   }
 
+  @Get('ping')
+  ping() {
+    return 'pong'
+  }
+
   @Get('status')
   status() {
     const env = {
