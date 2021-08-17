@@ -43,8 +43,8 @@ export class UserInfoService {
      */
     const avatarUrl = userInfo.avatarUrl.replace(/132$/, '0')
 
-    // 将头像的图片转储到 OSS 中，并获取内部的地址，格式为 `d/...`
-    const newUrl = await this.ossService.dump(avatarUrl)
+    // 将头像的图片转储到 OSS 中，并获取内部的地址，格式为 `avatar/...`
+    const newUrl = await this.ossService.dump(avatarUrl, 'avatar')
     userInfo.avatarUrl = newUrl
 
     this.userInfoRepository.merge(user, userInfo, { id: userId })

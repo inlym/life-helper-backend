@@ -5,7 +5,7 @@ import { Redis } from 'ioredis'
 import { AliyunOssConfig, AliyunOssEndpoint } from 'life-helper-config'
 import { RedisService } from 'nestjs-redis'
 import { v4 as uuidv4 } from 'uuid'
-import { ClientToken, GenerateClientTokenConfig } from './oss.interface'
+import { ClientToken, DumpDirname, GenerateClientTokenConfig } from './oss.interface'
 import axios from 'axios'
 import { COMMON_SERVER_ERROR } from 'src/common/errors.constant'
 
@@ -106,9 +106,10 @@ export class OssService {
    * 转储资源至 OSS
    *
    * @param url 待转储资源的 URL
+   * @param dirname 转储目录
    * @param options 配置
    */
-  async dump(url: string, options: OSS.PutObjectOptions = {}): Promise<string> {
+  async dump(url: string, dirname: DumpDirname, options: OSS.PutObjectOptions = {}): Promise<string> {
     const response = await axios.request({
       method: 'GET',
       url: url,
@@ -124,7 +125,7 @@ export class OssService {
     /** 随机文件名（去掉短横线的 uuid） */
     const filename = uuidv4().replace(/-/gu, '')
 
-    const name = `d/${filename}`
+    const name = `${dirname}/${filename}`
 
     const result = await this.ossClient.put(name, response.data, options)
     if (result.res.status === 200) {

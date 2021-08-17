@@ -23,3 +23,6 @@ export interface ClientToken {
   OSSAccessKeyId: string
   url: string
 }
+
+/** 转储目录名称 */
+export type DumpDirname = 'avatar'

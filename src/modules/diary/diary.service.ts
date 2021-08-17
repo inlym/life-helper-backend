@@ -6,7 +6,7 @@ import { PlaceService } from 'src/shared/place/place.service'
 import { Repository } from 'typeorm'
 import { AddDiaryRequestDto } from './diary.dto'
 import { Diary } from './diary.entity'
-import { AllDiaryListItem } from './diary.model'
+import { Media, YearMonthDay } from './diary.model'
 
 @Injectable()
 export class DiaryService {
@@ -43,42 +43,73 @@ export class DiaryService {
    *
    * @param userId 用户 ID
    */
-  async getAll(userId: number): Promise<AllDiaryListItem[]> {
+  async getAll(userId: number): Promise<Diary[]> {
     const list = await this.diaryRepository.find({
       select: ['id', 'content', 'images', 'videos', 'createTime'],
       where: { userId },
       order: { id: 'DESC' },
     })
 
-    return list.map((item: Diary) => {
-      const videos = item.videos.map((path: string) => AliyunOssConfig.res.url + '/' + path)
-      const images = item.images.map((path: string) => AliyunOssConfig.res.url + '/' + path)
+    return list
+  }
 
-      const list = videos
-        .map((url: string) => {
-          return {
-            type: 'video',
-            url: this.ossService.getVideoSnapshot(url),
-          }
-        })
-        .concat(
-          images.map((url: string) => {
-            return { type: 'image', url }
-          })
-        )
+  /**
+   * 将视频和图片资源合并成一个资源数组
+   *
+   * @param videos 视频列表
+   * @param images 图片列表
+   */
+  mergeVideoAndImage(videos: string[], images: string[]): Media[] {
+    const baseURL = AliyunOssConfig.res.url
 
-      const day = item.createTime.getDate()
-      const month = item.createTime.getMonth() + 1
-      const year = item.createTime.getFullYear()
-
-      const date = {
-        year: year === new Date().getFullYear() ? '' : year,
-        month: month > 9 ? String(month) : '0' + String(month),
-        day: day > 9 ? String(day) : '0' + String(day),
-      }
-
-      return { content: item.content, list, date }
+    const videoList = videos.map((path: string) => {
+      const url = baseURL + '/' + path
+      return {
+        type: 'video',
+        path: path,
+        url: url,
+        coverUrl: this.ossService.getVideoSnapshot(url),
+      } as Media
     })
+
+    const imageList = images.map((path: string) => {
+      return {
+        type: 'image',
+        path: path,
+        url: baseURL + '/' + path,
+      } as Media
+    })
+
+    return videoList.concat(imageList)
+  }
+
+  /**
+   * 转化时间对象为年月日格式
+   *
+   * @param t 时间
+   */
+  splitDate(t: Date): YearMonthDay {
+    const year = t.getFullYear()
+    const month = t.getMonth() + 1
+    const day = t.getDate()
+    return { year, month, day }
+  }
+
+  /**
+   * 转化成客户端可以使用的格式
+   *
+   * @param diary
+   */
+  transformDiary(diary: Diary) {
+    const date = this.splitDate(diary.createTime)
+    const medias = this.mergeVideoAndImage(diary.videos, diary.images)
+
+    return {
+      id: diary.id,
+      content: diary.content,
+      medias,
+      date,
+    }
   }
 
   /**

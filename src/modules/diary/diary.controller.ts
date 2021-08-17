@@ -3,6 +3,7 @@ import { ApiTags } from '@nestjs/swagger'
 import { AuthGuard } from 'src/common/auth.guard'
 import { User } from 'src/common/user.decorator'
 import { AddDiaryRequestDto } from './diary.dto'
+import { Diary } from './diary.entity'
 import { DiaryService } from './diary.service'
 
 @ApiTags('diary')
@@ -26,6 +27,7 @@ export class DiaryController {
   @Get()
   async getAllDiaries(@User('id') userId: number) {
     const list = await this.diaryService.getAll(userId)
-    return { list }
+    const transformedList = list.map((diary: Diary) => this.diaryService.transformDiary(diary))
+    return { list: transformedList }
   }
 }
