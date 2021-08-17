@@ -14,13 +14,13 @@ export class UploadService {
    * @param n 获取的数量
    */
   getOssToken(type: 'video' | 'image'): ClientToken {
-    const options: GenerateClientTokenConfig = {}
+    const options: GenerateClientTokenConfig = {
+      dirname: type,
+    }
 
     if (type === 'video') {
-      options.dirname = 'v'
       options.maxSize = 500
     } else if (type === 'image') {
-      options.dirname = 'p'
       options.maxSize = 100
     }
 
