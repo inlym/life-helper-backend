@@ -3,7 +3,6 @@ import { ApiTags } from '@nestjs/swagger'
 import { Request } from 'express'
 import { RedisService } from 'nestjs-redis'
 import { OssService } from 'src/shared/oss/oss.service'
-import { DiaryService } from '../diary/diary.service'
 
 @ApiTags('debug')
 @Controller('debug')
