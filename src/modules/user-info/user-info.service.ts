@@ -15,14 +15,19 @@ export class UserInfoService {
   /**
    * 获取昵称和头像
    */
-  async getBasicInfo(userId: number): Promise<UserInfo> {
+  async getBasicInfo(userId: number): Promise<UserInfo | null> {
     const userInfo = await this.userInfoRepository.findOne({
       select: ['nickName', 'avatarUrl'],
       where: { id: userId },
     })
 
+    // 该行记录不存在，则会返回 `undefined`
+    if (!userInfo) {
+      return null
+    }
+
     // 一般情况下获取到的地址格式为 `d/...`，为兼容可能存储完整 URL 的场景，此处做一个附加的判断
-    if (!userInfo.avatarUrl.startsWith('http')) {
+    if (userInfo.avatarUrl && !userInfo.avatarUrl.startsWith('http')) {
       userInfo.avatarUrl = this.ossPrefix + '/' + userInfo.avatarUrl
     }
 
@@ -33,7 +38,11 @@ export class UserInfoService {
    * 更新基本信息（由微信 `wx.getUserProfile` API 获取）
    */
   async updateInfo(userId: number, userInfo: UpdateWxUserInfoRequestDto): Promise<UserInfo> {
-    const user = await this.userInfoRepository.findOne(userId)
+    let user = await this.userInfoRepository.findOne(userId)
+
+    if (!user) {
+      user = this.userInfoRepository.create()
+    }
 
     /**
      * 变更从微信获取的 URL 地址
@@ -48,6 +57,7 @@ export class UserInfoService {
     userInfo.avatarUrl = newUrl
 
     this.userInfoRepository.merge(user, userInfo, { id: userId })
+
     await this.userInfoRepository.save(user)
     return this.getBasicInfo(userId)
   }
