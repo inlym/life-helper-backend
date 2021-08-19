@@ -5,7 +5,7 @@ import { Redis } from 'ioredis'
 import { AliyunOssConfig, AliyunOssEndpoint } from 'life-helper-config'
 import { RedisService } from 'nestjs-redis'
 import { v4 as uuidv4 } from 'uuid'
-import { ClientToken, DumpDirname, GenerateClientTokenConfig } from './oss.interface'
+import { ClientToken, DumpDirname, GenerateClientTokenConfig, SaveDirname } from './oss.interface'
 import axios from 'axios'
 import { COMMON_SERVER_ERROR } from 'src/common/errors.constant'
 
@@ -24,6 +24,26 @@ export class OssService {
     })
 
     this.redis = this.redisService.getClient()
+  }
+
+  /**
+   * 资源存储的 OSS Bucket 的 URL 地址，目前固定为：
+   *
+   * ```
+   * https://res.lifehelper.com.cn
+   * ```
+   */
+  get origin(): string {
+    return AliyunOssConfig.res.url
+  }
+
+  /**
+   * 获取资源的完整 URL 地址
+   *
+   * @param path 路径
+   */
+  getUrl(path: string): string {
+    return this.origin.replace(/\/+$/, '') + '/' + path.replace(/^\/+/, '')
   }
 
   /**
@@ -100,6 +120,25 @@ export class OssService {
 
     this.logger.error(`使用 OSS 上传文件失败，name => ${name}, status => ${result.res.status}`)
     throw new HttpException(COMMON_SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR)
+  }
+
+  /**
+   * 储存文件
+   *
+   * @param dirname 目录名
+   * @param buf 待上传的内容
+   * @param options 配置
+   */
+  async save(dirname: SaveDirname, buf: Buffer, options?: OSS.PutObjectOptions): Promise<string> {
+    /** 随机文件名（去掉短横线的 uuid） */
+    const filename = uuidv4().replace(/-/gu, '')
+
+    /** 文件路径 */
+    const key = dirname + '/' + filename
+
+    await this.upload(key, buf, options)
+
+    return key
   }
 
   /**

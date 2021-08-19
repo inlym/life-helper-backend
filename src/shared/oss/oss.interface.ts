@@ -26,3 +26,6 @@ export interface ClientToken {
 
 /** 转储目录名称 */
 export type DumpDirname = 'avatar'
+
+/** 储存目录名称 */
+export type SaveDirname = 'staticmap'

@@ -14,6 +14,7 @@ import { Redis } from 'ioredis'
 import { LbsqqKeys } from 'life-helper-config'
 import { RedisService } from 'nestjs-redis'
 import { COMMON_SERVER_ERROR } from 'src/common/errors.constant'
+import { OssService } from '../oss/oss.service'
 import { GeoLocationCoderResponse, LocateIpResponse, LocationCoordinate } from './lbsqq.interface'
 import { AddressInfo } from './lbsqq.model'
 
@@ -25,7 +26,7 @@ export class LbsqqService {
   /** 开发者密钥获取次数，每一次获取密钥则 +1 */
   private counter = 0
 
-  constructor(private redisService: RedisService) {
+  constructor(private redisService: RedisService, private readonly ossService: OssService) {
     this.redis = this.redisService.getClient()
   }
 
@@ -117,6 +118,44 @@ export class LbsqqService {
     return response.data
   }
 
+  /**
+   * 根据经纬度生成静态地图，并返回存储路径
+   *
+   * @param longitude 经度
+   * @param latitude 纬度
+   */
+  async generateStaticMap(longitude: number, latitude: number): Promise<string> {
+    /** 地图视图中心点 */
+    const center = `${latitude},${longitude}`
+
+    /** 地图视图的级别设置，取值范围 4≤zoom≤18 */
+    const zoom = 12
+
+    /** 地图静态图片大小，宽*高，单位像素 */
+    const size = '600*400'
+
+    /** 是否高清，取值2为高清，取值1为普清 */
+    const scale = 1
+
+    const markers = center
+
+    const key = this.getKey()
+
+    const response = await axios.request({
+      method: 'GET',
+      url: 'https://apis.map.qq.com/ws/staticmap/v2',
+      params: { center, zoom, size, scale, markers, key },
+      responseType: 'arraybuffer',
+    })
+
+    const contentType = response.headers['Content-Type'] || response.headers['content-type'] || 'image/png'
+
+    const buf = response.data
+    const path = await this.ossService.save('staticmap', buf, { headers: { 'Content-Type': contentType } })
+
+    return path
+  }
+
   /** ═════════════════  以下方法为对原生方法的二次封装方法  ═════════════════ */
 
   /**
@@ -150,5 +189,18 @@ export class LbsqqService {
   async getAddressInfo(longitude: number, latitude: number): Promise<AddressInfo> {
     const result = await this.geoLocationCoder(longitude, latitude)
     return plainToClass(AddressInfo, result.result.ad_info)
+  }
+
+  /**
+   * 获取静态地图的完整 URL
+   *
+   * @param longitude 经度
+   * @param latitude 纬度
+   * @return 静态地图的完整 URL，例如：`https://res.lifehelper.com.cn/staticmap/xxxxxx`
+   */
+  async getStaticMapUrl(longitude: number, latitude: number): Promise<string> {
+    const key = await this.generateStaticMap(longitude, latitude)
+    const url = this.ossService.getUrl(key)
+    return url
   }
 }

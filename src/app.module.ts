@@ -11,10 +11,10 @@ import { CalendarModule } from './modules/calendar/calendar.module'
 import { DebugModule } from './modules/debug/debug.module'
 import { DiaryModule } from './modules/diary/diary.module'
 import { IpModule } from './modules/ip/ip.module'
+import { UploadModule } from './modules/upload/upload.module'
 import { UserInfoModule } from './modules/user-info/user-info.module'
 import { UserModule } from './modules/user/user.module'
 import { WeatherModule } from './modules/weather/weather.module'
-import { UploadModule } from './modules/upload/upload.module';
 
 @Module({
   imports: [
