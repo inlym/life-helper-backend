@@ -8,20 +8,19 @@ import { AllExceptionFilter } from './common/all-exception.filter'
 import { AuthMiddleware } from './common/auth.middleware'
 import { AuthModule } from './modules/auth/auth.module'
 import { CalendarModule } from './modules/calendar/calendar.module'
-import { DebugModule } from './modules/debug/debug.module'
 import { DiaryModule } from './modules/diary/diary.module'
 import { IpModule } from './modules/ip/ip.module'
 import { UploadModule } from './modules/upload/upload.module'
 import { UserInfoModule } from './modules/user-info/user-info.module'
 import { UserModule } from './modules/user/user.module'
 import { WeatherModule } from './modules/weather/weather.module'
+import { SystemModule } from './system/system.module'
 
 @Module({
   imports: [
     TypeOrmModule.forRoot(TypeOrmConfig),
     RedisModule.register(RedisConfig),
     ScheduleModule.forRoot(),
-    DebugModule,
     AuthModule,
     UserModule,
     WeatherModule,
@@ -30,6 +29,7 @@ import { WeatherModule } from './modules/weather/weather.module'
     IpModule,
     DiaryModule,
     UploadModule,
+    SystemModule,
   ],
 
   providers: [{ provide: APP_FILTER, useClass: AllExceptionFilter }],
