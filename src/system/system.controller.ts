@@ -66,7 +66,8 @@ export class SystemController {
       /** 当前 Node.js 进程已经运行的秒数 */
       uptime: process.uptime().toFixed(0) + ' 秒',
     }
-    return { env, os: osInfo, ...processInfo }
+
+    return { env, os: osInfo, process: processInfo }
   }
 
   /**
