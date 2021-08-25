@@ -67,7 +67,10 @@ export class SystemController {
       uptime: process.uptime().toFixed(0) + ' 秒',
     }
 
-    return { env, os: osInfo, process: processInfo }
+    const timestamp = Date.now()
+    const now = new Date().toISOString()
+
+    return { env, os: osInfo, process: processInfo, timestamp, now }
   }
 
   /**
