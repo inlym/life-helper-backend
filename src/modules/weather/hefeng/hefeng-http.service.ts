@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common'
 import axios from 'axios'
 import { HefengConfig } from 'life-helper-config'
 import { COMMON_SERVER_ERROR } from 'src/common/errors.constant'
-import { CityInfo, HefengResponse, WeatherNow } from './hefeng-http.interface'
+import { CityInfo, HefengResponse, WarningCity, WeatherNow } from './hefeng-http.interface'
 
 /**
  * ### 模块说明
@@ -33,7 +33,8 @@ export class HefengHttpService {
    *
    * @param location 位置
    *
-   * @see [城市信息查询](https://dev.qweather.com/docs/api/geo/city-lookup/)
+   * @see
+   * [API 开发文档](https://dev.qweather.com/docs/api/geo/city-lookup/)
    *
    * @description
    *
@@ -80,7 +81,8 @@ export class HefengHttpService {
   /**
    * 热门城市查询
    *
-   * @see [热门城市查询](https://dev.qweather.com/docs/api/geo/top-city/)
+   * @see
+   * [API 开发文档](https://dev.qweather.com/docs/api/geo/top-city/)
    */
   async getTopCity(): Promise<CityInfo[]> {
     const { key } = HefengConfig.basic
@@ -117,7 +119,8 @@ export class HefengHttpService {
    *
    * @param location 需要查询地区的 `LocationID` 或以英文逗号分隔的 `经度,纬度` 坐标（十进制）
    *
-   * @see [实时天气](https://dev.qweather.com/docs/api/weather/weather-now/)
+   * @see
+   * [API 开发文档](https://dev.qweather.com/docs/api/weather/weather-now/)
    */
   async getWeatherNow(location: string): Promise<WeatherNow> {
     const { key, baseURL } = HefengConfig.basic
@@ -148,7 +151,8 @@ export class HefengHttpService {
    * @param location 需要查询地区的 `LocationID` 或以英文逗号分隔的 `经度,纬度` 坐标（十进制）
    * @param days 天数
    *
-   * @see [逐天天气预报](https://dev.qweather.com/docs/api/weather/weather-daily-forecast/)
+   * @see
+   * [API 开发文档](https://dev.qweather.com/docs/api/weather/weather-daily-forecast/)
    */
   async getDailyForecast(location: string, days: 3 | 7 | 10 | 15) {
     /**
@@ -184,7 +188,8 @@ export class HefengHttpService {
    * @param location 需要查询地区的 `LocationID` 或以英文逗号分隔的 `经度,纬度` 坐标（十进制）
    * @param hours 小时数
    *
-   * @see [逐小时天气预报](https://dev.qweather.com/docs/api/weather/weather-hourly-forecast/)
+   * @see
+   * [API 开发文档](https://dev.qweather.com/docs/api/weather/weather-hourly-forecast/)
    */
   async getHourlyForecast(location: string, hours: 24 | 72 | 168) {
     const { key, baseURL } = hours === 24 ? HefengConfig.basic : HefengConfig.pro
@@ -204,6 +209,34 @@ export class HefengHttpService {
     } else {
       // 失败情况
       this.logger.error(`[接口请求错误] 和风天气 - 逐小时天气预报, 响应 code => \`${response.data.code}\`,  location => \`${location}\` `)
+
+      throw new HttpException(COMMON_SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR)
+    }
+  }
+
+  /**
+   * 获取天气预警城市列表
+   *
+   * @see
+   * [API 开发文档](https://dev.qweather.com/docs/api/warning/weather-warning-city-list/)
+   */
+  async getWarningCityList(): Promise<WarningCity[]> {
+    const { key } = HefengConfig.basic
+
+    const response = await axios.request<HefengResponse>({
+      url: 'https://devapi.qweather.com/v7/warning/list',
+      params: {
+        key,
+        range: 'cn',
+      },
+    })
+
+    if (response.data.code === '200') {
+      // `code` 为 `200` 表示请求成功
+      return response.data.warningLocList
+    } else {
+      // 失败情况
+      this.logger.error(`[接口请求错误] 和风天气 - 天气预警城市列表, 响应 code => \`${response.data.code}\` `)
 
       throw new HttpException(COMMON_SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR)
     }

@@ -17,6 +17,9 @@ export interface HefengResponse {
 
   /** 逐小时天气预报 */
   hourly: HourlyForecastItem[]
+
+  /** 天气预警城市列表 */
+  warningLocList: WarningCity[]
 }
 
 /** 和风天气接口响应数据 - 城市信息查询 */
@@ -24,7 +27,8 @@ export interface HefengResponse {
 /**
  * `城市信息查询` 接口主要数据
  *
- * @see [城市信息查询](https://dev.qweather.com/docs/api/geo/city-lookup/)
+ * @see
+ * [城市信息查询](https://dev.qweather.com/docs/api/geo/city-lookup/)
  */
 export interface CityInfo {
   /** 地区/城市名称 */
@@ -71,9 +75,10 @@ export interface CityInfo {
 /**
  * 实时天气数据
  *
- * @see [实时天气](https://dev.qweather.com/docs/api/weather/weather-now/)
+ * @see
+ * [实时天气](https://dev.qweather.com/docs/api/weather/weather-now/)
  */
-export class WeatherNow {
+export interface WeatherNow {
   /** 数据观测时间 */
   obsTime: string
 
@@ -123,9 +128,10 @@ export class WeatherNow {
 /**
  * 逐天天气预报
  *
- * @see [逐天天气预报](https://dev.qweather.com/docs/api/weather/weather-daily-forecast/)
+ * @see
+ * [逐天天气预报](https://dev.qweather.com/docs/api/weather/weather-daily-forecast/)
  */
-export class DailyForecastItem {
+export interface DailyForecastItem {
   // 以下为原始数据（未做处理）
 
   /** 预报日期 */
@@ -212,9 +218,10 @@ export class DailyForecastItem {
 /**
  * 逐小时天气预报
  *
- * @see [逐小时天气预报](https://dev.qweather.com/docs/api/weather/weather-hourly-forecast/)
+ * @see
+ * [逐小时天气预报](https://dev.qweather.com/docs/api/weather/weather-hourly-forecast/)
  */
-export class HourlyForecastItem {
+export interface HourlyForecastItem {
   /** 预报时间 */
   fxTime: string
 
@@ -256,4 +263,15 @@ export class HourlyForecastItem {
 
   /** 露点温度 */
   dew: string
+}
+
+/**
+ * 天气预警城市
+ *
+ * @see
+ * [天气预警城市列表](https://dev.qweather.com/docs/api/warning/weather-warning-city-list/)
+ */
+export interface WarningCity {
+  /** 当前国家预警的LocationID */
+  locationId: string
 }
