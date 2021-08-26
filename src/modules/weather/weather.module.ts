@@ -8,11 +8,12 @@ import { WeatherCity } from './weather-city/weather-city.entity'
 import { WeatherCityService } from './weather-city/weather-city.service'
 import { WeatherController } from './weather.controller'
 import { WeatherService } from './weather.service'
+import { HefengHttpService } from './hefeng-http.service'
 
 @Module({
   imports: [TypeOrmModule.forFeature([WeatherCity]), SharedModule],
   controllers: [WeatherController, WeatherCityController],
-  providers: [WeatherService, HefengService, WeatherCityService, HefengApiService],
+  providers: [WeatherService, HefengService, WeatherCityService, HefengApiService, HefengHttpService],
   exports: [WeatherService, HefengService, WeatherCityService],
 })
 export class WeatherModule {}
