@@ -1,7 +1,18 @@
 import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common'
 import { HefengCachedService } from './hefeng-cached.service'
 import { INVALID_LOCATION } from './hefeng-error.constant'
-import { AirDailyForecastItem, AirNow, CityInfo, DailyForecastItem, HourlyForecastItem, LivingIndexItem, WarningCity, WeatherNow } from './hefeng-http.model'
+import {
+  AirDailyForecastItem,
+  AirNow,
+  CityInfo,
+  DailyForecastItem,
+  HourlyForecastItem,
+  LivingIndexItem,
+  MinutelyRainItem,
+  WarningCity,
+  WarningNowItem,
+  WeatherNow,
+} from './hefeng-http.model'
 
 /**
  * ### 模块说明
@@ -66,8 +77,10 @@ export class HefengPublicService {
   private transformLocationParams(first: number | string, second?: number): string {
     if (typeof first === 'number' && typeof second === 'number') {
       return this.transformCoordinate(first, second)
-    } else {
+    } else if (typeof first === 'string') {
       return first
+    } else {
+      // 一般不会走到这里
     }
   }
 
@@ -205,7 +218,7 @@ export class HefengPublicService {
    * @see
    * [API 开发文档](https://dev.qweather.com/docs/api/indices/)
    */
-  async getLivingIndexItem(locationId: string): Promise<LivingIndexItem> {
+  async getLivingIndexItem(locationId: string): Promise<LivingIndexItem[]> {
     const location = locationId
     return this.hefengCachedService.getLivingIndexItem(location)
   }

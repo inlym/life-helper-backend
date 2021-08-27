@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common'
 import { plainToClass } from 'class-transformer'
-import dayjs from 'dayjs'
+import * as dayjs from 'dayjs'
 import { AliyunOssConfig } from 'life-helper-config'
 import { WarningNowItem } from './hefeng/hefeng-http.model'
 import { HefengPublicService } from './hefeng/hefeng-public.service'
@@ -34,7 +34,7 @@ export class WeatherDataService {
    * @param icon 图标 ID
    */
   private getIconUrl(icon: string): string {
-    return AliyunOssConfig.res.url + '/static/hefeng/c1/' + icon + '.svg'
+    return AliyunOssConfig.admin.url + '/static/hefeng/c1/' + icon + '.svg'
   }
 
   /**
@@ -43,14 +43,14 @@ export class WeatherDataService {
    * @param icon 图标 ID
    */
   private getImageUrl(icon: string): string {
-    return AliyunOssConfig.res.url + '/static/hefeng/s2/' + icon + '.svg'
+    return AliyunOssConfig.admin.url + '/static/hefeng/s2/' + icon + '.svg'
   }
 
   /**
    * 获取天气生活指数对应的图标
    */
   private getLivingIndexItemIconUrl(type: string): string {
-    return AliyunOssConfig.res.url + '/static/hefeng/live/' + type + '.svg'
+    return AliyunOssConfig.admin.url + '/static/hefeng/live/' + type + '.svg'
   }
 
   /**
@@ -59,7 +59,7 @@ export class WeatherDataService {
    * @param locationId 和风天气的地区 `LocationID`
    */
   async getWeatherNow(locationId: string): Promise<ExtWeatherNow> {
-    const weatherNow: ExtWeatherNow = await this.hefengPublicService.getWarningNow(locationId)
+    const weatherNow: ExtWeatherNow = await this.hefengPublicService.getWeatherNow(locationId)
     weatherNow.obsDiff = dayjs().diff(dayjs(weatherNow.obsTime), 'minute')
 
     return weatherNow
@@ -116,7 +116,7 @@ export class WeatherDataService {
    * @param locationId 和风天气的地区 `LocationID`
    */
   async getHourlyForecast(hours: 24 | 72 | 168, locationId: string) {
-    const list = this.hefengPublicService.getHourlyForecast(hours, locationId)
+    const list = await this.hefengPublicService.getHourlyForecast(hours, locationId)
     return list.map((item: ExtHourlyForecastItem) => {
       item.iconUrl = this.getIconUrl(item.icon)
       item.time = item.fxTime.substring(11, 16)
@@ -229,8 +229,8 @@ export class WeatherDataService {
       promises.push(this.getMinutelyRain(longitude, latitude))
     }
 
-    const [now, daily, hourly, airnow, air5d, liveIndex, warning, rain] = await Promise.all(promises)
+    const [now, f15d, f24h, airnow, air5d, liveIndex, warning, rain] = await Promise.all(promises)
 
-    return { now, daily, hourly, airnow, air5d, liveIndex, warning, rain }
+    return { now, f15d, f24h, airnow, air5d, liveIndex, warning, rain }
   }
 }

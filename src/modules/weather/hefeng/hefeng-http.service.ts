@@ -11,7 +11,9 @@ import {
   HefengResponse,
   HourlyForecastItem,
   LivingIndexItem,
+  MinutelyRainItem,
   WarningCity,
+  WarningNowItem,
   WeatherNow,
 } from './hefeng-http.model'
 
@@ -174,7 +176,7 @@ export class HefengHttpService {
 
     if (response.data.code === '200') {
       // `code` 为 `200` 表示请求成功
-      return response.data.now
+      return response.data.now as WeatherNow
     } else {
       // 失败情况
       this.logger.error(`[接口请求错误] 和风天气 - 实时天气, 响应 code => \`${response.data.code}\`,  location => \`${location}\` `)
@@ -215,7 +217,7 @@ export class HefengHttpService {
 
     if (response.data.code === '200') {
       // `code` 为 `200` 表示请求成功
-      return response.data.daily
+      return response.data.daily as DailyForecastItem[]
     } else {
       // 失败情况
       this.logger.error(`[接口请求错误] 和风天气 - 逐天天气预报, 响应 code => \`${response.data.code}\`,  location => \`${location}\` `)
@@ -237,7 +239,7 @@ export class HefengHttpService {
    * @see
    * [API 开发文档](https://dev.qweather.com/docs/api/weather/weather-hourly-forecast/)
    */
-  async getHourlyForecast(location: string, hours: 24 | 72 | 168): Promise<HourlyForecastItem> {
+  async getHourlyForecast(location: string, hours: 24 | 72 | 168): Promise<HourlyForecastItem[]> {
     const { key, baseURL } = hours === 24 ? HefengConfig.basic : HefengConfig.pro
 
     const response = await axios.request<HefengResponse>({
@@ -251,7 +253,7 @@ export class HefengHttpService {
 
     if (response.data.code === '200') {
       // `code` 为 `200` 表示请求成功
-      return response.data.hourly
+      return response.data.hourly as HourlyForecastItem[]
     } else {
       // 失败情况
       this.logger.error(`[接口请求错误] 和风天气 - 逐小时天气预报, 响应 code => \`${response.data.code}\`,  location => \`${location}\` `)
@@ -304,7 +306,7 @@ export class HefengHttpService {
    * @see
    * [API 开发文档](https://dev.qweather.com/docs/api/indices/)
    */
-  async getLivingIndexItem(location: string): Promise<LivingIndexItem> {
+  async getLivingIndexItem(location: string): Promise<LivingIndexItem[]> {
     const { key, baseURL } = HefengConfig.basic
 
     const response = await axios.request<HefengResponse>({
@@ -319,7 +321,7 @@ export class HefengHttpService {
 
     if (response.data.code === '200') {
       // `code` 为 `200` 表示请求成功
-      return response.data.daily
+      return response.data.daily as LivingIndexItem[]
     } else {
       // 失败情况
       this.logger.error(`[接口请求错误] 和风天气 - 天气生活指数, 响应 code => \`${response.data.code}\`,  location => \`${location}\` `)
@@ -354,7 +356,7 @@ export class HefengHttpService {
 
     if (response.data.code === '200') {
       // `code` 为 `200` 表示请求成功
-      return response.data.now
+      return response.data.now as AirNow
     } else {
       // 失败情况
       this.logger.error(`[接口请求错误] 和风天气 - 实时空气质量, 响应 code => \`${response.data.code}\`,  location => \`${location}\` `)
@@ -389,7 +391,7 @@ export class HefengHttpService {
 
     if (response.data.code === '200') {
       // `code` 为 `200` 表示请求成功
-      return response.data.daily
+      return response.data.daily as AirDailyForecastItem[]
     } else {
       // 失败情况
       this.logger.error(`[接口请求错误] 和风天气 - 空气质量预报, 响应 code => \`${response.data.code}\`,  location => \`${location}\` `)

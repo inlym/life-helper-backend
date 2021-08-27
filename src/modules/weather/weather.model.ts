@@ -1,4 +1,13 @@
-import { DailyForecastItem, HourlyForecastItem, WeatherNow, LivingIndexItem, AirNow, AirDailyForecastItem, MinutelyRainItem } from './hefeng/hefeng-http.model'
+import {
+  DailyForecastItem,
+  HourlyForecastItem,
+  WeatherNow,
+  LivingIndexItem,
+  AirNow,
+  AirDailyForecastItem,
+  MinutelyRainItem,
+  WarningNowItem,
+} from './hefeng/hefeng-http.model'
 import { Exclude } from 'class-transformer'
 
 /**
@@ -6,7 +15,7 @@ import { Exclude } from 'class-transformer'
  */
 export class ExtWeatherNow extends WeatherNow {
   /** 观测时间距当前时间的分钟数 */
-  obsDiff: number
+  obsDiff?: number
 }
 
 /**
@@ -63,7 +72,9 @@ export class ExtLivingIndexItem extends LivingIndexItem {
 /**
  * 扩展的实时空气质量
  */
-export class ExtAirNow extends AirNow {}
+export class ExtAirNow extends AirNow {
+  q
+}
 
 export class ExtAirDailyForecastItem extends AirDailyForecastItem {
   /** 预报日期 */
@@ -81,7 +92,7 @@ export class ExtMinutelyRainItem extends MinutelyRainItem {
   height: string
 }
 
-export class ExtWarningNowItem extends ExtWarningNowItem {}
+export class ExtWarningNowItem extends WarningNowItem {}
 
 /** 合并的天气信息 */
 export class CombinedWeather {

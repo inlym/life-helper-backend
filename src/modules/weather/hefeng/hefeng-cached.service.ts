@@ -1,5 +1,16 @@
 import { Injectable, Logger } from '@nestjs/common'
-import { AirDailyForecastItem, AirNow, CityInfo, DailyForecastItem, HourlyForecastItem, LivingIndexItem, WarningCity, WeatherNow } from './hefeng-http.model'
+import {
+  AirDailyForecastItem,
+  AirNow,
+  CityInfo,
+  DailyForecastItem,
+  HourlyForecastItem,
+  LivingIndexItem,
+  MinutelyRainItem,
+  WarningCity,
+  WarningNowItem,
+  WeatherNow,
+} from './hefeng-http.model'
 import { Redis } from 'ioredis'
 import { RedisService } from 'nestjs-redis'
 import { HefengHttpService } from './hefeng-http.service'
@@ -127,7 +138,7 @@ export class HefengCachedService {
    * @param location 需要查询地区的 `LocationID` 或以英文逗号分隔的 `经度,纬度` 坐标（十进制）
    * @param hours 小时数
    */
-  async getHourlyForecast(location: string, hours: 24 | 72 | 168): Promise<HourlyForecastItem> {
+  async getHourlyForecast(location: string, hours: 24 | 72 | 168): Promise<HourlyForecastItem[]> {
     /** Redis 键名 */
     const rKey = `hefeng:hourly_${hours}h:location:${location}`
 
@@ -169,7 +180,7 @@ export class HefengCachedService {
    *
    * @param location 需要查询地区的 `LocationID` 或以英文逗号分隔的 `经度,纬度` 坐标（十进制）
    */
-  async getLivingIndexItem(location: string): Promise<LivingIndexItem> {
+  async getLivingIndexItem(location: string): Promise<LivingIndexItem[]> {
     /** Redis 键名 */
     const rKey = `hefeng:living_index:location:${location}`
 
