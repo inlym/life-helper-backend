@@ -3,18 +3,16 @@ import axios from 'axios'
 import { HefengConfig } from 'life-helper-config'
 import { COMMON_SERVER_ERROR } from 'src/common/errors.constant'
 import {
+  AirDailyForecastItem,
   AirNow,
   CityInfo,
   DailyForecastItem,
   HefengResponse,
   HourlyForecastItem,
   LivingIndex,
-  MinutelyRainItem,
   WarningCity,
-  WarningNowItem,
   WeatherNow,
 } from './hefeng-http.interface'
-import { AirDailyForecastItem } from './hefeng.model'
 
 /**
  * ### 模块说明
@@ -325,7 +323,7 @@ export class HefengHttpService {
    * @see
    * [API 开发文档](https://dev.qweather.com/docs/api/air/air-daily-forecast/)
    */
-  async getAirDailyForecast(location: string): Promise<AirDailyForecastItem[]> {
+  async getAirDailyForecast(location: string): Promise<AirDailyForecastItem> {
     const { key, baseURL } = HefengConfig.pro
 
     const response = await axios.request<HefengResponse>({
@@ -396,7 +394,7 @@ export class HefengHttpService {
    * @see
    * [API 开发文档](https://dev.qweather.com/docs/api/warning/weather-warning/)
    */
-  async getWarningNow(): Promise<WarningNowItem[]> {
+  async getWarningNow(location: string): Promise<WarningNowItem[]> {
     const { key, baseURL } = HefengConfig.basic
 
     const response = await axios.request<HefengResponse>({
