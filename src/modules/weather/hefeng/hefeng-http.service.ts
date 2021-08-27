@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common'
-import axios from 'axios'
 import { HefengConfig } from 'life-helper-config'
 import { COMMON_SERVER_ERROR } from 'src/common/errors.constant'
+import { request } from 'src/common/http'
 import { INVALID_LOCATION } from './hefeng-error.constant'
 import {
   AirDailyForecastItem,
@@ -82,7 +82,7 @@ export class HefengHttpService {
   async searchCity(location: string): Promise<CityInfo[]> {
     const { key } = HefengConfig.basic
 
-    const response = await axios.request<HefengResponse>({
+    const response = await request<HefengResponse>({
       url: 'https://geoapi.qweather.com/v2/city/lookup',
       params: {
         key,
@@ -123,7 +123,7 @@ export class HefengHttpService {
   async getTopCity(): Promise<CityInfo[]> {
     const { key } = HefengConfig.basic
 
-    const response = await axios.request<HefengResponse>({
+    const response = await request<HefengResponse>({
       url: 'https://geoapi.qweather.com/v2/city/top',
       params: {
         key,
@@ -165,7 +165,7 @@ export class HefengHttpService {
   async getWeatherNow(location: string): Promise<WeatherNow> {
     const { key, baseURL } = HefengConfig.basic
 
-    const response = await axios.request<HefengResponse>({
+    const response = await request<HefengResponse>({
       baseURL,
       url: '/weather/now',
       params: {
@@ -206,7 +206,7 @@ export class HefengHttpService {
      */
     const { key, baseURL } = [10, 15].includes(days) ? HefengConfig.pro : HefengConfig.basic
 
-    const response = await axios.request<HefengResponse>({
+    const response = await request<HefengResponse>({
       baseURL,
       url: `/weather/${days}d`,
       params: {
@@ -242,7 +242,7 @@ export class HefengHttpService {
   async getHourlyForecast(location: string, hours: 24 | 72 | 168): Promise<HourlyForecastItem[]> {
     const { key, baseURL } = hours === 24 ? HefengConfig.basic : HefengConfig.pro
 
-    const response = await axios.request<HefengResponse>({
+    const response = await request<HefengResponse>({
       baseURL,
       url: `/weather/${hours}h`,
       params: {
@@ -275,7 +275,7 @@ export class HefengHttpService {
   async getWarningCityList(): Promise<WarningCity[]> {
     const { key } = HefengConfig.basic
 
-    const response = await axios.request<HefengResponse>({
+    const response = await request<HefengResponse>({
       url: 'https://devapi.qweather.com/v7/warning/list',
       params: {
         key,
@@ -309,7 +309,7 @@ export class HefengHttpService {
   async getLivingIndexItem(location: string): Promise<LivingIndexItem[]> {
     const { key, baseURL } = HefengConfig.basic
 
-    const response = await axios.request<HefengResponse>({
+    const response = await request<HefengResponse>({
       baseURL,
       url: '/indices/1d',
       params: {
@@ -345,7 +345,7 @@ export class HefengHttpService {
   async getAirNow(location: string): Promise<AirNow> {
     const { key, baseURL } = HefengConfig.basic
 
-    const response = await axios.request<HefengResponse>({
+    const response = await request<HefengResponse>({
       baseURL,
       url: '/air/now',
       params: {
@@ -380,7 +380,7 @@ export class HefengHttpService {
   async getAirDailyForecast(location: string): Promise<AirDailyForecastItem[]> {
     const { key, baseURL } = HefengConfig.pro
 
-    const response = await axios.request<HefengResponse>({
+    const response = await request<HefengResponse>({
       baseURL,
       url: '/air/5d',
       params: {
@@ -424,7 +424,7 @@ export class HefengHttpService {
   async getMinutelyRain(location: string): Promise<MinutelyRainItem[]> {
     const { key, baseURL } = HefengConfig.pro
 
-    const response = await axios.request<HefengResponse>({
+    const response = await request<HefengResponse>({
       baseURL,
       url: '/minutely/5m',
       params: {
@@ -459,7 +459,7 @@ export class HefengHttpService {
   async getWarningNow(location: string): Promise<WarningNowItem[]> {
     const { key, baseURL } = HefengConfig.basic
 
-    const response = await axios.request<HefengResponse>({
+    const response = await request<HefengResponse>({
       baseURL,
       url: '/warning/now',
       params: {
