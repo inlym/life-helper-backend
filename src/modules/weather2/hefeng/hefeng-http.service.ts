@@ -10,10 +10,10 @@ import {
   DailyForecastItem,
   HefengResponse,
   HourlyForecastItem,
-  LivingIndex,
+  LivingIndexItem,
   WarningCity,
   WeatherNow,
-} from './hefeng-http.interface'
+} from './hefeng-http.model'
 
 /**
  * ### 模块说明
@@ -23,7 +23,6 @@ import {
  * 2. 仅将请求参数封装为函数，不做缓存处理。
  * 3. 仅返回响应数据中的有效数据部分，不是将整个响应都返回的。
  * ```
- *
  *
  * ### 注意事项
  *
@@ -305,7 +304,7 @@ export class HefengHttpService {
    * @see
    * [API 开发文档](https://dev.qweather.com/docs/api/indices/)
    */
-  async getLivingIndex(location: string): Promise<LivingIndex> {
+  async getLivingIndexItem(location: string): Promise<LivingIndexItem> {
     const { key, baseURL } = HefengConfig.basic
 
     const response = await axios.request<HefengResponse>({
@@ -376,7 +375,7 @@ export class HefengHttpService {
    * @see
    * [API 开发文档](https://dev.qweather.com/docs/api/air/air-daily-forecast/)
    */
-  async getAirDailyForecast(location: string): Promise<AirDailyForecastItem> {
+  async getAirDailyForecast(location: string): Promise<AirDailyForecastItem[]> {
     const { key, baseURL } = HefengConfig.pro
 
     const response = await axios.request<HefengResponse>({

@@ -1,13 +1,13 @@
 import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common'
 import { HefengCachedService } from './hefeng-cached.service'
 import { INVALID_LOCATION } from './hefeng-error.constant'
-import { AirDailyForecastItem, AirNow, CityInfo, DailyForecastItem, HourlyForecastItem, LivingIndex, WarningCity, WeatherNow } from './hefeng-http.interface'
+import { AirDailyForecastItem, AirNow, CityInfo, DailyForecastItem, HourlyForecastItem, LivingIndexItem, WarningCity, WeatherNow } from './hefeng-http.model'
 
 /**
  * ### 模块说明
  *
  * ```markdown
- * 1. 封装对用于外部调用的方法。
+ * 1. 封装对用于外部调用的方法，只封装了用得到的方法，后续按需增加。
  * ```
  *
  *
@@ -134,45 +134,47 @@ export class HefengPublicService {
   }
 
   /**
-   * 获取未来 15 天逐天天气预报
+   * 获取逐天天气预报
    *
+   * @param days 天数
    * @param locationId 和风天气的地区 `LocationID`
    */
-  async get15DaysForecast(locationId: string): Promise<DailyForecastItem[]>
+  async getDailyForecast(days: 3 | 7 | 10 | 15, locationId: string): Promise<DailyForecastItem[]>
 
   /**
-   * 获取未来 15 天逐天天气预报
+   * 获取逐天天气预报
    *
+   * @param days 天数
    * @param longitude 经度
    * @param latitude 纬度
    */
-  async get15DaysForecast(longitude: number, latitude: number): Promise<DailyForecastItem[]>
+  async getDailyForecast(days: 3 | 7 | 10 | 15, longitude: number, latitude: number): Promise<DailyForecastItem[]>
 
   /**
-   * 获取未来 15 天逐天天气预报
+   * 获取逐小时天气预报
    *
    * @see
    * [API 开发文档](https://dev.qweather.com/docs/api/weather/weather-daily-forecast/)
    */
-  async get15DaysForecast(first: number | string, second?: number): Promise<DailyForecastItem[]> {
+  async getDailyForecast(days: 3 | 7 | 10 | 15, first: number | string, second?: number): Promise<DailyForecastItem[]> {
     const location = this.transformLocationParams(first, second)
-    return this.hefengCachedService.getDailyForecast(location, 15)
+    return this.hefengCachedService.getDailyForecast(location, days)
   }
 
   /**
-   * 获取未来 24 小时的逐小时天气预报
+   * 获取逐小时天气预报
    *
    * @param locationId 和风天气的地区 `LocationID`
    */
-  async get24HoursForecast(locationId: string): Promise<HourlyForecastItem[]>
+  async getHourlyForecast(hours: 24 | 72 | 168, locationId: string): Promise<HourlyForecastItem[]>
 
   /**
-   * 获取未来 24 小时的逐小时天气预报
+   * 获取逐小时天气预报
    *
    * @param longitude 经度
    * @param latitude 纬度
    */
-  async get24HoursForecast(longitude: number, latitude: number): Promise<HourlyForecastItem[]>
+  async getHourlyForecast(hours: 24 | 72 | 168, longitude: number, latitude: number): Promise<HourlyForecastItem[]>
 
   /**
    * 获取未来 24 小时的逐小时天气预报
@@ -180,9 +182,9 @@ export class HefengPublicService {
    * @see
    * [API 开发文档](https://dev.qweather.com/docs/api/weather/weather-hourly-forecast/)
    */
-  async get24HoursForecast(first: number | string, second?: number): Promise<HourlyForecastItem[]> {
+  async getHourlyForecast(hours: 24 | 72 | 168, first: number | string, second?: number): Promise<HourlyForecastItem[]> {
     const location = this.transformLocationParams(first, second)
-    return this.hefengCachedService.getHourlyForecast(location, 24)
+    return this.hefengCachedService.getHourlyForecast(location, hours)
   }
 
   /**
@@ -203,9 +205,9 @@ export class HefengPublicService {
    * @see
    * [API 开发文档](https://dev.qweather.com/docs/api/indices/)
    */
-  async getLivingIndex(locationId: string): Promise<LivingIndex> {
+  async getLivingIndexItem(locationId: string): Promise<LivingIndexItem> {
     const location = locationId
-    return this.hefengCachedService.getLivingIndex(location)
+    return this.hefengCachedService.getLivingIndexItem(location)
   }
 
   /**
@@ -229,7 +231,7 @@ export class HefengPublicService {
    * @see
    * [API 开发文档](https://dev.qweather.com/docs/api/air/air-daily-forecast/)
    */
-  async getAirDailyForecast(locationId: string): Promise<AirDailyForecastItem> {
+  async getAirDailyForecast(locationId: string): Promise<AirDailyForecastItem[]> {
     const location = locationId
     return this.hefengCachedService.getAirDailyForecast(location)
   }
@@ -237,7 +239,8 @@ export class HefengPublicService {
   /**
    * 获取分钟级降水
    *
-   * @param location 需要查询地区的以英文逗号分隔的 `经度,纬度` 坐标（十进制）
+   * @param longitude 经度
+   * @param latitude 纬度
    *
    * @see
    * [API 开发文档](https://dev.qweather.com/docs/api/grid-weather/minutely/)

@@ -1,5 +1,5 @@
 /** 和风天气接口响应数据基本格式 */
-export interface HefengResponse {
+export class HefengResponse {
   /** API状态码 */
   code: string
 
@@ -13,7 +13,7 @@ export interface HefengResponse {
   now: WeatherNow | AirNow
 
   /** 逐天天气预报，天气生活指数，空气质量预报 */
-  daily: DailyForecastItem[] | LivingIndex[] | AirDailyForecastItem[]
+  daily: DailyForecastItem[] | LivingIndexItem[] | AirDailyForecastItem[]
 
   /** 逐小时天气预报 */
   hourly: HourlyForecastItem[]
@@ -36,7 +36,7 @@ export interface HefengResponse {
  * @see
  * [城市信息查询](https://dev.qweather.com/docs/api/geo/city-lookup/)
  */
-export interface CityInfo {
+export class CityInfo {
   /** 地区/城市名称 */
   name: string
 
@@ -84,7 +84,7 @@ export interface CityInfo {
  * @see
  * [实时天气](https://dev.qweather.com/docs/api/weather/weather-now/)
  */
-export interface WeatherNow {
+export class WeatherNow {
   /** 数据观测时间 */
   obsTime: string
 
@@ -137,7 +137,7 @@ export interface WeatherNow {
  * @see
  * [逐天天气预报](https://dev.qweather.com/docs/api/weather/weather-daily-forecast/)
  */
-export interface DailyForecastItem {
+export class DailyForecastItem {
   // 以下为原始数据（未做处理）
 
   /** 预报日期 */
@@ -227,7 +227,7 @@ export interface DailyForecastItem {
  * @see
  * [逐小时天气预报](https://dev.qweather.com/docs/api/weather/weather-hourly-forecast/)
  */
-export interface HourlyForecastItem {
+export class HourlyForecastItem {
   /** 预报时间 */
   fxTime: string
 
@@ -277,7 +277,7 @@ export interface HourlyForecastItem {
  * @see
  * [天气预警城市列表](https://dev.qweather.com/docs/api/warning/weather-warning-city-list/)
  */
-export interface WarningCity {
+export class WarningCity {
   /** 当前国家预警的LocationID */
   locationId: string
 }
@@ -288,7 +288,7 @@ export interface WarningCity {
  * @see
  * [天气生活指数](https://dev.qweather.com/docs/api/indices/)
  */
-export interface LivingIndex {
+export class LivingIndexItem {
   /** 预报日期 */
   date: string
 
@@ -317,7 +317,7 @@ export interface LivingIndex {
  * @see
  * [实时空气质量](https://dev.qweather.com/docs/api/air/air-now/)
  */
-export interface AirNow {
+export class AirNow {
   /** 空气质量指数 */
   aqi: string
 
@@ -355,7 +355,7 @@ export interface AirNow {
  * @see
  * [空气质量预报](https://dev.qweather.com/docs/api/air/air-daily-forecast/)
  */
-export interface AirDailyForecastItem {
+export class AirDailyForecastItem {
   /** 预报日期 */
   fxDate: string
 
@@ -378,7 +378,7 @@ export interface AirDailyForecastItem {
  * @see
  * [分钟级降水](https://dev.qweather.com/docs/api/grid-weather/minutely/)
  */
-export interface MinutelyRainItem {
+export class MinutelyRainItem {
   /** 预报时间 */
   fxTime: string
 
@@ -395,7 +395,7 @@ export interface MinutelyRainItem {
  * @see
  * [天气灾害预警](https://dev.qweather.com/docs/api/warning/weather-warning/)
  */
-export interface WarningNowItem {
+export class WarningNowItem {
   /** 本条预警的唯一标识，可判断本条预警是否已经存在 */
   id: string
 

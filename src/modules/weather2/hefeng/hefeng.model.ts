@@ -329,7 +329,7 @@ export interface WeatherHourlyForecastResponse {
 }
 
 @Exclude()
-export class LivingIndexItem {
+export class LivingIndexItemItem {
   /** 预报日期 */
   @Expose()
   date: string
@@ -359,8 +359,8 @@ export class LivingIndexItem {
   iconUrl: string
 }
 
-export interface LivingIndexResponse {
-  daily: LivingIndexItem[]
+export interface LivingIndexItemResponse {
+  daily: LivingIndexItemItem[]
 }
 
 @Exclude()

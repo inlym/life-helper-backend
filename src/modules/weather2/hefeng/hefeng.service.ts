@@ -20,8 +20,8 @@ import {
   AirNowResponse,
   GridWeatherMinutelyItem,
   GridWeatherMinutelyResponse,
-  LivingIndexItem,
-  LivingIndexResponse,
+  LivingIndexItemItem,
+  LivingIndexItemResponse,
   WeatherDailyForecastItem,
   WeatherDailyForecastResponse,
   WeatherHourlyForecastItem,
@@ -204,13 +204,13 @@ export class HefengService {
   /**
    * 获取天气生活指数
    */
-  async getLivingIndex(locationId: string): Promise<LivingIndexItem[]> {
-    const response: LivingIndexResponse = await this.hefengApiService.getData('indices-1d', locationId)
+  async getLivingIndexItem(locationId: string): Promise<LivingIndexItemItem[]> {
+    const response: LivingIndexItemResponse = await this.hefengApiService.getData('indices-1d', locationId)
     const iconUrlPrefix = AliyunOssConfig.admin.url + '/static/hefeng/live/'
 
-    return response.daily.map((item: LivingIndexItem) => {
+    return response.daily.map((item: LivingIndexItemItem) => {
       item.iconUrl = iconUrlPrefix + item.type + '.svg'
-      return plainToClass(LivingIndexItem, item)
+      return plainToClass(LivingIndexItemItem, item)
     })
   }
 

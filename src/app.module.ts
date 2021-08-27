@@ -15,6 +15,7 @@ import { UserInfoModule } from './modules/user-info/user-info.module'
 import { UserModule } from './modules/user/user.module'
 import { WeatherModule } from './modules/weather/weather.module'
 import { SystemModule } from './system/system.module'
+import { Weather2Module } from './modules/weather2/weather2.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { SystemModule } from './system/system.module'
     DiaryModule,
     UploadModule,
     SystemModule,
+    Weather2Module,
   ],
 
   providers: [{ provide: APP_FILTER, useClass: AllExceptionFilter }],
