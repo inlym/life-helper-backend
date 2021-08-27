@@ -15,6 +15,9 @@ import { COMMON_SERVER_ERROR } from 'src/common/errors.constant'
 import { LbsqqService } from 'src/shared/lbsqq/lbsqq.service'
 import { CityInfo, HefengApiType, HefengRequestOptions, HefengResponseData, ProfileItem } from './hefeng.interface'
 
+/**
+ * @deprecated
+ */
 @Injectable()
 export class HefengApiService {
   private readonly logger = new Logger(HefengApiService.name)

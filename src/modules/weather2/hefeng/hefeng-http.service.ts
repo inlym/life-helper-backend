@@ -2,6 +2,7 @@ import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common'
 import axios from 'axios'
 import { HefengConfig } from 'life-helper-config'
 import { COMMON_SERVER_ERROR } from 'src/common/errors.constant'
+import { INVALID_LOCATION } from './hefeng-error.constant'
 import {
   AirDailyForecastItem,
   AirNow,
@@ -37,6 +38,26 @@ import {
 export class HefengHttpService {
   /** 日志工具 */
   private readonly logger = new Logger(HefengHttpService.name)
+
+  /**
+   * 由于使用了无效的 `location` 数据，而返回的 `code`
+   *
+   * @see
+   * [错误状态码](https://dev.qweather.com/docs/start/status-code/)
+   *
+   *
+   * @description
+   *
+   * ### 状态码说明
+   *
+   * ```markdown
+   * 1. `code` 指的是响应数据中的 `code` 字段，而不是响应状态码。
+   * 2. `204` 含义：请求成功，但你查询的地区暂时没有你需要的数据。
+   * 3. `400` 含义：请求错误，可能包含错误的请求参数或缺少必选的请求参数。（实测使用地名进行城市查询，没找到也会报这个错，因此把它也加上）
+   * 4. `404` 含义：查询的数据或地区不存在。
+   * ```
+   */
+  private readonly invalidLocationCodes = ['204', '400', '404']
 
   /**
    * 查询和风天气中的城市信息
@@ -84,7 +105,11 @@ export class HefengHttpService {
       // 失败情况
       this.logger.error(`[接口请求错误] 和风天气 - 城市信息查询, 响应 code => \`${response.data.code}\`,  location => \`${location}\` `)
 
-      throw new HttpException(COMMON_SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR)
+      if (this.invalidLocationCodes.includes(response.data.code)) {
+        throw new HttpException(INVALID_LOCATION, HttpStatus.BAD_REQUEST)
+      } else {
+        throw new HttpException(COMMON_SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR)
+      }
     }
   }
 
@@ -120,7 +145,11 @@ export class HefengHttpService {
       // 失败情况
       this.logger.error(`[接口请求错误] 和风天气 - 热门城市查询, 响应 code => \`${response.data.code}\` `)
 
-      throw new HttpException(COMMON_SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR)
+      if (this.invalidLocationCodes.includes(response.data.code)) {
+        throw new HttpException(INVALID_LOCATION, HttpStatus.BAD_REQUEST)
+      } else {
+        throw new HttpException(COMMON_SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR)
+      }
     }
   }
 
@@ -151,7 +180,11 @@ export class HefengHttpService {
       // 失败情况
       this.logger.error(`[接口请求错误] 和风天气 - 实时天气, 响应 code => \`${response.data.code}\`,  location => \`${location}\` `)
 
-      throw new HttpException(COMMON_SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR)
+      if (this.invalidLocationCodes.includes(response.data.code)) {
+        throw new HttpException(INVALID_LOCATION, HttpStatus.BAD_REQUEST)
+      } else {
+        throw new HttpException(COMMON_SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR)
+      }
     }
   }
 
@@ -188,7 +221,11 @@ export class HefengHttpService {
       // 失败情况
       this.logger.error(`[接口请求错误] 和风天气 - 逐天天气预报, 响应 code => \`${response.data.code}\`,  location => \`${location}\` `)
 
-      throw new HttpException(COMMON_SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR)
+      if (this.invalidLocationCodes.includes(response.data.code)) {
+        throw new HttpException(INVALID_LOCATION, HttpStatus.BAD_REQUEST)
+      } else {
+        throw new HttpException(COMMON_SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR)
+      }
     }
   }
 
@@ -220,7 +257,11 @@ export class HefengHttpService {
       // 失败情况
       this.logger.error(`[接口请求错误] 和风天气 - 逐小时天气预报, 响应 code => \`${response.data.code}\`,  location => \`${location}\` `)
 
-      throw new HttpException(COMMON_SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR)
+      if (this.invalidLocationCodes.includes(response.data.code)) {
+        throw new HttpException(INVALID_LOCATION, HttpStatus.BAD_REQUEST)
+      } else {
+        throw new HttpException(COMMON_SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR)
+      }
     }
   }
 
@@ -248,7 +289,11 @@ export class HefengHttpService {
       // 失败情况
       this.logger.error(`[接口请求错误] 和风天气 - 天气预警城市列表, 响应 code => \`${response.data.code}\` `)
 
-      throw new HttpException(COMMON_SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR)
+      if (this.invalidLocationCodes.includes(response.data.code)) {
+        throw new HttpException(INVALID_LOCATION, HttpStatus.BAD_REQUEST)
+      } else {
+        throw new HttpException(COMMON_SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR)
+      }
     }
   }
 
@@ -280,7 +325,11 @@ export class HefengHttpService {
       // 失败情况
       this.logger.error(`[接口请求错误] 和风天气 - 天气生活指数, 响应 code => \`${response.data.code}\`,  location => \`${location}\` `)
 
-      throw new HttpException(COMMON_SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR)
+      if (this.invalidLocationCodes.includes(response.data.code)) {
+        throw new HttpException(INVALID_LOCATION, HttpStatus.BAD_REQUEST)
+      } else {
+        throw new HttpException(COMMON_SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR)
+      }
     }
   }
 
@@ -311,7 +360,11 @@ export class HefengHttpService {
       // 失败情况
       this.logger.error(`[接口请求错误] 和风天气 - 实时空气质量, 响应 code => \`${response.data.code}\`,  location => \`${location}\` `)
 
-      throw new HttpException(COMMON_SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR)
+      if (this.invalidLocationCodes.includes(response.data.code)) {
+        throw new HttpException(INVALID_LOCATION, HttpStatus.BAD_REQUEST)
+      } else {
+        throw new HttpException(COMMON_SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR)
+      }
     }
   }
 
@@ -342,7 +395,11 @@ export class HefengHttpService {
       // 失败情况
       this.logger.error(`[接口请求错误] 和风天气 - 空气质量预报, 响应 code => \`${response.data.code}\`,  location => \`${location}\` `)
 
-      throw new HttpException(COMMON_SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR)
+      if (this.invalidLocationCodes.includes(response.data.code)) {
+        throw new HttpException(INVALID_LOCATION, HttpStatus.BAD_REQUEST)
+      } else {
+        throw new HttpException(COMMON_SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR)
+      }
     }
   }
 
@@ -382,7 +439,11 @@ export class HefengHttpService {
       // 失败情况
       this.logger.error(`[接口请求错误] 和风天气 - 分钟级降水, 响应 code => \`${response.data.code}\`,  location => \`${location}\` `)
 
-      throw new HttpException(COMMON_SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR)
+      if (this.invalidLocationCodes.includes(response.data.code)) {
+        throw new HttpException(INVALID_LOCATION, HttpStatus.BAD_REQUEST)
+      } else {
+        throw new HttpException(COMMON_SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR)
+      }
     }
   }
 
@@ -413,7 +474,11 @@ export class HefengHttpService {
       // 失败情况
       this.logger.error(`[接口请求错误] 和风天气 - 天气灾害预警, 响应 code => \`${response.data.code}\`,  location => \`${location}\` `)
 
-      throw new HttpException(COMMON_SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR)
+      if (this.invalidLocationCodes.includes(response.data.code)) {
+        throw new HttpException(INVALID_LOCATION, HttpStatus.BAD_REQUEST)
+      } else {
+        throw new HttpException(COMMON_SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR)
+      }
     }
   }
 }

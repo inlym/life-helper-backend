@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { LbsqqService } from 'src/shared/lbsqq/lbsqq.service'
 import { Repository } from 'typeorm'
-import { HefengService } from '../hefeng/hefeng.service'
+import { HefengService } from '../../weather2/hefeng/hefeng.service'
 import { WxChooseLocationResult } from './weather-city.dto'
 import { WeatherCity } from './weather-city.entity'
 

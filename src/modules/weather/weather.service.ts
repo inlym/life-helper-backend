@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { LbsqqService } from 'src/shared/lbsqq/lbsqq.service'
-import { AirDailyForecastItem, WeatherDailyForecastItem, WeatherNow } from './hefeng/hefeng.model'
-import { HefengService } from './hefeng/hefeng.service'
+import { AirDailyForecastItem, WeatherDailyForecastItem, WeatherNow } from '../weather2/hefeng/hefeng.model'
+import { HefengService } from '../weather2/hefeng/hefeng.service'
 import { WeatherCity } from './weather-city/weather-city.entity'
 import { WeatherCityService } from './weather-city/weather-city.service'
 
