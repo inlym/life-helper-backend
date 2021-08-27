@@ -9,23 +9,29 @@ export interface HefengResponse {
   /** 热门城市查询 */
   topCityList: CityInfo[]
 
-  /** 实时天气数据 */
-  now: WeatherNow
+  /** 实时天气数据，实时空气质量 */
+  now: WeatherNow | AirNow
 
-  /** 逐天天气预报 */
-  dayly: DailyForecastItem[]
+  /** 逐天天气预报，天气生活指数，空气质量预报 */
+  daily: DailyForecastItem[] | LivingIndex[] | AirDailyForecastItem[]
 
   /** 逐小时天气预报 */
   hourly: HourlyForecastItem[]
 
+  /** 分钟级降水 */
+  minutely: MinutelyRainItem[]
+
   /** 天气预警城市列表 */
   warningLocList: WarningCity[]
+
+  /** 天气灾害预警 */
+  warning: WarningNowItem[]
 }
 
 /** 和风天气接口响应数据 - 城市信息查询 */
 
 /**
- * `城市信息查询` 接口主要数据
+ * 城市信息查询` 接口主要数据
  *
  * @see
  * [城市信息查询](https://dev.qweather.com/docs/api/geo/city-lookup/)
@@ -274,4 +280,163 @@ export interface HourlyForecastItem {
 export interface WarningCity {
   /** 当前国家预警的LocationID */
   locationId: string
+}
+
+/**
+ * 天气生活指数
+ *
+ * @see
+ * [天气生活指数](https://dev.qweather.com/docs/api/indices/)
+ */
+export interface LivingIndex {
+  /** 预报日期 */
+  date: string
+
+  /** 生活指数类型ID */
+  type: string
+
+  /** 生活指数类型的名称 */
+  name: string
+
+  /** 生活指数预报等级 */
+  level: string
+
+  /** 生活指数预报级别名称 */
+  category: string
+
+  /** 生活指数预报的详细描述，可能为空 */
+  text: string
+
+  // 自定义部分
+  iconUrl: string
+}
+
+/**
+ * 实时空气质量
+ *
+ * @see
+ * [实时空气质量](https://dev.qweather.com/docs/api/air/air-now/)
+ */
+export interface AirNow {
+  /** 空气质量指数 */
+  aqi: string
+
+  /** 空气质量指数等级 */
+  level: string
+
+  /** 空气质量指数级别 */
+  category: string
+
+  /** 空气质量的主要污染物，空气质量为优时，返回值为 `NA` */
+  primary: string
+
+  /** PM10 */
+  pm10: string
+
+  /** PM2.5 */
+  pm2p5: string
+
+  /** 二氧化氮 */
+  no2: string
+
+  /** 二氧化硫 */
+  so2: string
+
+  /** 一氧化碳 */
+  co: string
+
+  /** 臭氧 */
+  o3: string
+}
+
+/**
+ * 空气质量预报
+ *
+ * @see
+ * [空气质量预报](https://dev.qweather.com/docs/api/air/air-daily-forecast/)
+ */
+export interface AirDailyForecastItem {
+  /** 预报日期 */
+  fxDate: string
+
+  /** 空气质量指数 */
+  aqi: string
+
+  /** 空气质量指数等级 */
+  level: string
+
+  /** 空气质量指数级别 */
+  category: string
+
+  /** 空气质量的主要污染物，空气质量为优时，返回值为 `NA` */
+  primary: string
+}
+
+/**
+ * 分钟级降水
+ *
+ * @see
+ * [分钟级降水](https://dev.qweather.com/docs/api/grid-weather/minutely/)
+ */
+export interface MinutelyRainItem {
+  /** 预报时间 */
+  fxTime: string
+
+  /** 10分钟累计降水量，单位毫米 */
+  precip: string
+
+  /** 降水类型 */
+  type: 'rain' | 'snow'
+}
+
+/**
+ * 天气灾害预警
+ *
+ * @see
+ * [天气灾害预警](https://dev.qweather.com/docs/api/warning/weather-warning/)
+ */
+export interface WarningNowItem {
+  /** 本条预警的唯一标识，可判断本条预警是否已经存在 */
+  id: string
+
+  /** 预警发布单位，可能为空 */
+  sender?: string
+
+  /** 预警发布时间 */
+  pubTime: string
+
+  /** 预警信息标题 */
+  title: string
+
+  /** 预警开始时间，可能为空 */
+  startTime?: string
+
+  /** 预警结束时间，可能为空 */
+  endTime?: string
+
+  /**
+   * 预警状态，可能为空
+   *
+   * ```markdown
+   * 1. `active` - 预警中或首次预警
+   * 2. `update` - 预警信息更新
+   * 3. `cancel` - 取消预警
+   * ```
+   */
+  status?: string
+
+  /** 预警等级 */
+  level: string
+
+  /** 预警类型ID */
+  type: string
+
+  /** 预警类型名称 */
+  typeName: string
+
+  /** 预警详细文字描述 */
+  text: string
+
+  /** 与本条预警相关联的预警ID，当预警状态为cancel或update时返回。可能为空 */
+  related?: string
 }
