@@ -16,7 +16,10 @@ import { HefengHttpService } from './hefeng-http.service'
 describe('(class) HefengHttpService', () => {
   let service: HefengHttpService
 
+  /** 用于测试的经纬度坐标 */
   const testLocation = '120.137956,30.243928'
+
+  /** 用于测试的 `LocationID`，与上述的经纬度对应 */
   const testLocationId = '101210113'
 
   beforeAll(async () => {
@@ -150,23 +153,78 @@ describe('(class) HefengHttpService', () => {
   })
 
   describe('(method) getDailyForecast', () => {
-    describe('使用 `LocationID` 调用', () => {
+    describe('使用 `LocationID` 调用（未来 7 天预报）', () => {
       let result: DailyForecastItem[]
 
+      const keys = [
+        'fxDate',
+        'sunrise',
+        'sunset',
+        'moonrise',
+        'moonset',
+        'moonPhase',
+        'tempMax',
+        'tempMin',
+        'iconDay',
+        'textDay',
+        'iconNight',
+        'textNight',
+        'wind360Day',
+        'windDirDay',
+        'windScaleDay',
+        'windSpeedDay',
+        'wind360Night',
+        'windDirNight',
+        'windScaleNight',
+        'windSpeedNight',
+        'humidity',
+        'precip',
+        'pressure',
+        'vis',
+        'cloud',
+        'uvIndex',
+      ]
+
       it('方法调用成功', async () => {
-        result = await service.getDailyForecast(testLocationId, 3)
+        result = await service.getDailyForecast(testLocationId, 7)
         expect(result).toBeDefined()
+      })
+
+      it('列表长度为 7', () => {
+        expect(result.length).toBe(7)
+      })
+
+      it('包含所有开发文档上指定的所有属性', () => {
+        result.forEach((item: DailyForecastItem) => {
+          keys.forEach((key: string) => {
+            expect(item[key]).toBeDefined()
+          })
+        })
       })
     })
   })
 
   describe('(method) getHourlyForecast', () => {
-    describe('使用 `LocationID` 调用', () => {
+    describe('使用 `LocationID` 调用（未来 24 小时预报）', () => {
       let result: HourlyForecastItem[]
+
+      const keys = ['fxTime', 'temp', 'icon', 'text', 'wind360', 'windDir', 'windScale', 'windSpeed', 'humidity', 'pop', 'precip', 'pressure', 'cloud', 'dew']
 
       it('方法调用成功', async () => {
         result = await service.getHourlyForecast(testLocationId, 24)
         expect(result).toBeDefined()
+      })
+
+      it('列表长度为 24', () => {
+        expect(result.length).toBe(24)
+      })
+
+      it('包含所有开发文档上指定的所有属性', () => {
+        result.forEach((item: HourlyForecastItem) => {
+          keys.forEach((key: string) => {
+            expect(item[key]).toBeDefined()
+          })
+        })
       })
     })
   })
@@ -175,9 +233,19 @@ describe('(class) HefengHttpService', () => {
     describe('使用 `LocationID` 调用', () => {
       let result: LivingIndexItem[]
 
+      const keys = ['date', 'type', 'name', 'level', 'category', 'text']
+
       it('方法调用成功', async () => {
         result = await service.getLivingIndex(testLocationId)
         expect(result).toBeDefined()
+      })
+
+      it('包含所有开发文档上指定的所有属性', () => {
+        result.forEach((item: LivingIndexItem) => {
+          keys.forEach((key: string) => {
+            expect(item[key]).toBeDefined()
+          })
+        })
       })
     })
   })
@@ -186,9 +254,17 @@ describe('(class) HefengHttpService', () => {
     describe('使用 `LocationID` 调用', () => {
       let result: AirNow
 
+      const keys = ['pubTime', 'aqi', 'level', 'category', 'primary', 'pm10', 'pm2p5', 'no2', 'so2', 'co', 'o3']
+
       it('方法调用成功', async () => {
         result = await service.getAirNow(testLocationId)
         expect(result).toBeDefined()
+      })
+
+      it('包含所有开发文档上指定的所有属性', () => {
+        keys.forEach((key: string) => {
+          expect(result[key]).toBeDefined()
+        })
       })
     })
   })
@@ -197,9 +273,19 @@ describe('(class) HefengHttpService', () => {
     describe('使用 `LocationID` 调用', () => {
       let result: AirDailyForecastItem[]
 
+      const keys = ['fxDate', 'aqi', 'level', 'category', 'primary']
+
       it('方法调用成功', async () => {
         result = await service.getAirDailyForecast(testLocationId)
         expect(result).toBeDefined()
+      })
+
+      it('包含所有开发文档上指定的所有属性', () => {
+        result.forEach((item: AirDailyForecastItem) => {
+          keys.forEach((key: string) => {
+            expect(item[key]).toBeDefined()
+          })
+        })
       })
     })
   })
@@ -208,9 +294,19 @@ describe('(class) HefengHttpService', () => {
     describe('使用 `LocationID` 调用', () => {
       let result: MinutelyRainItem[]
 
+      const keys = ['fxTime', 'precip', 'type']
+
       it('方法调用成功', async () => {
         result = await service.getMinutelyRain(testLocation)
         expect(result).toBeDefined()
+      })
+
+      it('包含所有开发文档上指定的所有属性', () => {
+        result.forEach((item: MinutelyRainItem) => {
+          keys.forEach((key: string) => {
+            expect(item[key]).toBeDefined()
+          })
+        })
       })
     })
   })
@@ -219,9 +315,19 @@ describe('(class) HefengHttpService', () => {
     describe('使用 `LocationID` 调用', () => {
       let result: WarningCity[]
 
+      const keys = ['locationId']
+
       it('方法调用成功', async () => {
         result = await service.getWarningCityList()
         expect(result).toBeDefined()
+      })
+
+      it('包含所有开发文档上指定的所有属性', () => {
+        result.forEach((item: WarningCity) => {
+          keys.forEach((key: string) => {
+            expect(item[key]).toBeDefined()
+          })
+        })
       })
     })
   })
