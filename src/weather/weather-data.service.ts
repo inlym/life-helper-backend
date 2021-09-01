@@ -50,7 +50,7 @@ export class WeatherDataService {
   /**
    * 获取天气生活指数对应的图标
    */
-  private getLivingIndexItemIconUrl(type: string): string {
+  private getLivingIndexIconUrl(type: string): string {
     return AliyunOssConfig.admin.url + '/static/hefeng/live/' + type + '.svg'
   }
 
@@ -131,10 +131,10 @@ export class WeatherDataService {
    *
    * @param locationId 和风天气的地区 `LocationID`
    */
-  async getLivingIndexItem(locationId: string): Promise<ExtLivingIndexItem[]> {
-    const list = await this.hefengPublicService.getLivingIndexItem(locationId)
+  async getLivingIndex(locationId: string): Promise<ExtLivingIndexItem[]> {
+    const list = await this.hefengPublicService.getLivingIndex(locationId)
     return list.map((item: ExtLivingIndexItem) => {
-      item.iconUrl = this.getLivingIndexItemIconUrl(item.type)
+      item.iconUrl = this.getLivingIndexIconUrl(item.type)
 
       return plainToClass(ExtLivingIndexItem, item)
     })
@@ -223,7 +223,7 @@ export class WeatherDataService {
     promises.push(this.getHourlyForecast(24, locationId))
     promises.push(this.getAirNow(locationId))
     promises.push(this.getAirDailyForecast(locationId))
-    promises.push(this.getLivingIndexItem(locationId))
+    promises.push(this.getLivingIndex(locationId))
     promises.push(this.getWarningNow(locationId))
 
     if (typeof longitude === 'number' && typeof latitude === 'number') {

@@ -180,7 +180,7 @@ export class HefengCachedService {
    *
    * @param location 需要查询地区的 `LocationID` 或以英文逗号分隔的 `经度,纬度` 坐标（十进制）
    */
-  async getLivingIndexItem(location: string): Promise<LivingIndexItem[]> {
+  async getLivingIndex(location: string): Promise<LivingIndexItem[]> {
     /** Redis 键名 */
     const rKey = `hefeng:living_index:location:${location}`
 
@@ -191,7 +191,7 @@ export class HefengCachedService {
     if (result) {
       return JSON.parse(result)
     } else {
-      const res = await this.hefengHttpService.getLivingIndexItem(location)
+      const res = await this.hefengHttpService.getLivingIndex(location)
       await this.redis.set(rKey, JSON.stringify(res), 'EX', expiration)
       return res
     }

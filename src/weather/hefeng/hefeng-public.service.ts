@@ -218,9 +218,9 @@ export class HefengPublicService {
    * @see
    * [API 开发文档](https://dev.qweather.com/docs/api/indices/)
    */
-  async getLivingIndexItem(locationId: string): Promise<LivingIndexItem[]> {
+  async getLivingIndex(locationId: string): Promise<LivingIndexItem[]> {
     const location = locationId
-    return this.hefengCachedService.getLivingIndexItem(location)
+    return this.hefengCachedService.getLivingIndex(location)
   }
 
   /**

@@ -18,12 +18,15 @@ import {
 } from './hefeng-http.model'
 
 /**
+ * 和风天气 - HTTP 请求服务
+ *
  * ### 模块说明
  *
  * ```markdown
  * 1. 封装对 [和风天气](https://dev.qweather.com/docs/api/) API 的请求。
- * 2. 仅将请求参数封装为函数，不做缓存处理。
+ * 2. 仅将请求参数封装为函数，不对数据本身做任何处理，不做缓存处理。
  * 3. 仅返回响应数据中的有效数据部分，不是将整个响应都返回的。
+ * 4. 只将用得到的参数进行封装为方法的入参，其余部分写死在请求参数中。
  * ```
  *
  * ### 注意事项
@@ -63,7 +66,7 @@ export class HefengHttpService {
   /**
    * 查询和风天气中的城市信息
    *
-   * @param location 位置
+   * @param location 位置，详情见下方说明
    *
    * @see
    * [API 开发文档](https://dev.qweather.com/docs/api/geo/city-lookup/)
@@ -306,7 +309,7 @@ export class HefengHttpService {
    * @see
    * [API 开发文档](https://dev.qweather.com/docs/api/indices/)
    */
-  async getLivingIndexItem(location: string): Promise<LivingIndexItem[]> {
+  async getLivingIndex(location: string): Promise<LivingIndexItem[]> {
     const { key, baseURL } = HefengConfig.basic
 
     const response = await request<HefengResponse>({
