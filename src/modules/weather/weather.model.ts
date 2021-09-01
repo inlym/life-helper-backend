@@ -102,7 +102,7 @@ export class CombinedWeather {
   f24h: ExtHourlyForecastItem[]
   airnow: ExtAirNow
   air5d: ExtAirDailyForecastItem[]
-  liveIndex: ExtLivingIndexItem[]
+  livingIndex: ExtLivingIndexItem[]
   warning: ExtWarningNowItem[]
   rain: ExtMinutelyRainItem[]
 }

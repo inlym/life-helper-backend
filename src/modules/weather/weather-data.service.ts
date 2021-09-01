@@ -230,8 +230,8 @@ export class WeatherDataService {
       promises.push(this.getMinutelyRain(longitude, latitude))
     }
 
-    const [now, f15d, f24h, airnow, air5d, liveIndex, warning, rain] = await Promise.all(promises)
+    const [now, f15d, f24h, airnow, air5d, livingIndex, warning, rain] = await Promise.all(promises)
 
-    return { now, f15d, f24h, airnow, air5d, liveIndex, warning, rain }
+    return { now, f15d, f24h, airnow, air5d, livingIndex, warning, rain }
   }
 }
