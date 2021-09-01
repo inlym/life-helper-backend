@@ -6,14 +6,13 @@ import { HefengPublicService } from './hefeng-public.service'
 /**
  * 和风天气模块
  *
- * ### 模块说明
+ * ### 模块定位
  *
  * ```markdown
  * 1. 用于获取天气类数据。
  * ```
  *
- *
- * ### 各文件分工
+ * ### 各服务分工
  *
  * ```markdown
  * 1. `HefengHttpService` - 将对和风天气的 API 请求封装为内部的函数方法。
