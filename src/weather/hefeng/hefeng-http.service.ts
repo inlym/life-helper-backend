@@ -20,7 +20,7 @@ import {
 /**
  * 和风天气 - HTTP 请求服务
  *
- * ### 模块说明
+ * ### 功能说明
  *
  * ```markdown
  * 1. 封装对 [和风天气](https://dev.qweather.com/docs/api/) API 的请求。

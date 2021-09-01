@@ -3,7 +3,6 @@ import { LbsqqService } from 'src/shared/lbsqq/lbsqq.service'
 import { HefengPublicService } from './hefeng/hefeng-public.service'
 import { WeatherCity } from './weather-city/weather-city.entity'
 import { WeatherCityService } from './weather-city/weather-city.service'
-import { WeatherDataService } from './weather-data.service'
 import { GetWeatherOptions, LocationCoordinate, MixedWeather } from './weather.model'
 
 /**
@@ -18,7 +17,6 @@ export class WeatherMainService {
   constructor(
     private readonly lbsqqService: LbsqqService,
     private readonly hefengPublicService: HefengPublicService,
-    private readonly weatherDataService: WeatherDataService,
     private readonly weatherCityService: WeatherCityService
   ) {}
 

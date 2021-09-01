@@ -94,7 +94,7 @@ export class HefengCachedService {
    */
   async getWeatherNow(location: string): Promise<WeatherNow> {
     /** Redis 键名 */
-    const rKey = `hefeng:weather_now:location:${location}`
+    const rKey = `hefeng:now:location:${location}`
 
     /** 缓存时长：10分钟 */
     const expiration = 60 * 10
@@ -156,26 +156,6 @@ export class HefengCachedService {
   }
 
   /**
-   * 获取天气预警城市列表
-   */
-  async getWarningCityList(): Promise<WarningCity[]> {
-    /** Redis 键名 */
-    const rKey = `hefeng:city:warning_city`
-
-    /** 缓存时长：10分钟 */
-    const expiration = 60 * 10
-
-    const result = await this.redis.get(rKey)
-    if (result) {
-      return JSON.parse(result)
-    } else {
-      const res = await this.hefengHttpService.getWarningCityList()
-      await this.redis.set(rKey, JSON.stringify(res), 'EX', expiration)
-      return res
-    }
-  }
-
-  /**
    * 获取天气生活指数
    *
    * @param location 需要查询地区的 `LocationID` 或以英文逗号分隔的 `经度,纬度` 坐标（十进制）
@@ -184,8 +164,8 @@ export class HefengCachedService {
     /** Redis 键名 */
     const rKey = `hefeng:living_index:location:${location}`
 
-    /** 缓存时长：20分钟 */
-    const expiration = 60 * 20
+    /** 缓存时长：2 小时 */
+    const expiration = 60 * 60 * 2
 
     const result = await this.redis.get(rKey)
     if (result) {
@@ -258,6 +238,26 @@ export class HefengCachedService {
       return JSON.parse(result)
     } else {
       const res = await this.hefengHttpService.getMinutelyRain(location)
+      await this.redis.set(rKey, JSON.stringify(res), 'EX', expiration)
+      return res
+    }
+  }
+
+  /**
+   * 获取天气预警城市列表
+   */
+  async getWarningCityList(): Promise<WarningCity[]> {
+    /** Redis 键名 */
+    const rKey = `hefeng:city:warning_city`
+
+    /** 缓存时长：10分钟 */
+    const expiration = 60 * 10
+
+    const result = await this.redis.get(rKey)
+    if (result) {
+      return JSON.parse(result)
+    } else {
+      const res = await this.hefengHttpService.getWarningCityList()
       await this.redis.set(rKey, JSON.stringify(res), 'EX', expiration)
       return res
     }

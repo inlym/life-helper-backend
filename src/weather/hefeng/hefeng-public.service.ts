@@ -2,17 +2,18 @@ import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common'
 import { HefengCachedService } from './hefeng-cached.service'
 import { INVALID_LOCATION } from './hefeng-error.constant'
 import {
-  AirDailyForecastItem,
-  AirNow,
-  CityInfo,
-  DailyForecastItem,
-  HourlyForecastItem,
-  LivingIndexItem,
-  MinutelyRainItem,
-  WarningCity,
-  WarningNowItem,
-  WeatherNow,
-} from './hefeng-http.model'
+  ExtAirDailyForecastItem,
+  ExtAirNow,
+  ExtDailyForecastItem,
+  ExtHourlyForecastItem,
+  ExtLivingIndexItem,
+  ExtMinutelyRainItem,
+  ExtWarningCity,
+  ExtWarningNowItem,
+  ExtWeatherNow,
+} from './hefeng-extend.model'
+import { HefengExtendService } from './hefeng-extend.service'
+import { WeatherUnion } from './hefeng-public.model'
 
 /**
  * ### 模块说明
@@ -33,7 +34,7 @@ export class HefengPublicService {
   /** 日志工具 */
   private readonly logger = new Logger(HefengPublicService.name)
 
-  constructor(private readonly hefengCachedService: HefengCachedService) {}
+  constructor(private readonly hefengCachedService: HefengCachedService, private readonly hefengExtendService: HefengExtendService) {}
 
   /**
    * 将经纬度坐标转化为以英文逗号分隔的字符串形式
@@ -124,90 +125,39 @@ export class HefengPublicService {
    * 获取实时天气数据
    *
    * @param locationId 和风天气的地区 `LocationID`
-   */
-  async getWeatherNow(locationId: string): Promise<WeatherNow>
-
-  /**
-   * 获取实时天气数据
-   *
-   * @param longitude 经度
-   * @param latitude 纬度
-   */
-  async getWeatherNow(longitude: number, latitude: number): Promise<WeatherNow>
-
-  /**
-   * 获取实时天气数据
    *
    * @see
    * [API 开发文档](https://dev.qweather.com/docs/api/weather/weather-now/)
    */
-  async getWeatherNow(first: number | string, second?: number): Promise<WeatherNow> {
-    const location = this.transformLocationParams(first, second)
-    return await this.hefengCachedService.getWeatherNow(location)
+  async getWeatherNow(locationId: string): Promise<ExtWeatherNow> {
+    return this.hefengExtendService.getWeatherNow(locationId)
   }
 
   /**
-   * 获取逐天天气预报
-   *
-   * @param days 天数
-   * @param locationId 和风天气的地区 `LocationID`
-   */
-  async getDailyForecast(days: 3 | 7 | 10 | 15, locationId: string): Promise<DailyForecastItem[]>
-
-  /**
-   * 获取逐天天气预报
-   *
-   * @param days 天数
-   * @param longitude 经度
-   * @param latitude 纬度
-   */
-  async getDailyForecast(days: 3 | 7 | 10 | 15, longitude: number, latitude: number): Promise<DailyForecastItem[]>
-
-  /**
-   * 获取逐小时天气预报
-   *
-   * @see
-   * [API 开发文档](https://dev.qweather.com/docs/api/weather/weather-daily-forecast/)
-   */
-  async getDailyForecast(days: 3 | 7 | 10 | 15, first: number | string, second?: number): Promise<DailyForecastItem[]> {
-    const location = this.transformLocationParams(first, second)
-    return this.hefengCachedService.getDailyForecast(location, days)
-  }
-
-  /**
-   * 获取逐小时天气预报
+   * 获取未来 7 天逐天天气预报
    *
    * @param locationId 和风天气的地区 `LocationID`
    */
-  async getHourlyForecast(hours: 24 | 72 | 168, locationId: string): Promise<HourlyForecastItem[]>
-
-  /**
-   * 获取逐小时天气预报
-   *
-   * @param longitude 经度
-   * @param latitude 纬度
-   */
-  async getHourlyForecast(hours: 24 | 72 | 168, longitude: number, latitude: number): Promise<HourlyForecastItem[]>
-
-  /**
-   * 获取未来 24 小时的逐小时天气预报
-   *
-   * @see
-   * [API 开发文档](https://dev.qweather.com/docs/api/weather/weather-hourly-forecast/)
-   */
-  async getHourlyForecast(hours: 24 | 72 | 168, first: number | string, second?: number): Promise<HourlyForecastItem[]> {
-    const location = this.transformLocationParams(first, second)
-    return this.hefengCachedService.getHourlyForecast(location, hours)
+  async get7dForecast(locationId: string): Promise<ExtDailyForecastItem[]> {
+    return this.hefengExtendService.getDailyForecast(locationId, 7)
   }
 
   /**
-   * 获取天气预警城市列表
+   * 获取未来 15 天逐天天气预报
    *
-   * @see
-   * [API 开发文档](https://dev.qweather.com/docs/api/warning/weather-warning-city-list/)
+   * @param locationId 和风天气的地区 `LocationID`
    */
-  async getWarningCityList(): Promise<WarningCity[]> {
-    return this.hefengCachedService.getWarningCityList()
+  async get15dForecast(locationId: string): Promise<ExtDailyForecastItem[]> {
+    return this.hefengExtendService.getDailyForecast(locationId, 15)
+  }
+
+  /**
+   * 获取未来 24 小时天气预报
+   *
+   * @param locationId 和风天气的地区 `LocationID`
+   */
+  async get24hForecast(locationId: string): Promise<ExtHourlyForecastItem[]> {
+    return this.hefengExtendService.getHourlyForecast(locationId, 24)
   }
 
   /**
@@ -218,9 +168,8 @@ export class HefengPublicService {
    * @see
    * [API 开发文档](https://dev.qweather.com/docs/api/indices/)
    */
-  async getLivingIndex(locationId: string): Promise<LivingIndexItem[]> {
-    const location = locationId
-    return this.hefengCachedService.getLivingIndex(location)
+  async getLivingIndex(locationId: string): Promise<ExtLivingIndexItem[]> {
+    return this.hefengExtendService.getLivingIndex(locationId)
   }
 
   /**
@@ -231,9 +180,8 @@ export class HefengPublicService {
    * @see
    * [API 开发文档](https://dev.qweather.com/docs/api/air/air-now/)
    */
-  async getAirNow(locationId: string): Promise<AirNow> {
-    const location = locationId
-    return this.hefengCachedService.getAirNow(location)
+  async getAirNow(locationId: string): Promise<ExtAirNow> {
+    return this.hefengExtendService.getAirNow(locationId)
   }
 
   /**
@@ -244,9 +192,8 @@ export class HefengPublicService {
    * @see
    * [API 开发文档](https://dev.qweather.com/docs/api/air/air-daily-forecast/)
    */
-  async getAirDailyForecast(locationId: string): Promise<AirDailyForecastItem[]> {
-    const location = locationId
-    return this.hefengCachedService.getAirDailyForecast(location)
+  async getAirDailyForecast(locationId: string): Promise<ExtAirDailyForecastItem[]> {
+    return this.hefengExtendService.getAirDailyForecast(locationId)
   }
 
   /**
@@ -267,9 +214,16 @@ export class HefengPublicService {
    * 1. 当前接口的 `location` 参数不支持使用 `LocationID`。
    * ```
    */
-  async getMinutelyRain(longitude: number, latitude: number): Promise<MinutelyRainItem[]> {
+  async getMinutelyRain(longitude: number, latitude: number): Promise<ExtMinutelyRainItem[]> {
     const location = this.transformCoordinate(longitude, latitude)
-    return this.hefengCachedService.getMinutelyRain(location)
+    return this.hefengExtendService.getMinutelyRain(location)
+  }
+
+  /**
+   * 获取天气预警城市列表
+   */
+  async getWarningCityList(): Promise<ExtWarningCity[]> {
+    return this.hefengExtendService.getWarningCityList()
   }
 
   /**
@@ -280,8 +234,32 @@ export class HefengPublicService {
    * @see
    * [API 开发文档](https://dev.qweather.com/docs/api/warning/weather-warning/)
    */
-  async getWarningNow(locationId: string): Promise<WarningNowItem[]> {
-    const location = locationId
-    return this.hefengCachedService.getWarningNow(location)
+  async getWarningNow(locationId: string): Promise<ExtWarningNowItem[]> {
+    return this.hefengExtendService.getWarningNow(locationId)
+  }
+
+  /**
+   * 将天气数据进行合并
+   *
+   * @param locationId 和风天气的地区 `LocationID`
+   * @param longitude 经度
+   * @param latitude 纬度
+   */
+  async getWeatherUnion(locationId: string, longitude: number, latitude: number): Promise<WeatherUnion> {
+    const promises = []
+
+    promises.push(this.getWeatherNow(locationId))
+    promises.push(this.get15dForecast(locationId))
+    promises.push(this.get24hForecast(locationId))
+    promises.push(this.getLivingIndex(locationId))
+    promises.push(this.getAirNow(locationId))
+    promises.push(this.getAirDailyForecast(locationId))
+    promises.push(this.getMinutelyRain(longitude, latitude))
+    promises.push(this.getWarningNow(locationId))
+
+    const [now, f15d, f24h, livingIndex, airNow, air5d, rain, warning] = await Promise.all(promises)
+
+    const skyClass = this.hefengExtendService.skyClass((now as ExtWeatherNow).icon)
+    return { now, f15d, f24h, livingIndex, airNow, air5d, rain, warning, skyClass }
   }
 }

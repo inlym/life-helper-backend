@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common'
 import { HefengCachedService } from './hefeng-cached.service'
+import { HefengExtendService } from './hefeng-extend.service'
 import { HefengHttpService } from './hefeng-http.service'
 import { HefengPublicService } from './hefeng-public.service'
 
@@ -22,7 +23,7 @@ import { HefengPublicService } from './hefeng-public.service'
  * ```
  */
 @Module({
-  providers: [HefengHttpService, HefengCachedService, HefengPublicService],
+  providers: [HefengHttpService, HefengCachedService, HefengExtendService, HefengPublicService],
   exports: [HefengPublicService],
 })
 export class HefengModule {}
