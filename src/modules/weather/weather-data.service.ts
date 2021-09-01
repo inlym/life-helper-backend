@@ -5,6 +5,7 @@ import { AliyunOssConfig } from 'life-helper-config'
 import { WarningNowItem } from './hefeng/hefeng-http.model'
 import { HefengPublicService } from './hefeng/hefeng-public.service'
 import {
+  CombinedWeather,
   ExtAirDailyForecastItem,
   ExtAirNow,
   ExtDailyForecastItem,
@@ -115,7 +116,7 @@ export class WeatherDataService {
    *
    * @param locationId 和风天气的地区 `LocationID`
    */
-  async getHourlyForecast(hours: 24 | 72 | 168, locationId: string) {
+  async getHourlyForecast(hours: 24 | 72 | 168, locationId: string): Promise<ExtHourlyForecastItem[]> {
     const list = await this.hefengPublicService.getHourlyForecast(hours, locationId)
     return list.map((item: ExtHourlyForecastItem) => {
       item.iconUrl = this.getIconUrl(item.icon)
@@ -200,7 +201,7 @@ export class WeatherDataService {
    *
    * @param locationId 和风天气的地区 `LocationID`
    */
-  async getCombinedWeather(locationId: string)
+  async getCombinedWeather(locationId: string): Promise<CombinedWeather>
 
   /**
    * 将所有天气项目合并输出
@@ -209,12 +210,12 @@ export class WeatherDataService {
    * @param longitude 经度
    * @param latitude 纬度
    */
-  async getCombinedWeather(locationId: string, longitude: number, latitude: number)
+  async getCombinedWeather(locationId: string, longitude: number, latitude: number): Promise<CombinedWeather>
 
   /**
    * 将所有天气项目合并输出
    */
-  async getCombinedWeather(locationId: string, longitude?: number, latitude?: number) {
+  async getCombinedWeather(locationId: string, longitude?: number, latitude?: number): Promise<CombinedWeather> {
     const promises = []
 
     promises.push(this.getWeatherNow(locationId))

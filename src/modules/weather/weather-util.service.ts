@@ -1,5 +1,14 @@
 import { Injectable } from '@nestjs/common'
 
+export interface SkyClass {
+  bgClass: string
+  sun: boolean
+  fixedCloud: boolean
+  movingCloud: boolean
+  darkCloud: boolean
+  fullmoon: boolean
+}
+
 /**
  * ### 功能说明
  *
@@ -33,7 +42,7 @@ export class WeatherUtilService {
    *
    * 1-晴、2-云、3-阴、4-雨、5-雪、6-雾、7-尘
    */
-  skyClass(icon: string) {
+  skyClass(icon: string): SkyClass {
     const iconId = parseInt(icon, 10)
 
     /** 最终输出的内容 */

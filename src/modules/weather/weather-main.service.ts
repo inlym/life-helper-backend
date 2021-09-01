@@ -1,7 +1,10 @@
 import { Injectable } from '@nestjs/common'
 import { LbsqqService } from 'src/shared/lbsqq/lbsqq.service'
 import { HefengPublicService } from './hefeng/hefeng-public.service'
+import { WeatherCity } from './weather-city/weather-city.entity'
+import { WeatherCityService } from './weather-city/weather-city.service'
 import { WeatherDataService } from './weather-data.service'
+import { GetWeatherOptions, LocationCoordinate, MixedWeather } from './weather.model'
 
 /**
  * ### 功能定位
@@ -9,50 +12,104 @@ import { WeatherDataService } from './weather-data.service'
  * ```markdown
  * 1. 对接控制器，为控制器提供支持。
  * ```
- *
  */
 @Injectable()
 export class WeatherMainService {
   constructor(
     private readonly lbsqqService: LbsqqService,
     private readonly hefengPublicService: HefengPublicService,
-    private readonly weatherDataService: WeatherDataService
+    private readonly weatherDataService: WeatherDataService,
+    private readonly weatherCityService: WeatherCityService
   ) {}
 
   /**
-   * 用于未登录情况获取天气详情
+   * 分离经纬度坐标
+   *
+   * @param coord 以逗号分隔的经纬度坐标
+   *
+   * @description
+   *
+   * ### 说明
+   *
+   * ```markdown
+   * 1. 将 `120.1234,30.111` 形式的字符串穿解析为 `{ longitude:120.1234, latitude:30.111 }` 形式的对象。
+   * ```
    */
-  async getPublicWeather(ip: string, locationId?: string, coordinate?: string) {
-    /** 经度 */
-    let longitude: number
+  private splitCoordinate(coord: string): LocationCoordinate | undefined {
+    const [longitude, latitude] = coord.split(',').map((str: string) => Number(str))
 
-    /** 纬度 */
-    let latitude: number
+    if (!isNaN(longitude) && !isNaN(latitude)) {
+      return { longitude, latitude }
+    }
+  }
 
-    /** 和风天气的地区 `LocationID` */
-    let hefengId: string
+  /**
+   * 根据经纬度获取混合天气数据
+   *
+   * @param longitude 经度
+   * @param latitude 纬度
+   */
+  async getWeatherByLocation(longitude: number, latitude: number): Promise<MixedWeather> {
+    const locationId = await this.hefengPublicService.getLocationIdByCoordinate(longitude, latitude)
+    const locationName = await this.lbsqqService.getRecommendAddressDescrption(longitude, latitude)
+    const combinedWeather = await this.weatherDataService.getCombinedWeather(locationId, longitude, latitude)
 
-    if (coordinate) {
-      const [lng, lat] = coordinate.split(',').map((str: string) => Number(str))
-      if (lng > 70 && lng < 140 && lat > 110 && lat < 54) {
-        longitude = lng
-        latitude = lat
+    return { locationName, ...combinedWeather }
+  }
+
+  /**
+   * 根据 IP 地址获取数据
+   *
+   * @param ip IP 地址
+   */
+  async getWeatherByIp(ip: string): Promise<MixedWeather> {
+    const { longitude, latitude } = await this.lbsqqService.getCoordinateByIp(ip)
+    const locationId = await this.hefengPublicService.getLocationIdByCoordinate(longitude, latitude)
+    const { city, district } = await this.lbsqqService.getAddressInfo(longitude, latitude)
+    const combinedWeather = await this.weatherDataService.getCombinedWeather(locationId, longitude, latitude)
+
+    const locationName = (city ? city : '') + (district ? district : '')
+
+    return { locationName, ...combinedWeather }
+  }
+
+  /**
+   * 用于获取天气详情
+   */
+  async getWeather(options: GetWeatherOptions): Promise<MixedWeather> {
+    if (options.userId) {
+      let weatherCity: WeatherCity
+
+      if (options.cityId) {
+        weatherCity = await this.weatherCityService.getByPk(options.userId, options.cityId)
+      }
+
+      const cities = await this.weatherCityService.getAll(options.userId, 5, 0)
+
+      if (cities.length > 0) {
+        if (!weatherCity) {
+          weatherCity = cities[0]
+        }
+
+        const { locationId, longitude, latitude } = weatherCity
+        const combinedWeather = await this.weatherDataService.getCombinedWeather(locationId, longitude, latitude)
+
+        return {
+          locationName: weatherCity.name,
+          cityId: weatherCity.id,
+          cities,
+          ...combinedWeather,
+        }
       }
     }
 
-    if (locationId) {
-      hefengId = locationId
+    if (options.location) {
+      const { longitude, latitude } = this.splitCoordinate(options.location!)
+      return this.getWeatherByLocation(longitude, latitude)
     }
 
-    if (!hefengId) {
-      if (longitude && latitude) {
-        hefengId = await this.hefengPublicService.getLocationIdByCoordinate(longitude, latitude)
-      } else {
-        const coord = await this.lbsqqService.getCoordinateByIp(ip)
-        hefengId = await this.hefengPublicService.getLocationIdByCoordinate(coord.longitude, coord.latitude)
-      }
+    if (options.ip) {
+      return this.getWeatherByIp(options.ip!)
     }
-
-    return this.weatherDataService.getCombinedWeather(hefengId, longitude, latitude)
   }
 }

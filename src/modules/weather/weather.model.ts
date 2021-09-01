@@ -9,6 +9,7 @@ import {
   WarningNowItem,
 } from './hefeng/hefeng-http.model'
 import { Exclude } from 'class-transformer'
+import { WeatherCity } from './weather-city/weather-city.entity'
 
 /**
  * 扩展的实时天气对象
@@ -97,11 +98,49 @@ export class ExtWarningNowItem extends WarningNowItem {}
 /** 合并的天气信息 */
 export class CombinedWeather {
   now: ExtWeatherNow
-  daily: ExtDailyForecastItem[]
-  hourly: ExtHourlyForecastItem[]
+  f15d: ExtDailyForecastItem[]
+  f24h: ExtHourlyForecastItem[]
   airnow: ExtAirNow
   air5d: ExtAirDailyForecastItem[]
   liveIndex: ExtLivingIndexItem[]
   warning: ExtWarningNowItem[]
   rain: ExtMinutelyRainItem[]
+}
+
+/** 包含地理位置的天气信息 */
+export class MixedWeather extends CombinedWeather {
+  /** 地理位置名称 */
+  locationName?: string
+
+  /** 当前使用的天气城市 ID */
+  cityId?: number
+
+  cities?: WeatherCity[]
+}
+
+/** 经纬度坐标 */
+export interface LocationCoordinate {
+  /** 经度 */
+  longitude: number
+
+  /** 纬度 */
+  latitude: number
+}
+
+/** 获取天气数据选项 */
+export interface GetWeatherOptions {
+  /** 用户 ID */
+  userId?: number
+
+  /** 和风天气的 `LocationID` */
+  locationId?: string
+
+  /** IP 地址 */
+  ip: string
+
+  /** 天气城市 ID */
+  cityId?: number
+
+  /** 以逗号分隔的经纬度坐标 */
+  location?: string
 }
