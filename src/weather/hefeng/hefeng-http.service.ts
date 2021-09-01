@@ -270,38 +270,6 @@ export class HefengHttpService {
   }
 
   /**
-   * 获取天气预警城市列表
-   *
-   * @see
-   * [API 开发文档](https://dev.qweather.com/docs/api/warning/weather-warning-city-list/)
-   */
-  async getWarningCityList(): Promise<WarningCity[]> {
-    const { key } = HefengConfig.basic
-
-    const response = await request<HefengResponse>({
-      url: 'https://devapi.qweather.com/v7/warning/list',
-      params: {
-        key,
-        range: 'cn',
-      },
-    })
-
-    if (response.data.code === '200') {
-      // `code` 为 `200` 表示请求成功
-      return response.data.warningLocList
-    } else {
-      // 失败情况
-      this.logger.error(`[接口请求错误] 和风天气 - 天气预警城市列表, 响应 code => \`${response.data.code}\` `)
-
-      if (this.invalidLocationCodes.includes(response.data.code)) {
-        throw new HttpException(INVALID_LOCATION, HttpStatus.BAD_REQUEST)
-      } else {
-        throw new HttpException(COMMON_SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR)
-      }
-    }
-  }
-
-  /**
    * 获取天气生活指数
    *
    * @param location 需要查询地区的 `LocationID` 或以英文逗号分隔的 `经度,纬度` 坐标（十进制）
@@ -442,6 +410,38 @@ export class HefengHttpService {
     } else {
       // 失败情况
       this.logger.error(`[接口请求错误] 和风天气 - 分钟级降水, 响应 code => \`${response.data.code}\`,  location => \`${location}\` `)
+
+      if (this.invalidLocationCodes.includes(response.data.code)) {
+        throw new HttpException(INVALID_LOCATION, HttpStatus.BAD_REQUEST)
+      } else {
+        throw new HttpException(COMMON_SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR)
+      }
+    }
+  }
+
+  /**
+   * 获取天气预警城市列表
+   *
+   * @see
+   * [API 开发文档](https://dev.qweather.com/docs/api/warning/weather-warning-city-list/)
+   */
+  async getWarningCityList(): Promise<WarningCity[]> {
+    const { key } = HefengConfig.basic
+
+    const response = await request<HefengResponse>({
+      url: 'https://devapi.qweather.com/v7/warning/list',
+      params: {
+        key,
+        range: 'cn',
+      },
+    })
+
+    if (response.data.code === '200') {
+      // `code` 为 `200` 表示请求成功
+      return response.data.warningLocList
+    } else {
+      // 失败情况
+      this.logger.error(`[接口请求错误] 和风天气 - 天气预警城市列表, 响应 code => \`${response.data.code}\` `)
 
       if (this.invalidLocationCodes.includes(response.data.code)) {
         throw new HttpException(INVALID_LOCATION, HttpStatus.BAD_REQUEST)

@@ -5,7 +5,6 @@
     "plugins": ["@nestjs/swagger"]
   },
   "generateOptions": {
-    "spec": false,
-    "noSpec": true
+    "spec": true
   }
 }
