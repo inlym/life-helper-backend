@@ -1,62 +1,47 @@
-import { Injectable, NestMiddleware } from '@nestjs/common'
-import { NextFunction, Request, Response } from 'express'
-import { RequestUser } from 'src/common/request-user.interface'
+import { Injectable, Logger, NestMiddleware } from '@nestjs/common'
+import { NextFunction, Response } from 'express'
 import { AuthService } from 'src/modules/auth/auth.service'
 import { UserService } from 'src/modules/user/user.service'
-
-interface RequestNew extends Request {
-  user: RequestUser
-}
-
-interface parsedAuthParams {
-  code?: string
-  token?: string
-}
+import { ExtRequest, RequestUser } from './common.interface'
 
 /**
  * 鉴权中间件
+ *
+ *
+ * ### 说明
+ *
+ * ```markdown
+ * 1. 鉴权信息会放在请求头的 `Authorization` 字段。
+ * 2. 鉴权信息格式 `TOKEN ${token}` 或 `CODE ${code}`。
+ * ```
  */
 @Injectable()
 export class AuthMiddleware implements NestMiddleware {
-  constructor(private authService: AuthService, private userService: UserService) {}
+  private readonly logger = new Logger(AuthMiddleware.name)
 
-  async use(req: RequestNew, res: Response, next: NextFunction) {
-    const { token, code } = this.parseAuthParams(req)
-    const user: RequestUser = req.user || { id: 0, authType: '' }
+  constructor(private readonly authService: AuthService, private readonly userService: UserService) {}
 
-    if (token) {
-      user.id = await this.authService.getUserIdByToken(token)
-      user.authType = 'token'
-    } else if (code) {
-      user.id = await this.userService.getUserIdByCode(code)
-      user.authType = 'code'
-    } else {
-      // empty
+  async use(request: ExtRequest, response: Response, next: NextFunction): Promise<void> {
+    const user: RequestUser = request.user || { id: 0, authType: '' }
+
+    const authValue = request.get('authorization')
+
+    if (authValue) {
+      const [type, value] = authValue.split(' ')
+      if (type && type.toUpperCase() === 'TOKEN') {
+        user.id = await this.authService.getUserIdByToken(value)
+        user.authType = 'token'
+      } else if (type && type.toUpperCase() === 'CODE') {
+        user.id = await this.userService.getUserIdByCode(value)
+        user.authType = 'code'
+      } else {
+        this.logger.debug(`错误的鉴权信息格式，authorization => ${authValue}`)
+      }
     }
 
     // 挂载 `user` 对象
-    if (!req.user) {
-      req.user = user
-    }
+    request.user = user
 
     next()
-  }
-
-  /**
-   * 解析参数，获取 `code` 或 `token`
-   */
-  parseAuthParams(req: RequestNew): parsedAuthParams {
-    const authValue: string = req.get('authorization')
-    if (authValue) {
-      const [type, value]: string[] = authValue.split(' ')
-      if (type.toLowerCase() === 'token') {
-        return { token: value }
-      }
-      if (type.toLowerCase() === 'code') {
-        return { code: value }
-      }
-    }
-
-    return {}
   }
 }

@@ -1,4 +1,5 @@
 import { CanActivate, ExecutionContext, HttpException, HttpStatus, Injectable } from '@nestjs/common'
+import { ExtRequest } from './common.interface'
 import { INVALID_AUTH_INFO } from './errors.constant'
 
 /**
@@ -11,7 +12,7 @@ import { INVALID_AUTH_INFO } from './errors.constant'
 @Injectable()
 export class AuthGuard implements CanActivate {
   canActivate(context: ExecutionContext): boolean {
-    const request = context.switchToHttp().getRequest()
+    const request: ExtRequest = context.switchToHttp().getRequest()
 
     if (request.user && request.user.id > 0) {
       return true
