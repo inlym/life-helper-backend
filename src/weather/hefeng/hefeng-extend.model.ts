@@ -95,7 +95,7 @@ export class ExtAirDailyForecastItem extends AirDailyForecastItem {
 }
 
 /**
- * 扩展的空气质量预报
+ * 扩展的分钟级降水预报列表项
  */
 export class ExtMinutelyRainItem extends MinutelyRainItem {
   /** 预报时间 */
@@ -107,6 +107,27 @@ export class ExtMinutelyRainItem extends MinutelyRainItem {
 
   /** 用于 CSS 样式的高度 */
   height: string
+}
+
+/**
+ * 扩展的分钟级降水预报
+ *
+ * @description
+ *
+ * ### 说明
+ *
+ * ```markdown
+ * 1. 由于处理逻辑的不同，缓存时带入了其他参数，需清除。
+ * ```
+ */
+export class ExtRainSurvey {
+  /** n 分钟前更新 */
+  updateTimeDiff: number
+
+  /** 降水描述 */
+  summary: string
+
+  list: ExtMinutelyRainItem[]
 }
 
 /**

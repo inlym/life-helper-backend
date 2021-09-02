@@ -7,7 +7,7 @@ import {
   ExtDailyForecastItem,
   ExtHourlyForecastItem,
   ExtLivingIndexItem,
-  ExtMinutelyRainItem,
+  ExtRainSurvey,
   ExtWarningCity,
   ExtWarningNowItem,
   ExtWeatherNow,
@@ -215,7 +215,7 @@ export class HefengPublicService {
    * 1. 当前接口的 `location` 参数不支持使用 `LocationID`。
    * ```
    */
-  async getMinutelyRain(longitude: number, latitude: number): Promise<ExtMinutelyRainItem[]> {
+  async getMinutelyRain(longitude: number, latitude: number): Promise<ExtRainSurvey> {
     const location = this.transformCoordinate(longitude, latitude)
     return this.hefengExtendService.getMinutelyRain(location)
   }

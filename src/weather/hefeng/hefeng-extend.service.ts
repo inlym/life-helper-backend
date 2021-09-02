@@ -10,6 +10,7 @@ import {
   ExtHourlyForecastItem,
   ExtLivingIndexItem,
   ExtMinutelyRainItem,
+  ExtRainSurvey,
   ExtWarningCity,
   ExtWarningNowItem,
   ExtWeatherNow,
@@ -180,15 +181,20 @@ export class HefengExtendService {
    *
    * @param location 需要查询地区的以英文逗号分隔的 `经度,纬度` 坐标（十进制）
    */
-  async getMinutelyRain(location: string): Promise<ExtMinutelyRainItem[]> {
-    const list = await this.hefengCachedService.getMinutelyRain(location)
+  async getMinutelyRain(location: string): Promise<ExtRainSurvey> {
+    const rainSurvey = await this.hefengCachedService.getMinutelyRain(location)
 
-    return list.map((item: ExtMinutelyRainItem) => {
+    const list = rainSurvey.minutely.map((item: ExtMinutelyRainItem) => {
       item.time = item.fxTime.substring(11, 16)
       item.height = (parseFloat(item.precip) * 200 + 10).toFixed(0)
 
       return plainToClass(ExtMinutelyRainItem, item)
     })
+
+    const updateTimeDiff = dayjs().diff(dayjs(rainSurvey.updateTime), 'minute')
+
+    const result: ExtRainSurvey = { updateTimeDiff, list, summary: rainSurvey.summary }
+    return plainToClass(ExtRainSurvey, result)
   }
 
   /**

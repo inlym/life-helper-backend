@@ -1,4 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common'
+import { Redis } from 'ioredis'
+import { RedisService } from 'nestjs-redis'
 import {
   AirDailyForecastItem,
   AirNow,
@@ -6,13 +8,11 @@ import {
   DailyForecastItem,
   HourlyForecastItem,
   LivingIndexItem,
-  MinutelyRainItem,
+  RainSurvey,
   WarningCity,
   WarningNowItem,
   WeatherNow,
 } from './hefeng-http.model'
-import { Redis } from 'ioredis'
-import { RedisService } from 'nestjs-redis'
 import { HefengHttpService } from './hefeng-http.service'
 
 /**
@@ -226,7 +226,7 @@ export class HefengCachedService {
    *
    * @param location 需要查询地区的以英文逗号分隔的 `经度,纬度` 坐标（十进制）
    */
-  async getMinutelyRain(location: string): Promise<MinutelyRainItem[]> {
+  async getMinutelyRain(location: string): Promise<RainSurvey> {
     /** Redis 键名 */
     const rKey = `hefeng:rain:location:${location}`
 

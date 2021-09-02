@@ -4,7 +4,7 @@ import {
   ExtDailyForecastItem,
   ExtHourlyForecastItem,
   ExtLivingIndexItem,
-  ExtMinutelyRainItem,
+  ExtRainSurvey,
   ExtWarningNowItem,
   ExtWeatherNow,
   SkyClass,
@@ -26,7 +26,7 @@ export class WeatherUnion {
 
   livingIndex: ExtLivingIndexItem[]
 
-  rain: ExtMinutelyRainItem[]
+  rain: ExtRainSurvey
 
   warning: ExtWarningNowItem[]
 

@@ -11,7 +11,7 @@ import {
   HefengResponse,
   HourlyForecastItem,
   LivingIndexItem,
-  MinutelyRainItem,
+  RainSurvey,
   WarningCity,
   WarningNowItem,
   WeatherNow,
@@ -392,7 +392,7 @@ export class HefengHttpService {
    * 1. 当前接口的 `location` 参数不支持使用 `LocationID`。
    * ```
    */
-  async getMinutelyRain(location: string): Promise<MinutelyRainItem[]> {
+  async getMinutelyRain(location: string): Promise<RainSurvey> {
     const { key, baseURL } = HefengConfig.pro
 
     const response = await request<HefengResponse>({
@@ -406,7 +406,7 @@ export class HefengHttpService {
 
     if (response.data.code === '200') {
       // `code` 为 `200` 表示请求成功
-      return response.data.minutely
+      return response.data
     } else {
       // 失败情况
       this.logger.error(`[接口请求错误] 和风天气 - 分钟级降水, 响应 code => \`${response.data.code}\`,  location => \`${location}\` `)

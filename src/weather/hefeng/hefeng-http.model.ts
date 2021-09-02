@@ -3,6 +3,12 @@ export class HefengResponse {
   /** API状态码 */
   code: string
 
+  /** 更新时间 */
+  updateTime: string
+
+  /** 分钟级降水特有的 */
+  summary: string
+
   /** 城市信息查询 */
   location: CityInfo[]
 
@@ -373,10 +379,7 @@ export class AirDailyForecastItem {
 }
 
 /**
- * 分钟级降水
- *
- * @see
- * [分钟级降水](https://dev.qweather.com/docs/api/grid-weather/minutely/)
+ * 分钟级降水列表项数据
  */
 export class MinutelyRainItem {
   /** 预报时间 */
@@ -387,6 +390,23 @@ export class MinutelyRainItem {
 
   /** 降水类型 */
   type: 'rain' | 'snow'
+}
+
+/**
+ * 分钟级降水
+ *
+ * @see
+ * [分钟级降水](https://dev.qweather.com/docs/api/grid-weather/minutely/)
+ */
+export class RainSurvey {
+  /** 最近更新时间 */
+  updateTime: string
+
+  /** 降水描述 */
+  summary: string
+
+  /** 按分钟数据（5 分钟） */
+  minutely: MinutelyRainItem[]
 }
 
 /**
