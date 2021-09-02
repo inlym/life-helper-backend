@@ -1,10 +1,19 @@
-import { CreateDateColumn, PrimaryGeneratedColumn, UpdateDateColumn, DeleteDateColumn, VersionColumn } from 'typeorm'
 import { Min } from 'class-validator'
+import { CreateDateColumn, DeleteDateColumn, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from 'typeorm'
 
 /**
- * 当前实体包含所有公共列，所有实体继承当前实体
+ * 基实体
+ *
+ *
+ * ### 说明
+ *
+ * ```markdown
+ * 1. 当前实体包含了所有实体都会用到的一些公共列。
+ * 2. 所有实体都应当继承当前的基实体，避免重复定义这些公共列。
+ * ```
  */
 export abstract class AbstractEntity {
+  /** 主键 ID */
   @PrimaryGeneratedColumn({
     comment: '主键 ID',
   })
@@ -12,9 +21,14 @@ export abstract class AbstractEntity {
   id: number
 
   /**
-   * `createTime` 和 `updateTime` 两列的注意事项：
-   * 1. 该两列由 MySQL 触发器自动维护，禁止在代码中手动更新。
-   * 2. 不允许给该两列附加任务业务含义，即使值是完全相同的，例如当前情况下小程序用户的注册时间和列的创建时间是同一个值，也不能将创建时间赋予注册时间含义，必须再新增一列注册时间。
+   * 创建时间
+   *
+   *
+   * ### 说明
+   *
+   * ```markdown
+   * 1. `创建时间` 列由 MySQL 触发器自动维护，禁止在代码中手动更新。
+   * ```
    */
   @CreateDateColumn({
     name: 'create_time',
@@ -25,6 +39,16 @@ export abstract class AbstractEntity {
   })
   createTime: Date
 
+  /**
+   * 更新时间
+   *
+   *
+   * ### 说明
+   *
+   * ```markdown
+   * 1. `更新时间` 列由 MySQL 触发器自动维护，禁止在代码中手动更新。
+   * ```
+   */
   @UpdateDateColumn({
     name: 'update_time',
     select: false,
@@ -34,6 +58,16 @@ export abstract class AbstractEntity {
   })
   updateTime: Date
 
+  /**
+   * 删除时间（软删标记）
+   *
+   *
+   * ### 说明
+   *
+   * ```markdown
+   * 1. 当前列由框架自动维护，禁止在代码中手动更新。
+   * ```
+   */
   @DeleteDateColumn({
     name: 'delete_time',
     select: false,
@@ -43,9 +77,19 @@ export abstract class AbstractEntity {
   })
   deleteTime: Date
 
+  /**
+   * 自动存储计数（更新次数）
+   *
+   *
+   * ### 说明
+   *
+   * ```markdown
+   * 1. 当前列由框架自动维护，禁止在代码中手动更新。
+   * ```
+   */
   @VersionColumn({
     select: false,
-    comment: '自动存储计数',
+    comment: '自动存储计数（更新次数）',
   })
   version: number
 }
