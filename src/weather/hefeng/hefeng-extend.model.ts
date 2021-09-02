@@ -15,6 +15,10 @@ import {
  * 扩展的实时天气对象
  */
 export class ExtWeatherNow extends WeatherNow {
+  /** 观测时间 */
+  @Exclude()
+  obsTime: string
+
   /** 观测时间距当前时间的分钟数 */
   obsDiff?: number
 }
@@ -24,7 +28,8 @@ export class ExtWeatherNow extends WeatherNow {
  */
 export class ExtDailyForecastItem extends DailyForecastItem {
   /** 预报日期 */
-  @Exclude() fxDate: string
+  @Exclude()
+  fxDate: string
 
   /** 预报日期 */
   date: string
@@ -93,6 +98,10 @@ export class ExtAirDailyForecastItem extends AirDailyForecastItem {
  * 扩展的空气质量预报
  */
 export class ExtMinutelyRainItem extends MinutelyRainItem {
+  /** 预报时间 */
+  @Exclude()
+  fxTime: string
+
   /** 预报时间 */
   time: string
 

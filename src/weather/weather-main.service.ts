@@ -3,7 +3,7 @@ import { LbsqqService } from 'src/shared/lbsqq/lbsqq.service'
 import { HefengPublicService } from './hefeng/hefeng-public.service'
 import { WeatherCity } from './weather-city/weather-city.entity'
 import { WeatherCityService } from './weather-city/weather-city.service'
-import { GetWeatherOptions, LocationCoordinate, MixedWeather } from './weather.model'
+import { GetWeatherOptions, LocationCoordinate, MixedWeather } from './weather-main.model'
 
 /**
  * ### 功能定位
@@ -50,9 +50,9 @@ export class WeatherMainService {
   async getWeatherByLocation(longitude: number, latitude: number): Promise<MixedWeather> {
     const locationId = await this.hefengPublicService.getLocationIdByCoordinate(longitude, latitude)
     const locationName = await this.lbsqqService.getRecommendAddressDescrption(longitude, latitude)
-    const combinedWeather = await this.weatherDataService.getCombinedWeather(locationId, longitude, latitude)
+    const weatherUnion = await this.hefengPublicService.getWeatherUnion(locationId, longitude, latitude)
 
-    return { locationName, ...combinedWeather }
+    return { locationName, ...weatherUnion }
   }
 
   /**
@@ -64,11 +64,11 @@ export class WeatherMainService {
     const { longitude, latitude } = await this.lbsqqService.getCoordinateByIp(ip)
     const locationId = await this.hefengPublicService.getLocationIdByCoordinate(longitude, latitude)
     const { city, district } = await this.lbsqqService.getAddressInfo(longitude, latitude)
-    const combinedWeather = await this.weatherDataService.getCombinedWeather(locationId, longitude, latitude)
+    const weatherUnion = await this.hefengPublicService.getWeatherUnion(locationId, longitude, latitude)
 
     const locationName = (city ? city : '') + (district ? district : '')
 
-    return { locationName, ...combinedWeather }
+    return { locationName, ...weatherUnion }
   }
 
   /**
@@ -90,24 +90,24 @@ export class WeatherMainService {
         }
 
         const { locationId, longitude, latitude } = weatherCity
-        const combinedWeather = await this.weatherDataService.getCombinedWeather(locationId, longitude, latitude)
+        const weatherUnion = await this.hefengPublicService.getWeatherUnion(locationId, longitude, latitude)
 
         return {
           locationName: weatherCity.name,
           cityId: weatherCity.id,
           cities,
-          ...combinedWeather,
+          ...weatherUnion,
         }
       }
     }
 
     if (options.location) {
-      const { longitude, latitude } = this.splitCoordinate(options.location!)
+      const { longitude, latitude } = this.splitCoordinate(options.location)
       return this.getWeatherByLocation(longitude, latitude)
     }
 
     if (options.ip) {
-      return this.getWeatherByIp(options.ip!)
+      return this.getWeatherByIp(options.ip)
     }
   }
 }

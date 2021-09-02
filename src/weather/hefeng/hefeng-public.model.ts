@@ -22,13 +22,13 @@ export class WeatherUnion {
 
   airnow: ExtAirNow
 
-  f5d: ExtAirDailyForecastItem[]
+  air5d: ExtAirDailyForecastItem[]
 
   livingIndex: ExtLivingIndexItem[]
 
   rain: ExtMinutelyRainItem[]
 
-  warningNow: ExtWarningNowItem[]
+  warning: ExtWarningNowItem[]
 
   skyClass: SkyClass
 }

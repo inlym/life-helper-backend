@@ -31,7 +31,7 @@ export class HefengExtendService {
   private readonly weekText = ['周日', '周一', '周二', '周三', '周四', '周五', '周六']
 
   /** 存储资源的 OSS 绑定的域名 */
-  private readonly baseURL = AliyunOssConfig.res.url
+  private readonly baseURL = AliyunOssConfig.admin.url
 
   constructor(private readonly hefengCachedService: HefengCachedService) {}
 

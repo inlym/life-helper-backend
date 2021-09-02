@@ -1,12 +1,12 @@
 import { Controller, Get, Ip, Query } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
 import { User } from 'src/common/user.decorator'
+import { MixedWeather } from './weather-main.model'
 import { WeatherMainService } from './weather-main.service'
 import { GetWeatherQueryDto } from './weather.dto'
-import { MixedWeather } from './weather.model'
 
 @ApiTags('weather')
-@Controller(['weather', 'w'])
+@Controller(['weather'])
 export class WeatherController {
   constructor(private readonly weatherMainService: WeatherMainService) {}
 

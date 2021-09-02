@@ -13,6 +13,7 @@ import {
   ExtWeatherNow,
 } from './hefeng-extend.model'
 import { HefengExtendService } from './hefeng-extend.service'
+import { CityInfo } from './hefeng-http.model'
 import { WeatherUnion } from './hefeng-public.model'
 
 /**
@@ -257,9 +258,9 @@ export class HefengPublicService {
     promises.push(this.getMinutelyRain(longitude, latitude))
     promises.push(this.getWarningNow(locationId))
 
-    const [now, f15d, f24h, livingIndex, airNow, air5d, rain, warning] = await Promise.all(promises)
+    const [now, f15d, f24h, livingIndex, airnow, air5d, rain, warning] = await Promise.all(promises)
 
     const skyClass = this.hefengExtendService.skyClass((now as ExtWeatherNow).icon)
-    return { now, f15d, f24h, livingIndex, airNow, air5d, rain, warning, skyClass }
+    return { now, f15d, f24h, livingIndex, airnow, air5d, rain, warning, skyClass }
   }
 }
