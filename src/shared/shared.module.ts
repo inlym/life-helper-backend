@@ -9,7 +9,7 @@
  * ╚══════════════════════════════════════════════════════════════════════╝
  */
 
-import { Module } from '@nestjs/common'
+import { Global, Module } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { LbsqqService } from './lbsqq/lbsqq.service'
 import { OssService } from './oss/oss.service'
@@ -19,6 +19,7 @@ import { WeixinService } from './weixin/weixin.service'
 
 const services = [LbsqqService, WeixinService, OssService, PlaceService]
 
+@Global()
 @Module({
   imports: [TypeOrmModule.forFeature([Place])],
   providers: services,

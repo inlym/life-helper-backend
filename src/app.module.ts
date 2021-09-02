@@ -6,22 +6,24 @@ import { RedisConfig, TypeOrmConfig } from 'life-helper-config'
 import { RedisModule } from 'nestjs-redis'
 import { AllExceptionFilter } from './common/all-exception.filter'
 import { AuthMiddleware } from './common/auth.middleware'
-import { AuthModule } from './modules/auth/auth.module'
 import { CalendarModule } from './modules/calendar/calendar.module'
 import { DiaryModule } from './modules/diary/diary.module'
 import { IpModule } from './modules/ip/ip.module'
 import { UploadModule } from './modules/upload/upload.module'
 import { UserInfoModule } from './modules/user-info/user-info.module'
 import { UserModule } from './modules/user/user.module'
-import { WeatherModule } from './weather/weather.module'
 import { SystemModule } from './system/system.module'
+import { WeatherModule } from './weather/weather.module'
+import { AuthModule } from './auth/auth.module'
+import { SharedModule } from './shared/shared.module'
+import { AuthModule2 } from './modules/auth/auth.module'
 
 @Module({
   imports: [
     TypeOrmModule.forRoot(TypeOrmConfig),
     RedisModule.register(RedisConfig),
     ScheduleModule.forRoot(),
-    AuthModule,
+    SharedModule,
     UserModule,
     UserInfoModule,
     CalendarModule,
@@ -30,6 +32,8 @@ import { SystemModule } from './system/system.module'
     UploadModule,
     SystemModule,
     WeatherModule,
+    AuthModule,
+    AuthModule2,
   ],
 
   providers: [{ provide: APP_FILTER, useClass: AllExceptionFilter }],
