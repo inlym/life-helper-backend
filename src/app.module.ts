@@ -12,10 +12,10 @@ import { DiaryModule } from './modules/diary/diary.module'
 import { IpModule } from './modules/ip/ip.module'
 import { UploadModule } from './modules/upload/upload.module'
 import { UserInfoModule } from './modules/user-info/user-info.module'
-import { UserModule } from './modules/user/user.module'
 import { SharedModule } from './shared/shared.module'
 import { SystemModule } from './system/system.module'
 import { WeatherModule } from './weather/weather.module'
+import { UserModule } from './user/user.module'
 
 @Module({
   imports: [
@@ -23,6 +23,7 @@ import { WeatherModule } from './weather/weather.module'
     RedisModule.register(RedisConfig),
     ScheduleModule.forRoot(),
     SharedModule,
+    AuthModule,
     UserModule,
     UserInfoModule,
     CalendarModule,
@@ -31,7 +32,6 @@ import { WeatherModule } from './weather/weather.module'
     UploadModule,
     SystemModule,
     WeatherModule,
-    AuthModule,
   ],
 
   providers: [{ provide: APP_FILTER, useClass: AllExceptionFilter }],

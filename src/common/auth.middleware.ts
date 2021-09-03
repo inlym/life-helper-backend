@@ -1,7 +1,7 @@
 import { Injectable, Logger, NestMiddleware } from '@nestjs/common'
 import { NextFunction, Response } from 'express'
 import { TokenService } from 'src/auth/token/token.service'
-import { UserService } from 'src/modules/user/user.service'
+import { UserService } from 'src/user/user.service'
 import { ExtRequest, RequestUser } from './common.interface'
 
 /**
