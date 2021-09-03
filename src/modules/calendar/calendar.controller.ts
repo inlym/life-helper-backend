@@ -1,12 +1,22 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common'
-import { ApiTags } from '@nestjs/swagger'
+import { ApiProperty, ApiTags } from '@nestjs/swagger'
 import { plainToClass } from 'class-transformer'
+import { IsInt, Min } from 'class-validator'
 import { AuthGuard } from 'src/common/auth.guard'
-import { QueryId } from 'src/common/common.dto'
 import { User } from 'src/common/user.decorator'
 import { CalendarProjectService } from './calendar-project.service'
 import { CalendarTaskService } from './calendar-task.service'
 import { CreateProjectRequestDto, CreateProjectResponseDto, CreateTaskRequestDto, GetAllTasksQueryDto } from './calendar.dto'
+
+/**
+ * 大部分 `GET` 请求只需要传一个 `id` 参数
+ */
+export class QueryId {
+  @ApiProperty()
+  @IsInt()
+  @Min(1)
+  id: number
+}
 
 @ApiTags('calendar')
 @Controller('calendar')
