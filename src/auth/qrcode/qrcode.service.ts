@@ -196,12 +196,18 @@ export class QrcodeService {
   }
 
   /**
-   * 使用身份凭证
+   * 标记校验码已使用
    *
-   * @param userId 用户 ID
    * @param code 校验码
+   *
+   *
+   * ### 说明
+   *
+   * ```markdown
+   * 1. 在扫码登录控制器方法内使用，验证完成后，发放登录凭证，并标记该校验码已使用。
+   * ```
    */
-  async consume(userId: number, code: string): Promise<Authentication> {
+  async consume(code: string): Promise<Authentication> {
     const rKey = this.getRedisKey(code)
 
     const result = await this.redis.get(rKey)

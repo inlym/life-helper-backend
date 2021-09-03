@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common'
+import { LoginController } from './login.controller'
 import { QrcodeModule } from './qrcode/qrcode.module'
 import { TokenModule } from './token/token.module'
-import { LoginController } from './login.controller'
 
 /**
  * 权限模块

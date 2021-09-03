@@ -50,7 +50,11 @@ export class LoginController {
       /** 登录凭证 */
       const token = await this.tokenService.createToken(authen.confirmUserId, expiration)
 
-      return { status: authen.status, token, expiration }
+      const status = authen.status
+
+      await this.qrcodeService.consume(code)
+
+      return { status, token, expiration }
     } else {
       return { status: authen.status }
     }
