@@ -11,11 +11,10 @@ import { CalendarModule } from './modules/calendar/calendar.module'
 import { DiaryModule } from './modules/diary/diary.module'
 import { IpModule } from './modules/ip/ip.module'
 import { UploadModule } from './modules/upload/upload.module'
-import { UserInfoModule } from './modules/user-info/user-info.module'
 import { SharedModule } from './shared/shared.module'
 import { SystemModule } from './system/system.module'
-import { WeatherModule } from './weather/weather.module'
 import { UserModule } from './user/user.module'
+import { WeatherModule } from './weather/weather.module'
 
 @Module({
   imports: [
@@ -25,7 +24,6 @@ import { UserModule } from './user/user.module'
     SharedModule,
     AuthModule,
     UserModule,
-    UserInfoModule,
     CalendarModule,
     IpModule,
     DiaryModule,
