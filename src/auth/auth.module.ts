@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common'
 import { QrcodeModule } from './qrcode/qrcode.module'
 import { TokenModule } from './token/token.module'
+import { LoginController } from './login.controller'
 
 /**
  * 权限模块
@@ -13,5 +14,6 @@ import { TokenModule } from './token/token.module'
  */
 @Module({
   imports: [QrcodeModule, TokenModule],
+  controllers: [LoginController],
 })
 export class AuthModule {}
