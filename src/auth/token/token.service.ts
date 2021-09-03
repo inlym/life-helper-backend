@@ -84,4 +84,23 @@ export class TokenService {
 
     return 0
   }
+
+  /**
+   * 禁用登录凭证（即使其失效）
+   *
+   * @param token 登录凭证
+   *
+   *
+   * ### 说明
+   *
+   * ```markdown
+   * 1. 删除成功则返回 `true`，键名不存在则返回 `false`
+   * ```
+   */
+  async disableToken(token: string): Promise<boolean> {
+    const rKey = this.getTokenRedisKey(token)
+    const result = await this.redis.del(rKey)
+
+    return !!result
+  }
 }

@@ -45,4 +45,21 @@ describe('TokenService', () => {
       expect(result).toBe(0)
     })
   })
+
+  describe('(method) disableToken', () => {
+    it('禁用上述过程生成的登录凭证', async () => {
+      const result = await service.disableToken(testToken)
+      expect(result).toBe(true)
+
+      const id = await service.getUserIdByToken(testToken)
+      expect(id).toBe(0)
+    })
+
+    it('禁用不存在的登录凭证，返回结果为 false', async () => {
+      const notExistToken = 'i am inlym'
+      const result = await service.disableToken(notExistToken)
+
+      expect(result).toBe(false)
+    })
+  })
 })
