@@ -1,6 +1,6 @@
 import { Injectable, Logger, NestMiddleware } from '@nestjs/common'
 import { NextFunction, Response } from 'express'
-import { AuthService } from 'src/modules/auth/auth.service'
+import { TokenService } from 'src/auth/token/token.service'
 import { UserService } from 'src/modules/user/user.service'
 import { ExtRequest, RequestUser } from './common.interface'
 
@@ -19,7 +19,7 @@ import { ExtRequest, RequestUser } from './common.interface'
 export class AuthMiddleware implements NestMiddleware {
   private readonly logger = new Logger(AuthMiddleware.name)
 
-  constructor(private readonly authService: AuthService, private readonly userService: UserService) {}
+  constructor(private readonly tokenService: TokenService, private readonly userService: UserService) {}
 
   async use(request: ExtRequest, response: Response, next: NextFunction): Promise<void> {
     const user: RequestUser = request.user || { id: 0, authType: 'none' }
@@ -29,7 +29,7 @@ export class AuthMiddleware implements NestMiddleware {
     if (authValue) {
       const [type, value] = authValue.split(' ')
       if (type && type.toUpperCase() === 'TOKEN') {
-        user.id = await this.authService.getUserIdByToken(value)
+        user.id = await this.tokenService.getUserIdByToken(value)
         user.authType = 'token'
       } else if (type && type.toUpperCase() === 'CODE') {
         user.id = await this.userService.getUserIdByCode(value)

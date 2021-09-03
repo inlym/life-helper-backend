@@ -20,7 +20,7 @@ export class LoginController {
    * 微信小程序端登录
    */
   @Get()
-  async wxLogin(@User user: RequestUser): Promise<WxLoginResponseDto> {
+  async wxLogin(@User() user: RequestUser): Promise<WxLoginResponseDto> {
     if (user.id > 0 && user.authType === 'code') {
       /** 登录凭证有效时长：10 天 */
       const expiration = 3600 * 24 * 10
@@ -36,9 +36,16 @@ export class LoginController {
 
   /**
    * 扫码登录
+   *
+   *
+   * ### 说明
+   *
+   * ```markdown
+   * 1. 这个 API 可能存在高负载，Web 端使用“轮询”（间隔 1 秒）的方式查询扫码结果。
+   * ```
    */
   @Get('scan')
-  async scanLogin(@Query query: ScanLoginQueryDto): Promise<ScanLoginResponseDto> {
+  async scanLogin(@Query() query: ScanLoginQueryDto): Promise<ScanLoginResponseDto> {
     const code = query.code
 
     const authen = await this.qrcodeService.query(code)

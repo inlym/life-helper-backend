@@ -1,5 +1,6 @@
-import { Controller, Get, Put, Query } from '@nestjs/common'
+import { Controller, Get, Put, Query, UseGuards } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
+import { AuthGuard } from 'src/common/auth.guard'
 import { User } from 'src/common/user.decorator'
 import { ConfirmQueryDto, ConfirmResponseDto, ScanQueryDto, ScanResponseDto } from './qrcode.dto'
 import { QrcodeProfile } from './qrcode.model'
@@ -22,6 +23,7 @@ export class QrcodeController {
    * 扫码操作
    */
   @Put('scan')
+  @UseGuards(AuthGuard)
   async scan(@User('id') userId: number, @Query() query: ScanQueryDto): Promise<ScanResponseDto> {
     const code = query.code
 
@@ -33,6 +35,7 @@ export class QrcodeController {
    * 确认登录操作
    */
   @Put('confirm')
+  @UseGuards(AuthGuard)
   async confirm(@User('id') userId: number, @Query() query: ConfirmQueryDto): Promise<ConfirmResponseDto> {
     const code = query.code
 
