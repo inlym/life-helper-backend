@@ -22,7 +22,7 @@ export class AuthMiddleware implements NestMiddleware {
   constructor(private readonly authService: AuthService, private readonly userService: UserService) {}
 
   async use(request: ExtRequest, response: Response, next: NextFunction): Promise<void> {
-    const user: RequestUser = request.user || { id: 0, authType: '' }
+    const user: RequestUser = request.user || { id: 0, authType: 'none' }
 
     const authValue = request.get('authorization')
 

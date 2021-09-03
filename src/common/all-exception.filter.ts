@@ -24,7 +24,7 @@ import { COMMON_SERVER_ERROR } from './errors.constant'
 export class AllExceptionFilter implements ExceptionFilter {
   private readonly logger = new Logger(AllExceptionFilter.name)
 
-  catch(exception: HttpException | Error, host: ArgumentsHost): Promise<void> {
+  catch(exception: HttpException | Error, host: ArgumentsHost): void {
     const ctx = host.switchToHttp()
 
     const request = ctx.getRequest<Request>()
