@@ -1,27 +1,30 @@
-import { Controller, Get, Post, Redirect, Req } from '@nestjs/common'
+import { Controller, Get, Logger, Post, Redirect, Req } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
 import { Request } from 'express'
+import { GetStatusResponseDto, PingRedisResponseDto } from './system.dto'
 import { SystemService } from './system.service'
 
 @ApiTags('system')
 @Controller()
 export class SystemController {
+  /** 日志工具 */
+  private readonly logger = new Logger(SystemController.name)
+
   constructor(private readonly systemService: SystemService) {}
 
   /**
    * 接口连通性测试
    *
    *
-   * @description
+   * ### 功能说明
    *
    * ```markdown
-   * 功能说明：
    * 1. 用于测试项目是否已正常启动。
    * 2. 用于负载均衡健康检查。
    * ```
    */
   @Get('ping')
-  ping() {
+  ping(): string {
     return 'pong'
   }
 
@@ -29,7 +32,7 @@ export class SystemController {
    * 查看系统运行状态以及各运行参数
    */
   @Get('status')
-  getStatus() {
+  getStatus(): GetStatusResponseDto {
     return this.systemService.getSystemStatus()
   }
 
@@ -37,7 +40,7 @@ export class SystemController {
    * 请求调试（用于 `GET` 请求）
    *
    *
-   * @description
+   * ### 功能说明
    *
    * ```markdown
    * 1. 将会在响应数据中原样返回接收到的请求内容（包含请求方法，请求头，请求数据及各种参数）
@@ -45,7 +48,7 @@ export class SystemController {
    * ```
    */
   @Get('debug')
-  debugForGet(@Req() request: Request) {
+  debugForGet(@Req() request: Request): Partial<Request> {
     return this.systemService.pickRequestProperties(request)
   }
 
@@ -53,14 +56,14 @@ export class SystemController {
    * 请求调试（用于 `POST` 请求）
    *
    *
-   * @description
+   * ### 功能说明
    *
    * ```markdown
    * 1. 同上
    * ```
    */
   @Post('debug')
-  debugForPost(@Req() request: Request) {
+  debugForPost(@Req() request: Request): Partial<Request> {
     return this.systemService.pickRequestProperties(request)
   }
 
@@ -68,7 +71,7 @@ export class SystemController {
    * 网站标志
    *
    *
-   * @description
+   * ### 功能说明
    *
    * ```markdown
    * 1. 在使用浏览器直接输入 URL 访问，会自动请求获取 `/favicon.ico`，然后在标签页上显示。
@@ -78,7 +81,24 @@ export class SystemController {
    */
   @Get('favicon.ico')
   @Redirect('https://www.lifehelper.com.cn/favicon.ico')
-  favicon() {
+  favicon(): void {
     // 2021-08-26，这条注释仅用于占位，避免报 `no-empty-function` 错误
+  }
+
+  /**
+   * 检测 Redis 的连通性
+   *
+   *
+   * ### 功能说明
+   *
+   * ```markdown
+   * 1. 对在 Redis 的指定字段执行 `incr` 操作，用作计数器。
+   * ```
+   */
+  @Get('ping/redis')
+  async pingRedis(): Promise<PingRedisResponseDto> {
+    const result = await this.systemService.pingRedis()
+
+    return { counter: result }
   }
 }

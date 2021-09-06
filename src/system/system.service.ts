@@ -1,10 +1,19 @@
 import { Injectable } from '@nestjs/common'
 import { Request } from 'express'
+import { Redis } from 'ioredis'
 import { PORT, PROXY_NUMBER } from 'life-helper-config'
+import { RedisService } from 'nestjs-redis'
 import * as os from 'os'
+import { SystemStatus } from './system.model'
 
 @Injectable()
 export class SystemService {
+  private readonly redis: Redis
+
+  constructor(private readonly redisService: RedisService) {
+    this.redis = this.redisService.getClient()
+  }
+
   /**
    * 调试时，需要查看的请求的属性值
    */
@@ -34,11 +43,11 @@ export class SystemService {
    *
    * @param request Express 中的请求对象
    */
-  pickRequestProperties(request: Request) {
-    return this.detectedKeys.reduce((result: Record<string, any>, key: string) => {
+  pickRequestProperties(request: Request): Partial<Request> {
+    return this.detectedKeys.reduce((result: Record<string, unknown>, key: string) => {
       result[key] = request[key]
       return result
-    }, {} as Record<string, any>)
+    }, {} as Record<string, unknown>)
   }
 
   /**
@@ -53,7 +62,7 @@ export class SystemService {
    * 2. `proxyNumber` - 反向代理数量
    * ```
    */
-  getSystemStatus() {
+  getSystemStatus(): SystemStatus {
     const env = {
       NODE_ENV: process.env.NODE_ENV,
       PORT: process.env.PORT,
@@ -100,5 +109,16 @@ export class SystemService {
     const UTC = new Date().toISOString()
 
     return { env, os: osInfo, process: processInfo, config, timestamp, UTC }
+  }
+
+  /**
+   * 检测 Redis 连通性
+   */
+  async pingRedis(): Promise<number> {
+    const rKey = 'system:ping:counter'
+
+    const result = await this.redis.incr(rKey)
+
+    return result
   }
 }
