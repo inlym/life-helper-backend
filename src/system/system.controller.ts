@@ -29,6 +29,14 @@ export class SystemController {
   }
 
   /**
+   * 手动调试时，经常使用根路径来访问检测项目是否已启动，避免报错，因此增加当前控制器
+   */
+  @Get()
+  root(): string {
+    return 'hello, inlym'
+  }
+
+  /**
    * 查看系统运行状态以及各运行参数
    */
   @Get('status')
